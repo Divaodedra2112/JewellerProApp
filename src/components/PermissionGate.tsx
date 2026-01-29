@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { usePermission } from '../hooks/usePermission';
+import { usePermission } from '../rbac';
 
 interface PermissionGateProps {
   moduleKey: string | null;

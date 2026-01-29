@@ -1,5 +1,5 @@
 const Images = {
-  LOGO: require('../assets/images/Logo.png'),
+  LOGO: require('../assets/images/JP-Logo.webp'),
   OTP: require('../assets/images/OTP.png'),
   APP_BACKGROUND: require('../assets/images/Bgimage.jpg'),
   DELETE_IMAGE: require('../assets/icons/Delete.png'),
@@ -32,7 +32,7 @@ const Images = {
   WAVES_IMAGE: require('../assets/images/Wave.png'),
   RENAME_COMPANY_IMAGE: require('../assets/images/renameCompany.png'),
   EDITSTAFF_INCHAT: require('../assets/images/EditUser.png'),
-  APP_LOGO: require('../assets/images/Logo.png'),
+  APP_LOGO: require('../assets/images/JP-Logo.webp'),
 };
 
 export default Images;
