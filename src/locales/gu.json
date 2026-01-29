@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "સંગઠન એપ",
+    "welcome": "સ્વાગત છે"
+  },
+  "association": {
+    "name": "સંગઠનનું નામ",
+    "address": "ઓફિસ સરનામું",
+    "phone": "ફોન નંબર",
+    "email": "ઇમેઇલ સરનામું",
+    "workingHours": "કામના કલાકો",
+    "call": "કૉલ કરો",
+    "sendEmail": "ઇમેઇલ મોકલો",
+    "openMap": "નકશામાં ખોલો"
+  },
+  "settings": {
+    "title": "સેટિંગ્સ",
+    "language": "ભાષા",
+    "selectLanguage": "ભાષા પસંદ કરો"
+  },
+  "languages": {
+    "english": "અંગ્રેજી",
+    "gujarati": "ગુજરાતી",
+    "hindi": "હિંદી"
+  },
+  "common": {
+    "loading": "લોડ થઈ રહ્યું છે...",
+    "error": "ભૂલ",
+    "retry": "ફરી પ્રયાસ કરો",
+    "refresh": "રિફ્રેશ કરો"
+  }
+}
+

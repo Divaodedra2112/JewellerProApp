@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "Association App",
+    "welcome": "Welcome"
+  },
+  "association": {
+    "name": "Association Name",
+    "address": "Office Address",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "workingHours": "Working Hours",
+    "call": "Call",
+    "sendEmail": "Send Email",
+    "openMap": "Open in Map"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  },
+  "languages": {
+    "english": "English",
+    "gujarati": "Gujarati",
+    "hindi": "Hindi"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "refresh": "Refresh"
+  }
+}
+

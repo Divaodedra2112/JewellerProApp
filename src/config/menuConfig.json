@@ -1,0 +1,18 @@
+[
+  {
+    "id": "Home",
+    "name": "Dashboard",
+    "moduleKey": null,
+    "screen": "../modules/main/Home/Home.screen",
+    "type": "bottomTab",
+    "permissionKey": null
+  },
+  {
+    "id": "Settings",
+    "name": "Settings",
+    "moduleKey": null,
+    "screen": "../modules/main/Settings/SettingsScreen",
+    "type": "bottomTab",
+    "permissionKey": null
+  }
+]

@@ -1,0 +1,85 @@
+# Transform this into a `node_require` generic function:
+def node_require(script)
+  # Resolve script with node to allow for hoisting
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
+
+# Use it to require both react-native's and this package's scripts:
+node_require('react-native/scripts/react_native_pods.rb')
+node_require('react-native-permissions/scripts/setup.rb')
+
+# ✅ Use React Native's internally injected minimum iOS version
+platform :ios, min_ios_version_supported
+
+prepare_react_native_project!
+
+# Use static frameworks for Firebase
+use_frameworks! :linkage => :static
+$RNFirebaseAsStaticFramework = true
+
+abstract_target 'vidres_shared' do
+  config = use_native_modules!
+
+  # Setup permissions for react-native-permissions
+  setup_permissions([
+    'Camera',           # Camera permission for taking photos/videos
+    'PhotoLibrary',     # Photo library permission (covers both read & write/download)
+    'Notifications',    # Notification permission (for consistency, though we also use Firebase)
+  ])
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :hermes_enabled => true,  # ✅ Hermes is recommended by React Native
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  # ✅ Example custom pod (optional)
+  pod 'react-native-compressor', :path => '../node_modules/react-native-compressor'
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+
+    # ✅ Hermes debug symbols for development (safe even if not used in release)
+    installer.pods_project.targets.each do |target|
+      if target.name == 'hermes-engine'
+        target.build_configurations.each do |config|
+          config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf-with-dsym'
+        end
+      end
+    end
+
+    # ✅ Enforce Swift 5 and relax Swift 6 strict concurrency checks for all pods
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # Use Swift 5 toolchain for pods built with older Swift syntax
+        config.build_settings['SWIFT_VERSION'] = '5.0'
+        # Avoid Swift 6 Sendable/actor strictness breaking older pods
+        config.build_settings['SWIFT_STRICT_CONCURRENCY'] = 'minimal'
+      end
+    end
+  end
+
+  target 'vidres' do
+    inherit! :complete
+  end
+
+  target 'vidres dev' do
+    inherit! :complete
+  end
+
+  target 'vidres local' do
+    inherit! :complete
+  end
+
+  target 'vidres qa' do
+    inherit! :complete
+  end
+end

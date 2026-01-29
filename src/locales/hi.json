@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "एसोसिएशन ऐप",
+    "welcome": "स्वागत है"
+  },
+  "association": {
+    "name": "एसोसिएशन का नाम",
+    "address": "कार्यालय का पता",
+    "phone": "फोन नंबर",
+    "email": "ईमेल पता",
+    "workingHours": "कार्य के घंटे",
+    "call": "कॉल करें",
+    "sendEmail": "ईमेल भेजें",
+    "openMap": "मानचित्र में खोलें"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "language": "भाषा",
+    "selectLanguage": "भाषा चुनें"
+  },
+  "languages": {
+    "english": "अंग्रेजी",
+    "gujarati": "गुजराती",
+    "hindi": "हिंदी"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "retry": "पुनः प्रयास करें",
+    "refresh": "रीफ्रेश करें"
+  }
+}
+
