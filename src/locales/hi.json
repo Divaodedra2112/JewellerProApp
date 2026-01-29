@@ -1,17 +1,24 @@
 {
   "app": {
-    "name": "एसोसिएशन ऐप",
+    "name": "React Native Boilerplate",
     "welcome": "स्वागत है"
   },
-  "association": {
-    "name": "एसोसिएशन का नाम",
-    "address": "कार्यालय का पता",
-    "phone": "फोन नंबर",
-    "email": "ईमेल पता",
-    "workingHours": "कार्य के घंटे",
-    "call": "कॉल करें",
-    "sendEmail": "ईमेल भेजें",
-    "openMap": "मानचित्र में खोलें"
+  "home": {
+    "welcome": "React Native Boilerplate में आपका स्वागत है",
+    "subtitle": "यह एक production-ready boilerplate है जिसमें authentication, navigation और best practices शामिल हैं।",
+    "features": "शामिल सुविधाएं",
+    "getStarted": "शुरू करें"
+  },
+  "auth": {
+    "login": "लॉगिन",
+    "phoneNumber": "फोन नंबर",
+    "enterPhoneNumber": "अपना फोन नंबर दर्ज करें",
+    "sendOTP": "OTP भेजें",
+    "otpVerification": "OTP सत्यापन",
+    "enterOTP": "अपने फोन पर भेजे गए OTP को दर्ज करें",
+    "verify": "सत्यापित करें",
+    "resendOTP": "OTP पुनः भेजें",
+    "logout": "लॉगआउट"
   },
   "settings": {
     "title": "सेटिंग्स",
@@ -23,11 +30,31 @@
     "gujarati": "गुजराती",
     "hindi": "हिंदी"
   },
+  "notification": {
+    "title": "सूचनाएं",
+    "noNotifications": "कोई सूचना नहीं",
+    "markAsRead": "पढ़ा हुआ मार्क करें",
+    "markAllAsRead": "सभी को पढ़ा हुआ मार्क करें"
+  },
   "common": {
     "loading": "लोड हो रहा है...",
     "error": "त्रुटि",
     "retry": "पुनः प्रयास करें",
-    "refresh": "रीफ्रेश करें"
+    "refresh": "रिफ्रेश करें",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "back": "वापस",
+    "next": "अगला",
+    "done": "पूर्ण"
+  },
+  "errors": {
+    "networkError": "नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।",
+    "serverError": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
+    "unknownError": "एक अज्ञात त्रुटि हुई।",
+    "invalidPhoneNumber": "कृपया एक वैध फोन नंबर दर्ज करें",
+    "invalidOTP": "कृपया एक वैध OTP दर्ज करें"
   }
 }
-

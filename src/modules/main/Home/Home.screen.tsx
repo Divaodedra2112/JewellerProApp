@@ -1,44 +1,68 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, RefreshControl } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store';
-import { fetchAssociationInfo } from '../../../store/slices/associationSlice';
-import AssociationInfoCard from '../../../components/AssociationInfoCard/AssociationInfoCard';
-import { AppLoader } from '../../../components/AppLoader';
-import CustomHeader from '../../../components/CustomHeader/Header';
-import { HamburgerMenuIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { AppText, CustomHeader, AppButton } from '../../../components';
 import { colors } from '../../../utils/theme';
+import { HamburgerMenuIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 
+/**
+ * Home Screen - Generic boilerplate home screen
+ * TODO: Customize this screen for your app
+ */
 const HomeScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const { loading } = useSelector((state: RootState) => state.association);
-
-  useEffect(() => {
-    // Fetch association info on mount
-    dispatch(fetchAssociationInfo() as any);
-  }, [dispatch]);
-
-  const onRefresh = () => {
-    dispatch(fetchAssociationInfo() as any);
-  };
 
   return (
     <View style={styles.container}>
       <CustomHeader
-        title={t('app.name')}
+        title={t('app.name') || 'Home'}
         showBackButton={true}
         backIcon={<HamburgerMenuIcon width={24} height={24} color={colors.Gray80} />}
         onBackPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
-      {loading ? (
-        <AppLoader isLoading={true} />
-      ) : (
-        <AssociationInfoCard />
-      )}
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.welcomeSection}>
+          <AppText style={styles.welcomeTitle}>
+            {t('home.welcome') || 'Welcome to React Native Boilerplate'}
+          </AppText>
+          <AppText style={styles.welcomeSubtitle}>
+            {t('home.subtitle') ||
+              'This is a production-ready boilerplate with authentication, navigation, and best practices built-in.'}
+          </AppText>
+        </View>
+
+        <View style={styles.featuresSection}>
+          <AppText style={styles.sectionTitle}>
+            {t('home.features') || 'Features Included'}
+          </AppText>
+          <View style={styles.featureList}>
+            <AppText style={styles.featureItem}>✓ TypeScript with strict mode</AppText>
+            <AppText style={styles.featureItem}>✓ Redux Toolkit + Persist</AppText>
+            <AppText style={styles.featureItem}>✓ React Navigation</AppText>
+            <AppText style={styles.featureItem}>✓ i18next (Multi-language)</AppText>
+            <AppText style={styles.featureItem}>✓ RBAC System</AppText>
+            <AppText style={styles.featureItem}>✓ Authentication Flow</AppText>
+            <AppText style={styles.featureItem}>✓ Permission Handling</AppText>
+            <AppText style={styles.featureItem}>✓ UI Kitten Components</AppText>
+          </View>
+        </View>
+
+        <View style={styles.actionsSection}>
+          <AppButton
+            onPress={() => {
+              // TODO: Add your action
+              console.log('Button pressed');
+            }}
+            style={styles.actionButton}>
+            {t('home.getStarted') || 'Get Started'}
+          </AppButton>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -47,6 +71,49 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  content: {
+    flex: 1,
+  },
+  contentContainer: {
+    padding: 20,
+  },
+  welcomeSection: {
+    marginBottom: 30,
+  },
+  welcomeTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 10,
+  },
+  welcomeSubtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    lineHeight: 24,
+  },
+  featuresSection: {
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 15,
+  },
+  featureList: {
+    gap: 10,
+  },
+  featureItem: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    lineHeight: 24,
+  },
+  actionsSection: {
+    marginTop: 20,
+  },
+  actionButton: {
+    marginTop: 10,
   },
 });
 

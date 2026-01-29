@@ -1,13 +1,10 @@
 /**
  * Dashboard/Home data structure
+ * TODO: Customize this interface for your app's dashboard data
  */
 export interface DashboardData {
-  totalRoutes: number;
-  totalCompanies: number;
-  totalConcerns: number;
-  totalSampleRequests: number;
-  totalStaff: number;
-  totalMissedDueDate: number;
+  // Example fields - customize as needed
+  totalItems?: number;
   // Add more dashboard fields as needed
 }
 

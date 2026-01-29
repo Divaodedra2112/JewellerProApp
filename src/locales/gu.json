@@ -1,17 +1,24 @@
 {
   "app": {
-    "name": "સંગઠન એપ",
+    "name": "React Native Boilerplate",
     "welcome": "સ્વાગત છે"
   },
-  "association": {
-    "name": "સંગઠનનું નામ",
-    "address": "ઓફિસ સરનામું",
-    "phone": "ફોન નંબર",
-    "email": "ઇમેઇલ સરનામું",
-    "workingHours": "કામના કલાકો",
-    "call": "કૉલ કરો",
-    "sendEmail": "ઇમેઇલ મોકલો",
-    "openMap": "નકશામાં ખોલો"
+  "home": {
+    "welcome": "React Native Boilerplate માં આપનું સ્વાગત છે",
+    "subtitle": "આ એક production-ready boilerplate છે જેમાં authentication, navigation અને best practices શામેલ છે.",
+    "features": "શામેલ સુવિધાઓ",
+    "getStarted": "શરૂ કરો"
+  },
+  "auth": {
+    "login": "લૉગિન",
+    "phoneNumber": "ફોન નંબર",
+    "enterPhoneNumber": "તમારો ફોન નંબર દાખલ કરો",
+    "sendOTP": "OTP મોકલો",
+    "otpVerification": "OTP ચકાસણી",
+    "enterOTP": "તમારા ફોન પર મોકલેલ OTP દાખલ કરો",
+    "verify": "ચકાસો",
+    "resendOTP": "OTP ફરીથી મોકલો",
+    "logout": "લૉગઆઉટ"
   },
   "settings": {
     "title": "સેટિંગ્સ",
@@ -23,11 +30,31 @@
     "gujarati": "ગુજરાતી",
     "hindi": "હિંદી"
   },
+  "notification": {
+    "title": "સૂચનાઓ",
+    "noNotifications": "કોઈ સૂચના નથી",
+    "markAsRead": "વાંચ્યું તરીકે ચિહ્નિત કરો",
+    "markAllAsRead": "બધાને વાંચ્યું તરીકે ચિહ્નિત કરો"
+  },
   "common": {
     "loading": "લોડ થઈ રહ્યું છે...",
-    "error": "ભૂલ",
-    "retry": "ફરી પ્રયાસ કરો",
-    "refresh": "રિફ્રેશ કરો"
+    "error": "ત્રુટિ",
+    "retry": "ફરીથી પ્રયાસ કરો",
+    "refresh": "રિફ્રેશ કરો",
+    "cancel": "રદ કરો",
+    "confirm": "પુષ્ટિ કરો",
+    "save": "સાચવો",
+    "delete": "કાઢી નાખો",
+    "edit": "સંપાદિત કરો",
+    "back": "પાછળ",
+    "next": "આગળ",
+    "done": "પૂર્ણ"
+  },
+  "errors": {
+    "networkError": "નેટવર્ક ત્રુટિ. કૃપા કરીને તમારું કનેક્શન તપાસો.",
+    "serverError": "સર્વર ત્રુટિ. કૃપા કરીને પછી ફરીથી પ્રયાસ કરો.",
+    "unknownError": "એક અજ્ઞાત ત્રુટિ આવી.",
+    "invalidPhoneNumber": "કૃપા કરીને માન્ય ફોન નંબર દાખલ કરો",
+    "invalidOTP": "કૃપા કરીને માન્ય OTP દાખલ કરો"
   }
 }
-

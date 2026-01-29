@@ -10,6 +10,7 @@ import RootNavigator from './src/navigation/RootNavigator';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { AppContainer } from './src/components';
+import ErrorBoundary from './src/components/ErrorBoundary/ErrorBoundary';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { restoreToken, setInitializing } from './src/store/slices/authSlice';
@@ -27,6 +28,7 @@ import {
 } from './src/rbac';
 import { loadLanguage } from './src/store/slices/languageSlice';
 import i18n from './src/config/i18n';
+import { logger } from './src/utils/logger';
 
 const App = () => {
   const [isReady, setIsReady] = useState(false);
@@ -114,7 +116,12 @@ const App = () => {
   }
 
   return (
-    <>
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        logger.error('App Error Boundary caught error', error, {
+          componentStack: errorInfo.componentStack,
+        });
+      }}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <GestureHandlerRootView style={{ flex: 1 }}>
@@ -132,7 +139,7 @@ const App = () => {
           </GestureHandlerRootView>
         </PersistGate>
       </Provider>
-    </>
+    </ErrorBoundary>
   );
 };
 

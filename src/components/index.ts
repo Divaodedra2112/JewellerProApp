@@ -1,3 +1,4 @@
+// Core UI Components
 import { Button as AppButton } from './AppButton/Button';
 import AppImage from './AppImage/AppImage';
 import { Input as AppInput } from './AppInput/Input';
@@ -5,14 +6,32 @@ import { Checkbox as AppCheckbox } from './AppCheckbox/Checkbox';
 import AppScrollView from './AppScrollView/AppScrollView';
 import AppContainer from './AppContainer/AppContainer';
 import { AppOTPInput } from './AppOTPInput/AppOTPInput';
-import ProductCard from './ProductCard/ProductCard';
-import GridItem from './GridItem/GridItem';
 import { MultilineInput } from './MultilineInput/MultilineInput';
-import AppListViewCard from './AppListViewCard/AppListViewCard';
 import { AppText } from './AppText/AppText';
-import { sharePin } from './SharePin/SharePin';
+import AppModal from './AppModal/AppModal';
+import AppLoader from './AppLoader';
 
+// Layout Components
+import GridItem from './GridItem/GridItem';
+import AppListViewCard from './AppListViewCard/AppListViewCard';
+
+// Utility Components
+import { sharePin } from './SharePin/SharePin';
+import EmptyState from './EmptyState/EmptyState';
+import NotAuthorized from './NotAuthorized/NotAuthorized';
+import PermissionGate from './PermissionGate';
+
+// Navigation Components
+import CustomHeader from './CustomHeader/Header';
+import DrawerContent from './Drawer/DrawerContent';
+import LanguageSelector from './LanguageSelector/LanguageSelector';
+
+// Error Handling
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+
+// Export all generic components
 export {
+  // Core UI
   AppText,
   AppButton,
   AppImage,
@@ -21,9 +40,24 @@ export {
   AppScrollView,
   AppContainer,
   AppOTPInput,
-  ProductCard,
-  GridItem,
+  AppModal,
+  AppLoader,
+  // Layout
   MultilineInput,
+  GridItem,
   AppListViewCard,
+  // Utility
   sharePin,
+  EmptyState,
+  NotAuthorized,
+  PermissionGate,
+  // Navigation
+  CustomHeader,
+  DrawerContent,
+  LanguageSelector,
+  // Error Handling
+  ErrorBoundary,
 };
+
+// Default export for ErrorBoundary
+export { default as ErrorBoundary } from './ErrorBoundary/ErrorBoundary';
