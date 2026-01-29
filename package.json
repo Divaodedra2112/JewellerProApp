@@ -1,5 +1,5 @@
 {
-  "name": "react-native-boilerplate",
+  "name": "JewellerPro",
   "private": true,
   "scripts": {
     "preinstall": "node check-node.js",
