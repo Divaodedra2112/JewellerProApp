@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, @preconcurrency UNUserNot
     reactNativeFactory = factory
 
     window = UIWindow(frame: UIScreen.main.bounds)
-    factory.startReactNative(withModuleName: "ReactNativeBoilerplate", in: window, launchOptions: launchOptions)
+    factory.startReactNative(withModuleName: "JewellerPro", in: window, launchOptions: launchOptions)
 
     return true
   }
