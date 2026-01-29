@@ -1,12 +1,13 @@
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
-import { API_URL } from './envConfig';
+import { API_BASE_URL, API_TIMEOUT } from './envConfig';
 
-export { API_URL };
+// Export API_URL as alias for API_BASE_URL for backward compatibility
+export const API_URL = API_BASE_URL;
+export { API_TIMEOUT };
 
 export const API_VERSION = 'v1';
-export const API_TIMEOUT = 30000;
 
 export const getApiHeaders = async () => {
   const deviceId = await DeviceInfo.getUniqueId();
@@ -38,7 +39,7 @@ export const processQueue = (error: Error | null, token: string | null = null) =
 };
 
 export const refreshApi = axios.create({
-  baseURL: `${API_URL}/api/${API_VERSION}`,
+  baseURL: `${API_BASE_URL}/api/${API_VERSION}`,
   timeout: API_TIMEOUT,
 });
 

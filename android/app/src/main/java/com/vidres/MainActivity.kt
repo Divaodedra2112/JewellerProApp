@@ -1,4 +1,4 @@
-package com.vidres
+package com.jewellerpro
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

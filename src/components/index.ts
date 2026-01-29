@@ -9,9 +9,9 @@ import ProductCard from './ProductCard/ProductCard';
 import GridItem from './GridItem/GridItem';
 import { MultilineInput } from './MultilineInput/MultilineInput';
 import AppListViewCard from './AppListViewCard/AppListViewCard';
-import CompetitorAnalysisCard from './CompetitorAnalysisCard/CompetitorAnalysisCard';
 import { AppText } from './AppText/AppText';
 import { sharePin } from './SharePin/SharePin';
+
 export {
   AppText,
   AppButton,
@@ -25,6 +25,5 @@ export {
   GridItem,
   MultilineInput,
   AppListViewCard,
-  CompetitorAnalysisCard,
   sharePin,
 };

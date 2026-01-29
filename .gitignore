@@ -58,7 +58,11 @@ fastlane/screenshots/**/*.png
 
 # Misc
 .env
-.env.*.local
+.env.*
+.env.local
+.env.development
+.env.production
+!.env.example
 coverage/
 
 # Metro bundler cache

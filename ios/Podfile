@@ -17,18 +17,14 @@ platform :ios, min_ios_version_supported
 
 prepare_react_native_project!
 
-# Use static frameworks for Firebase
-use_frameworks! :linkage => :static
-$RNFirebaseAsStaticFramework = true
-
-abstract_target 'vidres_shared' do
+abstract_target 'ReactNativeBoilerplate_shared' do
   config = use_native_modules!
 
   # Setup permissions for react-native-permissions
   setup_permissions([
     'Camera',           # Camera permission for taking photos/videos
     'PhotoLibrary',     # Photo library permission (covers both read & write/download)
-    'Notifications',    # Notification permission (for consistency, though we also use Firebase)
+    'Notifications',    # Notification permission
   ])
 
   use_react_native!(
@@ -67,19 +63,7 @@ abstract_target 'vidres_shared' do
     end
   end
 
-  target 'vidres' do
-    inherit! :complete
-  end
-
-  target 'vidres dev' do
-    inherit! :complete
-  end
-
-  target 'vidres local' do
-    inherit! :complete
-  end
-
-  target 'vidres qa' do
+  target 'ReactNativeBoilerplate' do
     inherit! :complete
   end
 end

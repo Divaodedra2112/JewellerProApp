@@ -40,28 +40,12 @@ interface AuthState {
   initializing: boolean;
 }
 
+// Generic default modules for boilerplate
+// TODO: Update with your app's modules
 const defaultModules = [
   'Home',
-  'products',
-  'concern',
-  'chat',
-  'profile',
-  'Category',
-  'concernType',
-  'Road',
-  'Staff',
-  'Customer',
-  'Branch',
-  'task',
   'Notification',
-  'report',
-  'TechnicianConcernsListScreen',
-  'Technician',
-  'SampleRequestListScreen',
-  'GradeScreen',
-  'DailyVisitListScreen',
-  'CompetitorAnalysisListScreen',
-  'MasterBagCapListScreen',
+  'Profile',
 ];
 
 const initialState: AuthState = {

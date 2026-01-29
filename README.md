@@ -1,101 +1,336 @@
-# install Yarn
+# React Native Boilerplate 🚀
 
-# yarn install
+A production-ready React Native boilerplate with TypeScript, Redux Toolkit, React Navigation, i18n, and best practices built-in. Start building your next mobile app in minutes!
 
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+## ✨ Features
 
-# Getting Started
+- ⚛️ **React Native 0.79** with TypeScript
+- 🎨 **UI Kitten** - Beautiful UI component library
+- 🧭 **React Navigation** - Stack, Tab, and Drawer navigation
+- 🗄️ **Redux Toolkit** - State management with persistence
+- 🌍 **i18next** - Internationalization (English, Hindi, Gujarati)
+- 🎯 **TypeScript** - Full type safety
+- 🔐 **Authentication Flow** - Login, OTP verification
+- 🛡️ **RBAC** - Role-based access control
+- 📱 **Permissions** - Camera, Photo Library, Notifications
+- 🎨 **Theming** - Customizable theme system
+- 📦 **Code Organization** - Feature-based architecture
+- 🧪 **Testing** - Jest configured
+- 🎨 **Code Quality** - ESLint + Prettier
+- 📱 **Cross-platform** - iOS & Android
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 📋 Prerequisites
 
-## Step 1: Start Metro
+- Node.js >= 18
+- React Native development environment set up ([See official guide](https://reactnative.dev/docs/environment-setup))
+- iOS: Xcode 14+ and CocoaPods
+- Android: Android Studio with Android SDK
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🚀 Quick Start
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 1. Clone and Install
 
-```sh
-# Using npm
-npm start
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd JewellerProApp
 
-# OR using Yarn
-yarn start
+# Install dependencies
+yarn install
+
+# iOS: Install CocoaPods
+cd ios && pod install && cd ..
 ```
 
-## Step 2: Build and run your app
+### 2. Environment Setup
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your configuration
+```
+
+### 3. Run the App
+
+```bash
+# Start Metro bundler
+yarn start
+
+# Run on iOS (in a new terminal)
+yarn ios
+
+# Run on Android (in a new terminal)
+yarn android
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── assets/           # Images, fonts, icons
+├── components/       # Reusable UI components
+├── config/          # App configuration (i18n, constants, env)
+├── hooks/           # Custom React hooks
+├── locales/         # Translation files
+├── modules/         # Feature modules
+│   ├── auth/        # Authentication flow
+│   ├── main/        # Main app screens
+│   └── notification/# Notification screens
+├── navigation/      # Navigation configuration
+├── rbac/           # Role-based access control
+├── services/       # API services
+├── store/          # Redux store & slices
+├── types/          # TypeScript type definitions
+└── utils/          # Utility functions
+```
+
+## 🛠️ Available Scripts
+
+```bash
+# Development
+yarn start              # Start Metro bundler
+yarn start:reset        # Start Metro with cache reset
+yarn ios                # Run iOS app
+yarn android            # Run Android app
+
+# Code Quality
+yarn lint               # Run ESLint
+yarn format             # Format code with Prettier
+yarn format:check       # Check code formatting
+
+# Testing
+yarn test               # Run Jest tests
+
+# Build
+yarn build              # Build Android release APK
+
+# Utilities
+yarn link:fonts         # Link custom fonts
+yarn increment-version   # Increment app version
+```
+
+## 🏗️ Architecture
+
+### Feature-Based Structure
+
+Each feature module follows this structure:
+
+```
+modules/
+└── feature-name/
+    ├── FeatureScreen.tsx    # Main screen component
+    ├── FeatureService.ts    # API calls
+    ├── FeatureActions.ts    # Redux actions (if needed)
+    ├── FeatureTypes.ts      # TypeScript types
+    ├── FeatureSlice.ts      # Redux slice (if needed)
+    └── styles.ts            # Component styles
+```
+
+### State Management
+
+- **Redux Toolkit** for global state
+- **Redux Persist** for state persistence
+- Feature-based slices in `src/store/slices/`
+
+### Navigation
+
+- **Stack Navigator** for auth flow
+- **Bottom Tab Navigator** for main app
+- **Drawer Navigator** for side menu
+- Dynamic menu generation based on RBAC
+
+### API Services
+
+- Centralized API service in `src/services/api.ts`
+- Feature-specific services in `src/services/`
+- Axios for HTTP requests
+- Automatic token injection
+
+## 🔐 Authentication
+
+The boilerplate includes a complete authentication flow:
+
+1. **Login Screen** - Phone number input
+2. **OTP Verification** - OTP input and verification
+3. **Token Management** - Automatic token storage and refresh
+4. **Protected Routes** - Navigation guards
+
+## 🌍 Internationalization
+
+Supports multiple languages:
+- English (en)
+- Hindi (hi)
+- Gujarati (gu)
+
+Add translations in `src/locales/` and use with:
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+const { t } = useTranslation();
+<Text>{t('welcome')}</Text>
+```
+
+## 🎨 Theming
+
+Customize your app theme in `src/utils/theme.ts`:
+
+```typescript
+export const theme = {
+  colors: {
+    primary: '#007AFF',
+    secondary: '#5856D6',
+    // ... your colors
+  },
+  spacing: {
+    xs: 4,
+    sm: 8,
+    // ... your spacing
+  },
+};
+```
+
+## 🛡️ RBAC (Role-Based Access Control)
+
+- Permission-based navigation
+- Dynamic menu generation
+- Component-level permission gates
+- Service-level permission checks
+
+## 📱 Permissions
+
+Handled via `react-native-permissions`:
+- Camera
+- Photo Library
+- Notifications
+- And more...
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+yarn test
+
+# Run tests in watch mode
+yarn test --watch
+
+# Run tests with coverage
+yarn test --coverage
+```
+
+## 📦 Building for Production
 
 ### Android
 
-```sh
-# Using npm
-npm run android
+```bash
+# Generate release APK
+yarn build
 
-# OR using Yarn
-yarn android
+# Or manually
+cd android
+./gradlew assembleRelease
 ```
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+1. Open `ios/ReactNativeBoilerplate.xcworkspace` in Xcode
+2. Select your target device/simulator
+3. Product → Archive
+4. Distribute App
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+## 🔧 Configuration
 
-```sh
-bundle install
+### Environment Variables
+
+Create `.env` file:
+
+```env
+API_BASE_URL=https://api.example.com
+API_TIMEOUT=30000
+ENABLE_LOGGING=true
 ```
 
-Then, and every time you update your native dependencies, run:
+### App Configuration
 
-```sh
-bundle exec pod install
+- **Bundle ID**: Update in `ios/` and `android/app/build.gradle`
+- **App Name**: Update in `app.json` and native configs
+- **Version**: Update in `package.json` and native configs
+
+## 📚 Best Practices
+
+1. **Component Structure**: Keep components small and focused
+2. **Type Safety**: Use TypeScript for all new code
+3. **Code Organization**: Follow feature-based structure
+4. **State Management**: Use Redux for global state, local state for UI
+5. **API Calls**: Centralize in service files
+6. **Error Handling**: Use try-catch and error boundaries
+7. **Performance**: Use React.memo, useMemo, useCallback appropriately
+8. **Testing**: Write tests for critical business logic
+
+## 🐛 Troubleshooting
+
+### Metro Bundler Issues
+
+```bash
+yarn start:reset
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### iOS Build Issues
 
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+```bash
+cd ios
+pod deintegrate
+pod install
+cd ..
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Android Build Issues
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```bash
+cd android
+./gradlew clean
+cd ..
+```
 
-## Step 3: Modify your app
+### Clear All Caches
 
-Now that you have successfully run the app, let's make changes!
+```bash
+# Clear Metro cache
+yarn start:reset
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+# Clear watchman
+watchman watch-del-all
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+# Clear node modules
+rm -rf node_modules
+yarn install
+```
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## 📖 Documentation
 
-## Congratulations! :tada:
+- [React Native Docs](https://reactnative.dev/docs/getting-started)
+- [React Navigation](https://reactnavigation.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [UI Kitten](https://akveo.github.io/react-native-ui-kitten/)
 
-You've successfully run and modified your React Native App. :partying_face:
+## 🤝 Contributing
 
-### Now what?
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## 📄 License
 
-# Troubleshooting
+This project is licensed under the MIT License.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## 🙏 Acknowledgments
 
-# Learn More
+- React Native Community
+- All the amazing open-source contributors
 
-To learn more about React Native, take a look at the following resources:
+---
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+**Happy Coding! 🚀**

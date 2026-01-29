@@ -28,8 +28,6 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>0.0.2.1</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>http</string>

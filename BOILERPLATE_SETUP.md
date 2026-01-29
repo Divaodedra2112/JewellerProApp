@@ -1,25 +1,25 @@
 # React Native Boilerplate Setup
 
-This project has been converted from a Vidres-specific application to a clean React Native boilerplate.
+This project has been converted from a JewellerPro-specific application to a clean React Native boilerplate.
 
 ## What Was Changed
 
 ### ✅ Completed Changes
 
 1. **Package Configuration**
-   - Updated `package.json` - Changed name from "vidres" to "react-native-boilerplate"
-   - Removed Vidres-specific build scripts
+   - Updated `package.json` - Changed name from "jewellerpro" to "react-native-boilerplate"
+   - Removed JewellerPro-specific build scripts
    - Updated `app.json` with generic app name
 
 2. **Android Configuration**
    - Updated all `strings.xml` files in Android to use "React Native Boilerplate"
    - Updated app names for all build variants (local, dev, qa, prod)
-   - Updated `build.gradle` - Changed bundle IDs from `com.vidres.*` to `com.yourapp.*`
+   - Updated `build.gradle` - Changed bundle IDs from `com.jewellerpro.*` to `com.yourapp.*`
    - Updated `package.json` android script to use `devDebug` variant by default
    - Updated MainActivity component name to "ReactNativeBoilerplate"
 
 3. **Source Code**
-   - Removed all Vidres branding from:
+   - Removed all JewellerPro branding from:
      - Login screen
      - Home screen
      - Permission module messages
@@ -45,21 +45,21 @@ This project has been converted from a Vidres-specific application to a clean Re
 
 ### 🔧 iOS Configuration (Manual Steps Required)
 
-The iOS project files still contain Vidres references. You'll need to:
+The iOS project files still contain JewellerPro references. You'll need to:
 
 1. **Rename iOS Project**
-   - Rename `ios/vidres/` folder to your app name
+   - Rename `ios/jewellerpro/` folder to your app name
    - Update Xcode project references
-   - Update `ios/vidres.xcodeproj` to your app name
-   - Update `ios/vidres.xcworkspace` to your app name
+   - Update `ios/jewellerpro.xcodeproj` to your app name
+   - Update `ios/jewellerpro.xcworkspace` to your app name
 
 2. **Update Bundle Identifiers**
-   - Update all bundle IDs in Xcode from `com.vidres.*` to your app's bundle ID
+   - Update all bundle IDs in Xcode from `com.jewellerpro.*` to your app's bundle ID
    - Update `Info.plist` files
    - Update `GoogleService-Info.plist` files (or replace with your Firebase config)
 
 3. **Update AppDelegate.swift**
-   - Line 49: Change module name from "vidres" to your app name
+   - Line 49: Change module name from "jewellerpro" to your app name
 
 4. **Update Firebase Configuration**
    - Replace all `GoogleService-Info.plist` files with your Firebase configuration
@@ -73,7 +73,7 @@ The iOS project files still contain Vidres references. You'll need to:
    - Update namespace from `com.yourapp` to your package name
 
 2. **Update Package Name (Optional but Recommended)**
-   - Rename `android/app/src/main/java/com/vidres/` to your package name (e.g., `com/yourapp/`)
+   - Rename `android/app/src/main/java/com/jewellerpro/` to your package name (e.g., `com/yourapp/`)
    - Update package declarations in `MainActivity.kt` and `MainApplication.kt`
    - Update any other references to the old package name
 
@@ -179,5 +179,5 @@ src/
 - The navigation structure is simplified but maintains the same architecture
 - Auth flow is intact and ready to use
 - Bottom tabs structure is preserved
-- All Vidres-specific content has been removed from source code
+- All JewellerPro-specific content has been removed from source code
 

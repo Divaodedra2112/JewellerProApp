@@ -108,8 +108,8 @@ src/
    - Update package name
 
 3. **Update iOS Bundle ID**:
-   - Open `ios/vidres.xcodeproj` in Xcode
-   - Change bundle identifier from `com.vidres.*` to `com.yourapp.*`
+   - Open `ios/jewellerpro.xcodeproj` in Xcode
+   - Change bundle identifier from `com.jewellerpro.*` to `com.yourapp.*`
 
 4. **Update Android Package Name**:
    - Update `android/app/build.gradle`:
@@ -164,7 +164,7 @@ src/
    - Update `android/app/src/main/res/values/strings.xml`
 
 2. **iOS**:
-   - Replace icons in `ios/vidres/Images.xcassets/AppIcon.appiconset/`
+   - Replace icons in `ios/jewellerpro/Images.xcassets/AppIcon.appiconset/`
    - Update launch screen
 
 ### Step 6: Remove Unused Components
@@ -181,7 +181,7 @@ src/
 
 2. **iOS**:
    - Configure APNs certificates
-   - Update notification handlers in `ios/vidres/AppDelegate.swift`
+   - Update notification handlers in `ios/jewellerpro/AppDelegate.swift`
 
 ### Step 8: Set Up Environment Variables
 
@@ -292,7 +292,7 @@ yarn format
 ## ⚠️ Notes
 
 - All Firebase code has been removed
-- All "vidres" specific code has been removed
+- All "jewellerpro" specific code has been removed
 - Chat functionality has been removed
 - Only essential modules remain (Auth, Home, Notification)
 - Build artifacts are properly ignored in `.gitignore`
