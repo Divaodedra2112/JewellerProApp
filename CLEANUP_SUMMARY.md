@@ -130,3 +130,4 @@ The boilerplate is now **100% clean** and ready for any project:
 
 **Perfect for starting any React Native project!** 🚀
 
+
