@@ -9,19 +9,20 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
-import { Text } from '@ui-kitten/components';
+import { Text, Icon } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParamList } from '../../../types/navigation';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { requestOtp } from './loginActions';
+import { loginAppAction } from './loginActions';
 import { RootState } from '../../../store';
 import { styles } from './styles';
 import { AppButton, AppImage } from '../../../components';
 import { Images } from '../../../utils';
 import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
-import { verticalScale, isTab } from '../../../utils/Responsive';
+import { verticalScale, isTab, scale, moderateScale } from '../../../utils/Responsive';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { AppText } from '../../../components/AppText/AppText';
 import { colors } from '../../../utils/theme';
@@ -39,7 +40,14 @@ export const LoginScreen = () => {
   const dynamicMarginTop = isTab || isLandscape ? verticalScale(50) : verticalScale(140);
 
   const navigation = useNavigation<NavigationProp>();
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const countryCode = '91'; // Fixed country code for India
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<{
+    mobileNumber?: string;
+    password?: string;
+  }>({});
   const dispatch = useDispatch();
   const { loading } = useSelector((state: RootState) => state.auth);
 
@@ -88,79 +96,98 @@ export const LoginScreen = () => {
     requestPermissionsIfNeeded();
   }, []);
 
-  const handlePhoneNumberChange = (text: string) => {
+  const handleMobileNumberChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, '');
     // Allow up to 10 digits
     const finalNumber = numericValue.slice(0, 10);
-    setPhoneNumber(finalNumber);
+    setMobileNumber(finalNumber);
+    if (errors.mobileNumber) {
+      setErrors(prev => ({ ...prev, mobileNumber: undefined }));
+    }
   };
 
-  const validatePhoneNumber = (number: string): boolean => {
-    // Validate as 10-digit number (allows 91 as part of the 10 digits)
-    return number.length === 10;
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    if (errors.password) {
+      setErrors(prev => ({ ...prev, password: undefined }));
+    }
   };
 
-  const handleContinue = async () => {
+  const validateForm = (): boolean => {
+    const newErrors: typeof errors = {};
+
+    if (!mobileNumber || mobileNumber.trim() === '') {
+      newErrors.mobileNumber = TOAST_MESSAGES.AUTH.MOBILE_NUMBER_REQUIRED;
+    } else if (mobileNumber.length !== 10) {
+      newErrors.mobileNumber = TOAST_MESSAGES.AUTH.INVALID_MOBILE_NUMBER;
+    }
+
+    if (!password || password.trim() === '') {
+      newErrors.password = TOAST_MESSAGES.AUTH.PASSWORD_REQUIRED;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleLogin = async () => {
     Keyboard.dismiss();
 
-    if (!phoneNumber || !validatePhoneNumber(phoneNumber)) {
-      showToast(TOAST_TYPE.ERROR, TOAST_MESSAGES.AUTH.PHONE_NUMBER_INVALID);
+    if (!validateForm()) {
+      // Show the first error found
+      const firstError = errors.mobileNumber || errors.password;
+      if (firstError) {
+        showToast(TOAST_TYPE.ERROR, firstError);
+      }
       return;
     }
 
     try {
-      const result = await dispatch(requestOtp(phoneNumber));
-      if (requestOtp.fulfilled.match(result)) {
-        // Login response doesn't include PIN, so just navigate to PIN screen
-        navigation.navigate('OTP', { phoneNumber });
-      } else if (requestOtp.rejected.match(result)) {
+      const result = await dispatch(
+        loginAppAction({
+          countryCode: countryCode.trim(),
+          mobileNumber: mobileNumber.trim(),
+          password: password.trim(),
+        })
+      );
+
+      if (loginAppAction.fulfilled.match(result)) {
+        showToast(TOAST_TYPE.SUCCESS, TOAST_MESSAGES.AUTH.LOGIN_SUCCESS);
+        // Navigation will be handled by the auth state change
+      } else if (loginAppAction.rejected.match(result)) {
         const payload = result.payload as string;
-        let errorMessage: string = TOAST_MESSAGES.GENERIC.SOMETHING_WENT_WRONG;
+        let errorMessage: string = TOAST_MESSAGES.AUTH.LOGIN_FAILED;
 
-        if (payload === 'USER_NOT_FOUND' || payload === 'MOBILE_NOT_FOUND') {
-          errorMessage = TOAST_MESSAGES.AUTH.PHONE_NUMBER_DOES_NOT_EXIST;
-        } else if (payload === 'MOBILE_NOT_REGISTERED') {
-          errorMessage = TOAST_MESSAGES.AUTH.MOBILE_NOT_REGISTERED;
-        } else if (payload === 'WAIT_OTP_ONE_MIN') {
-          errorMessage = TOAST_MESSAGES.AUTH.WAIT_OTP_ONE_MIN;
-        } else if (payload === 'WAIT_OTP_ONE_HOUR') {
-          errorMessage = TOAST_MESSAGES.AUTH.WAIT_OTP_ONE_HOUR;
-        } else if (payload === 'WAIT_BEFORE_RESEND_OTP') {
-          errorMessage = TOAST_MESSAGES.AUTH.WAIT_BEFORE_RESEND_OTP;
-        } else if (payload === 'UNAUTHORIZED_DEVICE') {
-          errorMessage = TOAST_MESSAGES.AUTH.UNAUTHORIZED_DEVICE;
-        } else if (payload === 'MULTIPLE_SMS_TO_SAME_NUMBER_NOT_ALLOWED') {
-          errorMessage = TOAST_MESSAGES.AUTH.MULTIPLE_SMS_TO_SAME_NUMBER_NOT_ALLOWED;
-        } else if (payload === 'INVALID_COUNTRY_CODE') {
-          errorMessage = TOAST_MESSAGES.AUTH.INVALID_COUNTRY_CODE;
-        } else if (payload === 'PIN_THROTTLED') {
-          errorMessage = TOAST_MESSAGES.AUTH.PIN_THROTTLED;
+        // Handle specific error codes
+        if (payload === 'INVALID_CREDENTIALS' || payload === 'INVALID_MOBILE_NUMBER_OR_PASSWORD') {
+          errorMessage = TOAST_MESSAGES.AUTH.INVALID_CREDENTIALS;
+        } else if (payload === 'USER_NOT_FOUND' || payload === 'MOBILE_NOT_FOUND') {
+          errorMessage = TOAST_MESSAGES.AUTH.USER_NOT_FOUND;
+        } else if (payload === 'INVALID_PASSWORD' || payload === 'WRONG_PASSWORD') {
+          errorMessage = TOAST_MESSAGES.AUTH.INVALID_PASSWORD;
+        } else if (payload === 'ACCOUNT_LOCKED') {
+          errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_LOCKED;
+        } else if (payload === 'ACCOUNT_SUSPENDED') {
+          errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_SUSPENDED;
+        } else if (payload === 'SESSION_EXPIRED') {
+          errorMessage = TOAST_MESSAGES.AUTH.SESSION_EXPIRED;
+        } else if (payload === 'NETWORK_ERROR' || payload === 'ERR_NETWORK') {
+          errorMessage = TOAST_MESSAGES.AUTH.NETWORK_ERROR;
+        } else if (payload === 'SERVER_ERROR' || payload?.includes('500')) {
+          errorMessage = TOAST_MESSAGES.AUTH.SERVER_ERROR;
+        } else if (payload) {
+          // Use the error code as message if it's a known error
+          errorMessage = payload;
         }
 
-        if (payload === 'PIN_THROTTLED') {
-          showToast(
-            TOAST_TYPE.ERROR,
-            errorMessage,
-            'bottom',
-            undefined,
-            TOAST_MESSAGES.AUTH.PIN_THROTTLED_SUBTITLE
-          );
-        } else {
-          showToast(TOAST_TYPE.ERROR, errorMessage);
-        }
+        showToast(TOAST_TYPE.ERROR, errorMessage);
       }
-    } catch (error) {
-      showToast(TOAST_TYPE.ERROR, TOAST_MESSAGES.GENERIC.NETWORK_ERROR);
+    } catch (error: any) {
+      const errorMessage =
+        error?.message || error?.code || TOAST_MESSAGES.GENERIC.NETWORK_ERROR;
+      showToast(TOAST_TYPE.ERROR, errorMessage);
     }
   };
-
-  useEffect(() => {
-    // Auto-submit when 10 digits are entered
-    if (phoneNumber.length === 10) {
-      handleContinue();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phoneNumber]);
 
   const scrollViewStyle = { flex: 1 };
 
@@ -178,33 +205,71 @@ export const LoginScreen = () => {
       </View>
 
       <View style={styles.form}>
-        <AppText variant={TEXT_VARIANTS.h4_large}>Phone Number</AppText>
-
+        {/* Mobile Number with Country Code */}
+        <AppText variant={TEXT_VARIANTS.h4_large} style={styles.inputLabel}>
+          Mobile Number
+        </AppText>
         <View style={styles.phoneInputContainer}>
-          <Text style={styles.countryCode}>+91</Text>
+          <Text style={styles.countryCode}>+{countryCode}</Text>
           <TextInput
-            value={phoneNumber}
-            onChangeText={handlePhoneNumberChange}
+            value={mobileNumber}
+            onChangeText={handleMobileNumberChange}
             keyboardType="phone-pad"
             maxLength={10}
-            placeholder="Enter your number"
+            placeholder="Enter your mobile number"
             placeholderTextColor={colors.gray1000}
             style={styles.phoneInput}
             cursorColor={colors.black}
             selectionColor={colors.black}
           />
         </View>
+        {errors.mobileNumber && (
+          <AppText style={styles.errorText} variant={TEXT_VARIANTS.h4_small}>
+            {errors.mobileNumber}
+          </AppText>
+        )}
 
-        <AppText style={styles.infoText} variant={TEXT_VARIANTS.h4_small}>
-        Enter your PIN to securely access your account.
+        {/* Password */}
+        <AppText variant={TEXT_VARIANTS.h4_large} style={[styles.inputLabel, { marginTop: verticalScale(16) }]}>
+          Password
         </AppText>
+        <View style={[styles.phoneInputContainer, { paddingRight: scale(10) }]}>
+          <TextInput
+            value={password}
+            onChangeText={handlePasswordChange}
+            secureTextEntry={!showPassword}
+            placeholder="Enter your password"
+            placeholderTextColor={colors.gray1000}
+            style={[styles.phoneInput, { flex: 1 }]}
+            cursorColor={colors.black}
+            selectionColor={colors.black}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={{ padding: scale(8) }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            activeOpacity={0.7}
+          >
+            <Icon
+              name={showPassword ? 'eye' : 'eye-off'}
+              style={{ width: scale(24), height: scale(24), tintColor: colors.gray1000 }}
+            />
+          </TouchableOpacity>
+        </View>
+        {errors.password && (
+          <AppText style={styles.errorText} variant={TEXT_VARIANTS.h4_small}>
+            {errors.password}
+          </AppText>
+        )}
 
         <AppButton
-          onPress={handleContinue}
-          style={{ marginBottom: verticalScale(50) }}
+          onPress={handleLogin}
+          style={{ marginTop: verticalScale(32), marginBottom: verticalScale(50) }}
           loading={loading}
         >
-          Continue
+          Sign In
         </AppButton>
       </View>
 

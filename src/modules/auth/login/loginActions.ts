@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { sendOtp, verifyOtp, SendOtpResponse } from './loginService';
+import { sendOtp, verifyOtp, SendOtpResponse, loginApp, LoginAppRequest } from './loginService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setModules } from '../../../store/slices/authSlice';
+import { setModules, setUser } from '../../../store/slices/authSlice';
 
 interface VerifyOtpParams {
   phoneNumber: string;
@@ -66,6 +66,49 @@ export const submitOtp = createAsyncThunk(
     } catch (error: any) {
       const errorMessage = error?.response?.data?.code || error?.message || 'Failed to login';
       return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const loginAppAction = createAsyncThunk(
+  'auth/loginApp',
+  async (loginData: LoginAppRequest, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await loginApp(loginData);
+      
+      // Extract token and user data from response
+      const token = response?.data?.token || response?.token;
+      const refreshToken = response?.data?.refreshToken || response?.refreshToken;
+      const user = response?.data?.user || response?.user;
+      const modules = response?.data?.modules || response?.modules;
+
+      if (!token) {
+        return rejectWithValue('No token received from server');
+      }
+
+      // Store tokens
+      await AsyncStorage.setItem('access_token', token);
+      if (refreshToken) {
+        await AsyncStorage.setItem('refresh_token', refreshToken);
+      }
+
+      // Set user and modules in Redux
+      if (user) {
+        dispatch(setUser(user));
+      }
+      if (modules) {
+        dispatch(setModules(modules));
+      }
+
+      return {
+        userId: user?.id || 0,
+        accessToken: token,
+        refreshToken: refreshToken || '',
+        user: user || null,
+      };
+    } catch (error: any) {
+      const errorCode = error?.response?.data?.code || error?.response?.data?.message || error?.message || 'LOGIN_FAILED';
+      return rejectWithValue(errorCode);
     }
   }
 );

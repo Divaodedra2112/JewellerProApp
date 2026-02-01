@@ -7,7 +7,7 @@
 
 // API Configuration
 export const API_BASE_URL = __DEV__
-  ? 'https://api-dev.example.com' // Development API
+  ? 'http://localhost:7878' // Development API
   : 'https://api.example.com'; // Production API
 
 export const API_TIMEOUT = 30000; // 30 seconds

@@ -96,8 +96,10 @@ export const styles: Styles = StyleSheet.create({
   errorText: {
     color: colors.error,
     fontSize: scale(14),
-    textAlign: 'center',
-    marginBottom: verticalScale(16),
+    textAlign: 'left',
+    marginTop: verticalScale(4),
+    marginLeft: scale(8),
+    marginBottom: verticalScale(4),
   },
   phoneInputContainer: {
     flexDirection: 'row',

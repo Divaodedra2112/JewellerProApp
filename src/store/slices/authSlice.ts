@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { requestOtp } from '../../modules/auth/login/loginActions';
+import { requestOtp, loginAppAction } from '../../modules/auth/login/loginActions';
 import { submitOtp } from '../../modules/auth/otp/otpActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../services/api';
@@ -162,6 +162,48 @@ const authSlice = createSlice({
         }
       )
       .addCase(submitOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(loginAppAction.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        loginAppAction.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            userId: number;
+            accessToken: string;
+            refreshToken: string;
+            user: {
+              id: number;
+              name: string;
+              firstName: string;
+              lastName: string;
+              mobile: string;
+              email: string;
+              photo?: string;
+              roles?: Array<{
+                id: number;
+                name: string;
+                permissions: Record<string, string[]>;
+              }>;
+              permissions?: Record<string, string[]>;
+            } | null;
+          }>
+        ) => {
+          state.loading = false;
+          state.token = action.payload.accessToken;
+          state.user = action.payload.user;
+          state.phoneNumber = action.payload.user?.mobile || '';
+          if (!action.payload.accessToken) {
+            state.error = 'No token received from server';
+          }
+        }
+      )
+      .addCase(loginAppAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

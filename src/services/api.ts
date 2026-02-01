@@ -47,9 +47,20 @@ api.interceptors.request.use(
     const deviceId = await DeviceInfo.getUniqueId();
     const platform = Platform.OS;
     config.headers['x-current-device-id'] = deviceId;
+    
+    // Add x-login-type header for login-app endpoint
+    const isLoginAppEndpoint =
+      typeof config.url === 'string' && config.url.includes('/auth/login-app');
+    if (isLoginAppEndpoint && config.headers) {
+      config.headers['x-login-type'] = 'C1';
+    }
+    
+    // Get app version from package.json
+    const packageJson = require('../../package.json');
     config.headers['x-client-info'] = JSON.stringify({
+      platform: 'app',
+      version: packageJson.version || '1.0.0',
       bundleId: DeviceInfo.getBundleId(),
-      platform,
     });
     return config;
   },
