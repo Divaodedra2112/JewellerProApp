@@ -48,10 +48,12 @@ api.interceptors.request.use(
     const platform = Platform.OS;
     config.headers['x-current-device-id'] = deviceId;
     
-    // Add x-login-type header for login-app endpoint
+    // Add x-login-type header for login-app and logout-app endpoints
     const isLoginAppEndpoint =
       typeof config.url === 'string' && config.url.includes('/auth/login-app');
-    if (isLoginAppEndpoint && config.headers) {
+    const isLogoutAppEndpoint =
+      typeof config.url === 'string' && config.url.includes('/auth/logout-app');
+    if ((isLoginAppEndpoint || isLogoutAppEndpoint) && config.headers) {
       config.headers['x-login-type'] = 'C1';
     }
     
