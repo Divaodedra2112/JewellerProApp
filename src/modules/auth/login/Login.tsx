@@ -152,8 +152,8 @@ export const LoginScreen = () => {
       );
 
       if (loginAppAction.fulfilled.match(result)) {
-        showToast(TOAST_TYPE.SUCCESS, TOAST_MESSAGES.AUTH.LOGIN_SUCCESS);
-        // Navigation will be handled by the auth state change
+        // Don't show toast here, navigation will happen automatically via RootNavigator
+        // The token is already stored and Redux state is updated
       } else if (loginAppAction.rejected.match(result)) {
         const payload = result.payload as string;
         let errorMessage: string = TOAST_MESSAGES.AUTH.LOGIN_FAILED;
