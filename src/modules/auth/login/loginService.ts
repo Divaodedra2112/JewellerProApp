@@ -67,78 +67,64 @@ export interface LoginAppRequest {
 }
 
 export interface LoginAppResponse {
-  status?: number;
+  isSuccess?: boolean;
+  code?: string;
+  message?: string;
   data?: {
-    code?: string;
-    message?: string;
+    token?: string;
+    refreshToken?: string;
     user?: {
-      id: string;
+      id: number;
+      name: string;
       firstName: string;
       lastName: string;
+      mobile: string;
       email: string;
-      mobileNumber: string;
-      countryCode: string;
-      roleId: string;
-      role?: {
-        id: string;
+      photo?: string;
+      roles?: Array<{
+        id: number;
         name: string;
-        description?: string;
-        status?: string;
-        permissions?: Record<string, any>;
-        sequence?: number;
-        isDefault?: boolean;
-        isSuperAdmin?: boolean;
-        createdAt?: string;
-        updatedAt?: string;
-      };
+        permissions: Record<string, string[]>;
+      }>;
+      permissions?: Record<string, string[]>;
     };
-    access_token?: string;
-    refresh_token?: string;
-    expires_in?: number;
+    modules?: string[];
   };
-  timestamp?: string;
+  token?: string;
+  refreshToken?: string;
+  user?: {
+    id: number;
+    name: string;
+    firstName: string;
+    lastName: string;
+    mobile: string;
+    email: string;
+    photo?: string;
+    roles?: Array<{
+      id: number;
+      name: string;
+      permissions: Record<string, string[]>;
+    }>;
+    permissions?: Record<string, string[]>;
+  };
+  modules?: string[];
 }
 
 export const loginApp = async (requestData: LoginAppRequest): Promise<LoginAppResponse> => {
   const response = await post<LoginAppResponse>('/auth/login-app', requestData);
   
-  console.log('[LoginService] Raw response from post:', JSON.stringify(response, null, 2));
-  
-  // The post function returns response.data, so response is already the data part
-  // But the API returns { status: 200, data: {...} }, so response should be that object
-  // Check if response has a nested data property (API response structure)
-  const apiData = response?.data || response;
-  
-  console.log('[LoginService] Extracted apiData:', JSON.stringify(apiData, null, 2));
-  
   // Check if the response indicates failure
-  // Only throw error if code exists and is NOT LOGIN_SUCCESS
-  if (apiData?.code && apiData.code !== 'LOGIN_SUCCESS' && apiData.code !== 'SUCCESS') {
-    const error: any = new Error(apiData.code || apiData.message || 'Failed to login');
+  if (response && response.code && response.code !== 'SUCCESS' && !response.isSuccess) {
+    const error: any = new Error(response.code || response.message || 'Failed to login');
     error.response = {
       data: {
-        code: apiData.code,
-        message: apiData.message,
+        code: response.code,
+        message: response.message,
+        isSuccess: false,
       },
     };
     throw error;
   }
   
-  // If status is not 200, also consider it an error
-  if (response?.status && response.status !== 200) {
-    const error: any = new Error(apiData?.code || apiData?.message || 'Failed to login');
-    error.response = {
-      data: {
-        code: apiData?.code,
-        message: apiData?.message,
-      },
-    };
-    throw error;
-  }
-  
-  // Return the response with data properly structured
-  return {
-    ...response,
-    data: apiData,
-  };
+  return response;
 };
