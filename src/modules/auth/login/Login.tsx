@@ -18,6 +18,7 @@ import { styles } from './styles';
 import { AppImage } from '../../../components';
 import { Images } from '../../../utils';
 import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
+const LOGIN_LOGO = require('../../../assets/images/JP-Logo.png');
 import { verticalScale, isTab, scale } from '../../../utils/Responsive';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { AppText } from '../../../components/AppText/AppText';
@@ -195,7 +196,7 @@ export const LoginScreen = () => {
       bounces={false}
     >
       <View style={[styles.logoContainer, { marginTop: dynamicMarginTop }]}>
-        <AppImage image={Images.LOGO} mainStyle={styles.logo} isDisabled from="Login" />
+        <AppImage image={LOGIN_LOGO} mainStyle={styles.logo} isDisabled from="Login" />
         <AppText variant={TEXT_VARIANTS.h1} style={styles.titleText}>
           Sign in to Jeweller Pro
         </AppText>

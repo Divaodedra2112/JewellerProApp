@@ -25,6 +25,10 @@ type Styles = {
   foregroundContent: ViewStyle;
   versionContainer: ViewStyle;
   versionText: TextStyle;
+  titleText: TextStyle;
+  signInButton: ViewStyle;
+  signInButtonText: TextStyle;
+  signInButtonDisabled: ViewStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -46,11 +50,12 @@ export const styles: Styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     marginTop: verticalScale(150),
-    marginBottom: verticalScale(40),
+    marginBottom: verticalScale(32),
   },
   logo: {
     width: scale(110),
     height: verticalScale(110),
+    resizeMode: 'contain',
   },
   title: {},
   phoneRow: {
@@ -66,12 +71,13 @@ export const styles: Styles = StyleSheet.create({
   form: {
     width: '100%',
     paddingHorizontal: scale(24),
-    gap: verticalScale(6),
+    gap: verticalScale(0),
   },
   inputLabel: {
-    fontSize: scale(14),
+    fontSize: scale(16),
     fontWeight: '600',
     marginLeft: scale(8),
+    marginBottom: verticalScale(8),
     color: colors.textPrimary,
     fontFamily: Fonts.semi_bold,
   },
@@ -110,8 +116,8 @@ export const styles: Styles = StyleSheet.create({
     borderRadius: moderateScale(50),
     borderWidth: 1,
     borderColor: colors.gray100,
-    paddingHorizontal: scale(15),
-    marginTop: verticalScale(4),
+    paddingHorizontal: scale(20),
+    marginTop: verticalScale(8),
     gap: scale(10),
   },
   countryCode: {
@@ -120,11 +126,11 @@ export const styles: Styles = StyleSheet.create({
     fontFamily: Fonts.regular,
   },
   phoneInput: {
-    // padding: 10,
-    width: '100%',
+    flex: 1,
     fontSize: scale(16),
     color: colors.textPrimary,
     fontFamily: Fonts.regular,
+    paddingVertical: 0,
   },
   fixedBackgroundContainer: {
     position: 'absolute',
@@ -156,5 +162,35 @@ export const styles: Styles = StyleSheet.create({
     letterSpacing: 0,
     textAlign: 'center',
     color: colors.gray1000,
+  },
+  titleText: {
+    fontSize: scale(28),
+    fontWeight: '700',
+    color: '#173051',
+    fontFamily: Fonts.bold,
+    marginTop: verticalScale(20),
+    textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+  signInButton: {
+    backgroundColor: '#173051',
+    borderRadius: moderateScale(50),
+    paddingVertical: verticalScale(18),
+    paddingHorizontal: scale(24),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: verticalScale(32),
+    gap: scale(10),
+    minHeight: 56,
+  },
+  signInButtonText: {
+    color: colors.white,
+    fontSize: scale(16),
+    fontWeight: '600',
+    fontFamily: Fonts.semi_bold,
+  },
+  signInButtonDisabled: {
+    opacity: 0.6,
   },
 });
