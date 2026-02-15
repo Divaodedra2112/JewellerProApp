@@ -80,69 +80,114 @@ export const LoginScreen = () => {
   const handleLogin = async () => {
     Keyboard.dismiss();
 
+    logger.info('Login Screen - Login button pressed', {
+      mobileNumber: mobileNumber ? `${mobileNumber.substring(0, 2)}****${mobileNumber.substring(6)}` : 'empty',
+      hasPassword: !!password,
+      countryCode,
+    });
+
     if (!validateForm()) {
       // Show the first error found
       const firstError = errors.mobileNumber || errors.password;
+      logger.warn('Login Screen - Form validation failed', {
+        errors,
+        firstError,
+      });
       if (firstError) {
         showToast(TOAST_TYPE.ERROR, firstError);
       }
       return;
     }
 
+    logger.info('Login Screen - Starting login process', {
+      countryCode: countryCode.trim(),
+      mobileNumberLength: mobileNumber.trim().length,
+    });
+
     try {
-      const result = await dispatch(
-        loginAppAction({
-          countryCode: countryCode.trim(),
-          mobileNumber: mobileNumber.trim(),
-          password: password.trim(),
-        })
-      );
+      const loginPayload = {
+        countryCode: countryCode.trim(),
+        mobileNumber: mobileNumber.trim(),
+        password: password.trim(),
+      };
+
+      logger.debug('Login Screen - Dispatching login action', {
+        countryCode: loginPayload.countryCode,
+        mobileNumber: loginPayload.mobileNumber,
+      });
+
+      const result = await dispatch(loginAppAction(loginPayload));
 
       if (loginAppAction.fulfilled.match(result)) {
+        const payload = result.payload as any;
         logger.info('Login Screen - Login successful', {
-          userId: (result.payload as any)?.userId,
+          userId: payload?.userId,
+          hasUser: !!payload?.user,
+          userName: payload?.user?.name,
+          userEmail: payload?.user?.email,
         });
         // Show success overlay
         setShowSuccessOverlay(true);
         // Navigation will be handled by the auth state change
       } else if (loginAppAction.rejected.match(result)) {
         const errorPayload = result.payload as string;
-        logger.error('Login Screen - Login rejected', new Error(errorPayload), {
+        logger.error('Login Screen - Login failed', new Error(errorPayload || 'Unknown error'), {
           errorPayload,
           errorType: typeof errorPayload,
+          errorDetails: {
+            payload: result.payload,
+            meta: result.meta,
+          },
         });
         let errorMessage: string = TOAST_MESSAGES.AUTH.LOGIN_FAILED;
 
         // Handle specific error codes
         if (errorPayload === 'INVALID_CREDENTIALS' || errorPayload === 'INVALID_MOBILE_NUMBER_OR_PASSWORD') {
           errorMessage = TOAST_MESSAGES.AUTH.INVALID_CREDENTIALS;
+          logger.warn('Login Screen - Invalid credentials', { errorPayload });
         } else if (errorPayload === 'USER_NOT_FOUND' || errorPayload === 'MOBILE_NOT_FOUND') {
           errorMessage = TOAST_MESSAGES.AUTH.USER_NOT_FOUND;
+          logger.warn('Login Screen - User not found', { errorPayload });
         } else if (errorPayload === 'INVALID_PASSWORD' || errorPayload === 'WRONG_PASSWORD') {
           errorMessage = TOAST_MESSAGES.AUTH.INVALID_PASSWORD;
+          logger.warn('Login Screen - Invalid password', { errorPayload });
         } else if (errorPayload === 'ACCOUNT_LOCKED') {
           errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_LOCKED;
+          logger.warn('Login Screen - Account locked', { errorPayload });
         } else if (errorPayload === 'ACCOUNT_SUSPENDED') {
           errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_SUSPENDED;
+          logger.warn('Login Screen - Account suspended', { errorPayload });
         } else if (errorPayload === 'SESSION_EXPIRED') {
           errorMessage = TOAST_MESSAGES.AUTH.SESSION_EXPIRED;
+          logger.warn('Login Screen - Session expired', { errorPayload });
         } else if (errorPayload === 'NETWORK_ERROR' || errorPayload === 'ERR_NETWORK' || errorPayload === 'Network Error') {
           errorMessage = TOAST_MESSAGES.AUTH.NETWORK_ERROR;
+          logger.error('Login Screen - Network error', new Error(errorPayload), { errorPayload });
         } else if (errorPayload === 'SERVER_ERROR' || errorPayload?.includes('500')) {
           errorMessage = TOAST_MESSAGES.AUTH.SERVER_ERROR;
+          logger.error('Login Screen - Server error', new Error(errorPayload), { errorPayload });
         } else if (errorPayload) {
           // Use the error code as message if it's a known error
           errorMessage = errorPayload;
+          logger.warn('Login Screen - Unknown error code', { errorPayload });
+        } else {
+          logger.error('Login Screen - No error payload provided', new Error('Unknown error'));
         }
 
         showToast(TOAST_TYPE.ERROR, errorMessage);
       }
     } catch (error: any) {
-      logger.error('Login Screen - Exception during login', error as Error);
+      logger.error('Login Screen - Exception during login', error as Error, {
+        errorMessage: error?.message,
+        errorCode: error?.code,
+        errorStack: error?.stack,
+      });
       const errorMessage =
         error?.message || error?.code || TOAST_MESSAGES.GENERIC.NETWORK_ERROR;
       showToast(TOAST_TYPE.ERROR, errorMessage);
     }
+    
+    logger.debug('Login Screen - Login process completed');
   };
 
   const scrollViewStyle = { flex: 1 };

@@ -32,15 +32,36 @@ export const loginAppAction = createAsyncThunk(
   'auth/loginApp',
   async (loginData: LoginAppRequest, { rejectWithValue, dispatch }) => {
     try {
+      logger.info('Login Action - Starting login attempt', {
+        mobileNumber: loginData.mobileNumber,
+        hasPassword: !!loginData.password,
+      });
+
       const response = await loginApp(loginData);
       
-      const responseData = (response as any)?.data;
-      const accessToken = responseData?.access_token;
-      const refreshToken = responseData?.refresh_token;
-      const userData = responseData?.user;
+      logger.debug('Login Action - API response received', {
+        hasResponse: !!response,
+        responseKeys: response ? Object.keys(response) : [],
+        fullResponse: response ? JSON.stringify(response, null, 2) : 'null',
+      });
+      
+      // Try multiple possible response structures
+      const responseData = (response as any)?.data || response;
+      const accessToken = responseData?.access_token || (response as any)?.access_token || (response as any)?.token;
+      const refreshToken = responseData?.refresh_token || (response as any)?.refresh_token || (response as any)?.refreshToken;
+      const userData = responseData?.user || (response as any)?.user;
+
+      logger.debug('Login Action - Response data parsed', {
+        hasAccessToken: !!accessToken,
+        hasRefreshToken: !!refreshToken,
+        hasUserData: !!userData,
+        userId: userData?.id,
+      });
 
       if (!accessToken) {
-        logger.error('Login Action - No access token in response', new Error('No access token'));
+        logger.error('Login Action - No access token in response', new Error('No access token'), {
+          responseData: responseData ? JSON.stringify(responseData) : 'null',
+        });
         return rejectWithValue('No access token received from server');
       }
 
@@ -49,6 +70,8 @@ export const loginAppAction = createAsyncThunk(
       if (refreshToken) {
         await AsyncStorage.setItem('refresh_token', refreshToken);
       }
+
+      logger.info('Login Action - Tokens stored successfully');
 
       // Transform user data to match expected format
       if (userData) {
@@ -70,9 +93,14 @@ export const loginAppAction = createAsyncThunk(
         };
         
         dispatch(setUser(transformedUser));
+        logger.info('Login Action - User data set successfully', {
+          userId: transformedUser.id,
+          name: transformedUser.name,
+          email: transformedUser.email,
+        });
       }
 
-      return {
+      const loginResult = {
         userId: userData?.id ? parseInt(userData.id) : 0,
         accessToken: accessToken,
         refreshToken: refreshToken || '',
@@ -93,16 +121,37 @@ export const loginAppAction = createAsyncThunk(
           permissions: {} as Record<string, string[]>,
         } : null,
       };
+
+      logger.info('Login Action - Login successful', {
+        userId: loginResult.userId,
+        hasUser: !!loginResult.user,
+      });
+
+      return loginResult;
     } catch (error: any) {
       // Check if it's a network error
       const isNetworkError = (error as any)?.isNetworkError || error?.code === 'ERR_NETWORK' || error?.message === 'Network Error';
       
       if (isNetworkError) {
-        logger.error('Login Action - Network Error', error as Error);
+        logger.error('Login Action - Network Error', error as Error, {
+          errorCode: error?.code,
+          errorMessage: error?.message,
+          isNetworkError: true,
+        });
         return rejectWithValue('Network Error');
       }
       
       const errorCode = error?.response?.data?.code || error?.response?.data?.message || error?.message || 'LOGIN_FAILED';
+      const errorDetails = {
+        errorCode,
+        statusCode: error?.response?.status,
+        statusText: error?.response?.statusText,
+        responseData: error?.response?.data ? JSON.stringify(error?.response?.data) : 'null',
+        errorMessage: error?.message,
+        errorStack: error?.stack,
+      };
+
+      logger.error('Login Action - Login failed', error as Error, errorDetails);
       return rejectWithValue(errorCode);
     }
   }

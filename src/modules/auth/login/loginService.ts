@@ -82,11 +82,33 @@ export interface LoginAppResponse {
 
 export const loginApp = async (requestData: LoginAppRequest): Promise<LoginAppResponse> => {
   try {
+    logger.info('Login Service - Making login API call', {
+      endpoint: '/auth/login-app',
+      countryCode: requestData.countryCode,
+      mobileNumber: requestData.mobileNumber,
+      hasPassword: !!requestData.password,
+    });
+
     const response = await post<LoginAppResponse>('/auth/login-app', requestData);
+    
+    logger.debug('Login Service - API response received', {
+      hasResponse: !!response,
+      isSuccess: response?.isSuccess,
+      code: response?.code,
+      hasData: !!response?.data,
+      hasToken: !!(response?.data?.access_token || response?.token),
+      hasUser: !!response?.data?.user || !!response?.user,
+    });
     
     // Check if the response indicates failure
     if (response && response.code && response.code !== 'SUCCESS' && !response.isSuccess) {
-      const error: any = new Error(response.code || response.message || 'Failed to login');
+      const errorMessage = response.code || response.message || 'Failed to login';
+      logger.error('Login Service - Login API returned error', new Error(errorMessage), {
+        code: response.code,
+        message: response.message,
+        isSuccess: response.isSuccess,
+      });
+      const error: any = new Error(errorMessage);
       error.response = {
         data: {
           code: response.code,
@@ -97,9 +119,24 @@ export const loginApp = async (requestData: LoginAppRequest): Promise<LoginAppRe
       throw error;
     }
     
+    logger.info('Login Service - Login API call successful', {
+      hasAccessToken: !!(response?.data?.access_token || response?.token),
+      hasRefreshToken: !!(response?.data?.refresh_token || response?.refreshToken),
+      userId: response?.data?.user?.id || response?.user?.id,
+    });
+    
     return response;
   } catch (error: any) {
-    logger.error('Login Service - Error in loginApp', error as Error);
+    const errorDetails = {
+      errorMessage: error?.message,
+      errorCode: error?.code,
+      statusCode: error?.response?.status,
+      statusText: error?.response?.statusText,
+      responseData: error?.response?.data ? JSON.stringify(error?.response?.data) : 'null',
+      isNetworkError: error?.code === 'ERR_NETWORK' || error?.message === 'Network Error',
+    };
+    
+    logger.error('Login Service - Error in loginApp', error as Error, errorDetails);
     throw error;
   }
 };

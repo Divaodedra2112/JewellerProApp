@@ -14,17 +14,21 @@ import { logger } from '../utils/logger';
 // To find your IP: Mac: System Settings → Network → Wi-Fi → IP address
 //                   Or run: ipconfig getifaddr en0
 const getDevelopmentApiUrl = () => {
-  if (Platform.OS === 'android') {
-    // Android emulator uses 10.0.2.2 to access host machine's localhost
-    return 'http://10.0.2.2:7878';
-  } else {
-    // iOS simulator can use localhost
-    return 'http://localhost:7878';
-  }
+  // Using ngrok URL for testing
+  return 'https://05d9-2409-40c1-30ad-6cb8-1d22-8920-c125-1d7a.ngrok-free.app';
+  
+  // Original platform-specific URLs (commented out for ngrok testing)
+  // if (Platform.OS === 'android') {
+  //   // Android emulator uses 10.0.2.2 to access host machine's localhost
+  //   return 'http://10.0.2.2:7878';
+  // } else {
+  //   // iOS simulator can use localhost
+  //   return 'http://localhost:7878';
+  // }
 };
 
 export const API_BASE_URL = __DEV__
-  ? getDevelopmentApiUrl() // Development API - auto-detects platform
+  ? getDevelopmentApiUrl() // Development API - using ngrok for testing
   : 'https://api.example.com'; // Production API - TODO: Replace with actual production URL
 
 export const API_TIMEOUT = 30000; // 30 seconds
