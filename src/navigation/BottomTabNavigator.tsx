@@ -4,50 +4,20 @@ import { GenericParamList } from '../types/navigation';
 import { colors } from '../utils/theme';
 import { moderateScale } from '../utils/Responsive';
 import Header from '../components/Header/Header';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
 import { navigationModulesConfig, NavigationItem } from '../config/navigationConfig';
-import { useDynamicMenu } from './buildDynamicMenu';
 import CustomTabBar from '../components/BottomTabNavigation/CustomTabBar';
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { Fonts } from '../utils/theme';
-import { usePermission } from '../rbac';
 
 const Tab = createBottomTabNavigator<GenericParamList>();
 
 const BottomTabNavigator = () => {
-  const modules = useSelector((state: RootState) => state.auth.modules);
-  const { has } = usePermission();
-  const dynamicMenu = useDynamicMenu();
-
-  // Filter tabs from static navigation config
-  const filteredTabs = navigationModulesConfig.filter((tab: NavigationItem) => {
-    if (tab.type !== 'bottomTab') return false;
-
-    // Always show Dashboard (Home) tab regardless of permissions
-    if (tab.id === 'Home') {
-      return true;
-    }
-
-    const jsonItem = dynamicMenu.find(i => i.id === tab.id);
-    if (!jsonItem) return false; // wait for JSON-driven mapping to resolve
-    const moduleKey = (jsonItem.moduleKey as string | null) ?? null;
-    const allowed = has(moduleKey, 'view');
-    return allowed;
+  // Get all bottom tab items from navigation config (no permission filtering)
+  const bottomTabs = navigationModulesConfig.filter((tab: NavigationItem) => {
+    return tab.type === 'bottomTab';
   });
 
-  // Merge with JSON-driven bottom tabs (permission filtered inside useDynamicMenu)
-  const jsonBottomTabs = dynamicMenu.filter(i => i.type === 'bottomTab');
-
-  // Build a combined list, preferring explicit items when IDs collide
-  const combinedBottomTabs: Array<NavigationItem & { component: any }> = [
-    ...filteredTabs,
-    ...jsonBottomTabs
-      .filter(i => !filteredTabs.find(t => t.id === i.id))
-      .map(i => ({ id: i.id, name: i.name, component: i.component, type: 'bottomTab' } as any)),
-  ];
-
-  if (combinedBottomTabs.length === 0) {
+  if (bottomTabs.length === 0) {
     return null;
   }
 
@@ -55,25 +25,69 @@ const BottomTabNavigator = () => {
     <Tab.Navigator
       tabBar={props => <CustomTabBar {...props} />}
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: colors.textPrimary,
-        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarActiveTintColor: '#4B5563', // Dark gray for active
+        tabBarInactiveTintColor: '#FFFFFF', // White for inactive
         tabBarStyle: {
-          height: moderateScale(70),
-          paddingBottom: moderateScale(10),
+          height: moderateScale(72),
+          paddingBottom: moderateScale(8),
           paddingTop: moderateScale(8),
+          paddingHorizontal: moderateScale(4),
           borderTopWidth: 0,
-          backgroundColor: 'transparent',
+          backgroundColor: 'transparent', // Transparent to show background from CustomTabBar
           elevation: 0,
           shadowOpacity: 0,
+        },
+        tabBarButton: (props) => {
+          const { children, onPress, accessibilityState } = props;
+          const focused = accessibilityState?.selected ?? false;
+          
+          return (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={onPress}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: moderateScale(6),
+                // Active tab background - light gray/white pill matching Figma
+                ...(focused && {
+                  backgroundColor: '#F3F4F6', // Light gray background for active tab (matching Figma)
+                  borderRadius: moderateScale(18),
+                  paddingHorizontal: moderateScale(12),
+                  paddingVertical: moderateScale(6),
+                  marginHorizontal: moderateScale(3),
+                  minHeight: moderateScale(44), // Ensure enough height for icon + text
+                  // Add shadow for depth
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3,
+                }),
+              }}
+            >
+              <View 
+                style={{ 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  width: '100%',
+                }}
+              >
+                {children}
+              </View>
+            </TouchableOpacity>
+          );
         },
         tabBarLabel: ({ focused, color: _color }) => (
           <Text
             style={{
-              fontFamily: focused ? Fonts.bold : Fonts.regular,
-              fontWeight: focused ? 'bold' : 'normal',
-              color: focused ? colors.textPrimary : colors.textSecondary,
-              fontSize: moderateScale(9),
-              marginTop: 4,
+              fontFamily: focused ? Fonts.medium : Fonts.regular,
+              fontWeight: focused ? '600' : '400',
+              color: focused ? '#4B5563' : '#FFFFFF', // Dark gray for active, white for inactive (matching Figma)
+              fontSize: moderateScale(11),
+              marginTop: moderateScale(2), // Small spacing between icon and text
+              textAlign: 'center',
             }}
           >
             {route.name}
@@ -81,11 +95,18 @@ const BottomTabNavigator = () => {
         ),
         tabBarIcon: ({ focused, color: _color }) => {
           // Find the tab config for this route
-          const tab = combinedBottomTabs.find(t => t.name === route.name);
-          // Use black for focused, gray for unfocused
-          const iconColor = focused ? colors.textPrimary : colors.gray400;
+          const tab = bottomTabs.find(t => t.name === route.name);
+          // Use dark blue for focused, white for unfocused (matching Figma exactly)
+          const iconColor = focused ? '#2563EB' : '#FFFFFF';
           return (
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 2 }}>
+            <View 
+              style={{ 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                marginBottom: 0,
+                width: '100%',
+              }}
+            >
               {tab?.icon?.({ color: iconColor, focused })}
             </View>
           );
@@ -95,9 +116,12 @@ const BottomTabNavigator = () => {
           fontFamily: 'regular',
         },
         tabBarItemStyle: {
-          height: moderateScale(50),
+          height: 'auto', // Let it size based on content
           justifyContent: 'center',
+          alignItems: 'center',
           flex: 1,
+          paddingVertical: 0, // Remove default padding
+          paddingHorizontal: 0,
         },
         tabBarIconStyle: {
           width: moderateScale(20),
@@ -108,7 +132,7 @@ const BottomTabNavigator = () => {
         header: () => <Header title={route.name} />,
       })}
     >
-      {combinedBottomTabs.map((tab: NavigationItem & { component: any }) => (
+      {bottomTabs.map((tab: NavigationItem & { component: any }) => (
         <Tab.Screen
           key={tab.id}
           name={tab.name as keyof GenericParamList}

@@ -18,5 +18,11 @@ export type MainStackParamList = {
 
 export type GenericParamList = {
   MainTabs: undefined;
+  Home: undefined;
+  Chatbot: undefined;
+  Updates: undefined;
+  Settings: undefined;
+  Dashboard: undefined; // Alias for Home
+  Notification: undefined; // Alias for Updates
   // Add your drawer screens here
 };

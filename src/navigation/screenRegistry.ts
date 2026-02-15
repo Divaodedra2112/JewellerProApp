@@ -22,7 +22,16 @@ const registry: Record<string, ScreenMeta> = {
     moduleKey: null,
     action: 'list',
   },
-
+  '../modules/main/Chatbot/ChatbotScreen': {
+    component: require('../modules/main/Chatbot/ChatbotScreen').default,
+    moduleKey: null,
+    action: 'list',
+  },
+  '../modules/main/Updates/UpdatesScreen': {
+    component: require('../modules/main/Updates/UpdatesScreen').default,
+    moduleKey: null,
+    action: 'list',
+  },
 };
 
 export function getScreenComponent(key: string): AnyComponent | null {
