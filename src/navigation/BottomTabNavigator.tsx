@@ -50,20 +50,20 @@ const BottomTabNavigator = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 paddingVertical: moderateScale(6),
-                // Active tab background - whitish pill matching Figma
+                // Active tab background - oval white pill matching Figma
                 ...(focused && {
-                  backgroundColor: '#FFFFFF', // Whitish/white background for active tab (matching Figma)
-                  borderRadius: moderateScale(18),
-                  paddingHorizontal: moderateScale(12),
-                  paddingVertical: moderateScale(6),
-                  marginHorizontal: moderateScale(3),
-                  minHeight: moderateScale(44), // Ensure enough height for icon + text
+                  backgroundColor: '#FFFFFF', // White background for active tab (matching Figma)
+                  borderRadius: moderateScale(25), // More oval/pill-shaped
+                  paddingHorizontal: moderateScale(16),
+                  paddingVertical: moderateScale(8),
+                  marginHorizontal: moderateScale(4),
+                  minHeight: moderateScale(48), // Ensure enough height for icon + text
                   // Add shadow for depth
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                  elevation: 3,
+                  shadowOpacity: 0.12,
+                  shadowRadius: 6,
+                  elevation: 4,
                 }),
               }}
             >

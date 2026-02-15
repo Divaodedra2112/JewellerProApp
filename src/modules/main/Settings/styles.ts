@@ -30,7 +30,7 @@ export const styles: Styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: scale(20),
-    paddingTop: verticalScale(20),
+    paddingTop: verticalScale(50), // Increased top spacing for header
   },
   title: {
     fontSize: scale(28),
@@ -41,14 +41,14 @@ export const styles: Styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   settingsList: {
-    gap: verticalScale(4),
+    gap: verticalScale(0), // Reduced gap between items
   },
   settingsItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: verticalScale(16),
+    paddingVertical: verticalScale(12), // Reduced vertical padding
     paddingHorizontal: scale(4),
-    minHeight: verticalScale(56),
+    minHeight: verticalScale(48), // Reduced minimum height
   },
   iconContainer: {
     width: scale(40),
