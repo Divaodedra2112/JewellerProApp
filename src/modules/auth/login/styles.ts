@@ -50,7 +50,8 @@ export const styles: Styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: verticalScale(150),
+    justifyContent: 'center',
+    
     marginBottom: verticalScale(32),
   },
   logo: {
@@ -71,7 +72,7 @@ export const styles: Styles = StyleSheet.create({
 
   form: {
     width: '100%',
-    paddingHorizontal: scale(24),
+    paddingHorizontal: scale(8),
     gap: verticalScale(0),
   },
   inputLabel: {
