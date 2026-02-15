@@ -22,11 +22,7 @@ const registry: Record<string, ScreenMeta> = {
     moduleKey: null,
     action: 'list',
   },
-  '../modules/notification/NotificationScreen': {
-    component: require('../modules/notification/NotificationScreen').default,
-    moduleKey: 'notification',
-    action: 'list',
-  },
+
 };
 
 export function getScreenComponent(key: string): AnyComponent | null {

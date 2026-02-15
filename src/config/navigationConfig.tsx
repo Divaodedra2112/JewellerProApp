@@ -1,7 +1,6 @@
 import React from 'react';
 import HomeScreen from '../modules/main/Home/Home.screen';
 import SettingsScreen from '../modules/main/Settings/SettingsScreen';
-import NotificationScreen from '../modules/notification/NotificationScreen';
 import { HomeIcon, NotificationIcon as NotificationSVGIcon } from '../assets/icons/svgIcons/appSVGIcons';
 import { moderateScale } from '../utils/Responsive';
 import { defaultIconSizes } from '../utils/CommonStyles';
@@ -40,30 +39,5 @@ export const navigationModulesConfig: NavigationItem[] = [
     type: 'bottomTab',
     permissionKey: 'list',
   },
-  {
-    id: 'Notification',
-    name: 'Notification',
-    component: NotificationScreen,
-    icon: ({ color, focused }) => (
-      <NotificationIcon
-        icon={
-          <NotificationSVGIcon
-            width={
-              focused
-                ? moderateScale(defaultIconSizes.xmedium)
-                : moderateScale(defaultIconSizes.small)
-            }
-            height={
-              focused
-                ? moderateScale(defaultIconSizes.xmedium)
-                : moderateScale(defaultIconSizes.small)
-            }
-            color={color}
-          />
-        }
-      />
-    ),
-    type: 'bottomTab',
-    permissionKey: 'list',
-  },
+ 
 ];
