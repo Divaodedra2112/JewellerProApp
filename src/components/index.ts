@@ -21,7 +21,6 @@ import PermissionGate from './PermissionGate';
 
 // Navigation Components
 import CustomHeader from './CustomHeader/Header';
-import DrawerContent from './Drawer/DrawerContent';
 import LanguageSelector from './LanguageSelector/LanguageSelector';
 
 // Error Handling
@@ -49,7 +48,6 @@ export {
   PermissionGate,
   // Navigation
   CustomHeader,
-  DrawerContent,
   LanguageSelector,
   // Error Handling
   ErrorBoundary,

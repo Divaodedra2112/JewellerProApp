@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, Text, TouchableOpacity, View, AppState } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation, useFocusEffect, DrawerActions } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './NotificationScreenStyle';
 import { getNotifications, markNotificationAsRead } from './notificationService';
@@ -182,9 +182,7 @@ const NotificationScreen = () => {
       <View style={{ paddingHorizontal: moderateScale(11) }}>
         <CustomHeader
           title="Notification"
-          showBackButton={true}
-          backIcon={<HamburgerMenuIcon width={24} height={24} color={colors.Gray80} />}
-          onBackPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+          showBackButton={false}
         />
       </View>
 
