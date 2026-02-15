@@ -27,7 +27,7 @@ import packageJson from '../../../../package.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestAllPermissions } from '../../../utils/permissionModule';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { ArrowRightIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
+import { ArrowRightIcon, EyeIcon, EyeOffIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 
 const PERMISSIONS_REQUESTED_KEY = '@permissions_requested';
 
@@ -248,11 +248,11 @@ export const LoginScreen = () => {
             style={{ padding: scale(8) }}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Icon
-              name={showPassword ? 'visibility' : 'visibility-off'}
-              size={scale(24)}
-              color={colors.gray1000}
-            />
+            {showPassword ? (
+              <EyeIcon width={scale(24)} height={scale(24)} color={colors.gray1000} />
+            ) : (
+              <EyeOffIcon width={scale(24)} height={scale(24)} color={colors.gray1000} />
+            )}
           </TouchableOpacity>
         </View>
         {errors.password && (

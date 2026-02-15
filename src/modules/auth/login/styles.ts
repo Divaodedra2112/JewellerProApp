@@ -53,8 +53,8 @@ export const styles: Styles = StyleSheet.create({
     marginBottom: verticalScale(32),
   },
   logo: {
-    width: scale(110),
-    height: verticalScale(110),
+    width: scale(64),
+    height: verticalScale(64),
     resizeMode: 'contain',
   },
   title: {},
@@ -116,9 +116,19 @@ export const styles: Styles = StyleSheet.create({
     borderRadius: moderateScale(50),
     borderWidth: 1,
     borderColor: colors.gray100,
+    borderTopWidth: 0,
     paddingHorizontal: scale(20),
     marginTop: verticalScale(8),
     gap: scale(10),
+    // Shadow properties: X: 0, Y: 1, Blur: 2, Spread: 0, Color: #000000, Opacity: 8%
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2, // For Android
   },
   countryCode: {
     fontSize: scale(16),
@@ -164,7 +174,7 @@ export const styles: Styles = StyleSheet.create({
     color: colors.gray1000,
   },
   titleText: {
-    fontSize: scale(28),
+    fontSize: scale(24),
     fontWeight: '700',
     color: '#173051',
     fontFamily: Fonts.bold,
