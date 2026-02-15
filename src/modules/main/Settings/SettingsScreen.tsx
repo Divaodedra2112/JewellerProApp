@@ -2,7 +2,6 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 import { AppText } from '../../../components/AppText/AppText';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { styles } from './styles';
@@ -15,13 +14,12 @@ import {
   ChevronRightIcon,
 } from '../../../assets/icons/svgIcons/appSVGIcons';
 import { logoutAppAction } from '../../../modules/auth/login/loginActions';
-import { scale, verticalScale } from '../../../utils/Responsive';
+import { scale } from '../../../utils/Responsive';
 import { colors } from '../../../utils/theme';
 
 const SettingsScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const handleLogout = () => {
     dispatch(logoutAppAction());
@@ -123,25 +121,21 @@ const SettingsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.sideMargin} />
-      <View style={styles.mainContent}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.content}>
-            <AppText variant={TEXT_VARIANTS.h1} style={styles.title}>
-              {t('settings.title', 'Settings')}
-            </AppText>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.content}>
+          <AppText variant={TEXT_VARIANTS.h1} style={styles.title}>
+            {t('settings.title', 'Settings')}
+          </AppText>
 
-            <View style={styles.settingsList}>
-              {settingsItems.map(renderSettingsItem)}
-            </View>
+          <View style={styles.settingsList}>
+            {settingsItems.map(renderSettingsItem)}
           </View>
-        </ScrollView>
-      </View>
-      <View style={styles.sideMargin} />
+        </View>
+      </ScrollView>
     </View>
   );
 };

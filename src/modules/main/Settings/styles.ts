@@ -4,8 +4,6 @@ import { colors, Fonts } from '../../../utils/theme';
 
 type Styles = {
   container: ViewStyle;
-  sideMargin: ViewStyle;
-  mainContent: ViewStyle;
   scrollView: ViewStyle;
   scrollContent: ViewStyle;
   content: ViewStyle;
@@ -19,15 +17,6 @@ type Styles = {
 
 export const styles: Styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: colors.background,
-  },
-  sideMargin: {
-    width: scale(12),
-    backgroundColor: '#9CA3AF', // Dark gray background matching Figma
-  },
-  mainContent: {
     flex: 1,
     backgroundColor: colors.white,
   },
