@@ -14,6 +14,7 @@ import { moderateScale } from '../../utils/Responsive';
 import FloatingActionButton from '../../components/FloatingActionButton/FloatingActionButton';
 import { useFloatingActions } from '../../hooks/useFloatingActions';
 import NoResultsFoundScreen from '../UtilityScreens/NoResultsFoundScreen';
+import { logger } from '../../utils/logger';
 
 interface Notification {
   id: string;
@@ -105,7 +106,7 @@ const NotificationScreen = () => {
         setHasMore(result.currentPage < result.totalPages);
         dispatch(setUnreadCount(result.unreadCount));
       } catch (e) {
-        console.error('Failed to fetch notifications:', e);
+        logger.error('Failed to fetch notifications', e as Error);
       } finally {
         setLoading(false);
         if (isRefresh) {
@@ -134,7 +135,7 @@ const NotificationScreen = () => {
       try {
         await markNotificationAsRead(item.id);
       } catch (e) {
-        console.error('Failed to mark notification as read:', e);
+        logger.error('Failed to mark notification as read', e as Error);
       }
     }
 

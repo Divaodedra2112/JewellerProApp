@@ -38,21 +38,21 @@ export const fetchPermissionCatalog = createAsyncThunk(
 
       // If catalog is already loaded, return it without API call
       if (state.permission.catalog.length > 0) {
-        console.log('[RBAC][Permissions] Catalog already loaded, using cached version');
+        logger.debug('RBAC - Catalog already loaded, using cached version');
         return state.permission.catalog;
       }
 
       if (!getCatalogImpl) throw new Error('RBAC catalog fetcher not configured');
-      console.log('[RBAC][Permissions] Fetching /permission/list from server...');
+      logger.debug('RBAC - Fetching /permission/list from server');
       const response = await getCatalogImpl();
-      console.log('[RBAC][Permissions] /permission/list raw response:', response);
+      logger.debug('RBAC - /permission/list raw response', undefined, response);
       if (!response?.isSuccess || !Array.isArray(response.data)) {
         throw new Error('Invalid permission catalog response');
       }
-      console.log('[RBAC][Permissions] Catalog fetched and cached. Size:', response.data.length);
+      logger.debug('RBAC - Catalog fetched and cached', undefined, { size: response.data.length });
       return response.data;
     } catch (error: any) {
-      console.error('[RBAC][Permissions] Catalog fetch failed:', error?.message || error);
+      logger.error('RBAC - Catalog fetch failed', error as Error);
       return rejectWithValue(error?.message || 'Failed to fetch permission catalog');
     }
   }

@@ -1,5 +1,6 @@
 import { setUnreadCount } from '../store/slices/notificationSlice';
 import { getNotifications } from '../modules/notification/notificationService';
+import { logger } from '../utils/logger';
 
 type AppDispatch = any;
 
@@ -10,9 +11,7 @@ export const prefetchNotifications = () => {
       const unread = typeof res?.unreadCount === 'number' ? res.unreadCount : 0;
       dispatch(setUnreadCount(unread));
     } catch (err) {
-      if (__DEV__) {
-        console.warn('prefetchNotifications failed:', err);
-      }
+      logger.warn('prefetchNotifications failed', err as Error);
     }
   };
 };

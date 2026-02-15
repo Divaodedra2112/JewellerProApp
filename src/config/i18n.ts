@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from '../locales/en.json';
 import gu from '../locales/gu.json';
 import hi from '../locales/hi.json';
+import { logger } from '../utils/logger';
 
 // Language codes
 export type LanguageCode = 'en' | 'gu' | 'hi';
@@ -14,7 +15,7 @@ const getSavedLanguage = async (): Promise<LanguageCode> => {
     const saved = await AsyncStorage.getItem('userLanguage');
     return (saved as LanguageCode) || 'en';
   } catch (error) {
-    console.error('Error loading saved language:', error);
+    logger.error('Error loading saved language', error as Error);
     return 'en';
   }
 };

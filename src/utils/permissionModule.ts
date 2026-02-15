@@ -1,5 +1,6 @@
 import { Platform, Alert, Linking } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS, Permission, PermissionStatus } from 'react-native-permissions';
+import { logger } from './logger';
 
 export type PermissionStatusResult = {
   status: PermissionStatus;
@@ -19,7 +20,7 @@ export const requestCameraPermission = async (): Promise<boolean> => {
     const result = await request(permission);
     return result === RESULTS.GRANTED;
   } catch (error) {
-    console.error('Error requesting camera permission:', error);
+    logger.error('Error requesting camera permission', error as Error);
     return false;
   }
 };
@@ -41,7 +42,7 @@ export const checkCameraPermissionStatus = async (): Promise<PermissionStatusRes
       blocked: result === RESULTS.BLOCKED,
     };
   } catch (error) {
-    console.error('Error checking camera permission:', error);
+    logger.error('Error checking camera permission', error as Error);
     return { status: RESULTS.DENIED, blocked: false };
   }
 };
@@ -61,7 +62,7 @@ export const requestStoragePermission = async (): Promise<boolean> => {
     const result = await request(permission);
     return result === RESULTS.GRANTED;
   } catch (error) {
-    console.error('Error requesting storage permission:', error);
+    logger.error('Error requesting storage permission', error as Error);
     return false;
   }
 };
@@ -85,7 +86,7 @@ export const checkStoragePermissionStatus = async (): Promise<PermissionStatusRe
       blocked: result === RESULTS.BLOCKED,
     };
   } catch (error) {
-    console.error('Error checking storage permission:', error);
+    logger.error('Error checking storage permission', error as Error);
     return { status: RESULTS.DENIED, blocked: false };
   }
 };
@@ -103,7 +104,7 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
     const result = await request(permission);
     return result === RESULTS.GRANTED;
   } catch (error) {
-    console.error('Error requesting notification permission:', error);
+    logger.error('Error requesting notification permission', error as Error);
     return false;
   }
 };
@@ -125,7 +126,7 @@ export const checkNotificationPermissionStatus = async (): Promise<PermissionSta
       blocked: result === RESULTS.BLOCKED,
     };
   } catch (error) {
-    console.error('Error checking notification permission:', error);
+    logger.error('Error checking notification permission', error as Error);
     return { status: RESULTS.DENIED, blocked: false };
   }
 };
@@ -135,7 +136,7 @@ export const openAppSettings = async (): Promise<void> => {
   try {
     await Linking.openSettings();
   } catch (error) {
-    console.error('Error opening app settings:', error);
+    logger.error('Error opening app settings', error as Error);
   }
 };
 

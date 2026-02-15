@@ -50,20 +50,7 @@ export const useNotificationQueue = () => {
         const updatedLogs = [...currentLogs, log].slice(-100);
         await AsyncStorage.setItem(LOGS_STORAGE_KEY, JSON.stringify(updatedLogs));
       } catch (error) {
-        console.error('Error saving logs:', error);
-      }
-
-      if (__DEV__) {
-        switch (type) {
-          case 'error':
-            console.error(`[NotificationQueue] ${message}`, data);
-            break;
-          case 'warn':
-            console.warn(`[NotificationQueue] ${message}`, data);
-            break;
-          default:
-            console.log(`[NotificationQueue] ${message}`, data);
-        }
+        // Silently fail - logging errors shouldn't break the app
       }
     },
     []
@@ -78,7 +65,7 @@ export const useNotificationQueue = () => {
           setLogs(JSON.parse(storedLogs));
         }
       } catch (error) {
-        console.error('Error loading logs:', error);
+        // Silently fail - loading logs shouldn't break the app
       }
     };
     loadLogs();
@@ -145,14 +132,6 @@ export const useNotificationQueue = () => {
         const updatedQueue = [...prevQueue, newNotification];
         saveQueue(updatedQueue);
 
-        console.log('🔔 [NOTIFICATION QUEUED] Added notification to queue:', {
-          title: notification.title,
-          body: notification.body,
-          type: notification.type,
-          totalInQueue: updatedQueue.length,
-          timestamp: new Date(notification.timestamp).toISOString(),
-        });
-
         addLog(`Added notification to queue. Total in queue: ${updatedQueue.length}`, 'info', {
           title: notification.title,
           type: notification.type,
@@ -194,13 +173,6 @@ export const useNotificationQueue = () => {
             timestamp: new Date(notification.timestamp).toISOString(),
           });
 
-          console.log('🔔 [NOTIFICATION DISPLAY] Showing notification to user:', {
-            title: notification.title,
-            body: notification.body,
-            type: notification.type,
-            timestamp: new Date(notification.timestamp).toISOString(),
-          });
-
           await notifee.displayNotification({
             title: notification.title,
             body: notification.body,
@@ -228,8 +200,6 @@ export const useNotificationQueue = () => {
               }),
             },
           });
-
-          console.log('🔔 [NOTIFICATION DISPLAY] Notification displayed successfully!');
 
           if (notification.data) {
             handleNotificationNavigation(notification.data);

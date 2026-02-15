@@ -111,7 +111,7 @@ export const sendChatNotification = async ({
     logger.error('Error sending chat notification', error as Error);
     if (error.response) {
       logger.error('Chat notification response error', new Error('Response error'), error.response.data);
-      console.error('[NotificationService] Response status:', error.response.status);
+      logger.error('NotificationService - Response status', new Error('Response error'), { status: error.response.status });
     }
     throw error;
   }

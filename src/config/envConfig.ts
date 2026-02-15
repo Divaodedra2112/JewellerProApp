@@ -4,6 +4,7 @@
  * TODO: Replace with your API URLs
  * You can use environment variables or hardcode based on your needs
  */
+import { logger } from '../utils/logger';
 
 // API Configuration
 export const API_BASE_URL = __DEV__
@@ -25,7 +26,7 @@ export const ENVIRONMENT = __DEV__ ? 'development' : 'production';
 
 // Log configuration in development
 if (__DEV__) {
-  console.log('[EnvConfig] Configuration loaded:', {
+  logger.debug('EnvConfig - Configuration loaded', undefined, {
     API_BASE_URL,
     ENVIRONMENT,
     ENABLE_LOGGING,

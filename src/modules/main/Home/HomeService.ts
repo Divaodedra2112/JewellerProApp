@@ -1,5 +1,6 @@
 import { get } from '../../../services/api';
 import { HomeResponse } from './HomeTypes';
+import { logger } from '../../../utils/logger';
 
 export const getDashboardData = async () => {
   try {
@@ -11,17 +12,9 @@ export const getDashboardData = async () => {
 
     return response.data;
   } catch (error: any) {
-    console.error('❌ Home Service - Error:', {
+    logger.error('Home Service - Error fetching dashboard data', error as Error, {
       endpoint: '/dashboard',
       method: 'GET',
-      error: {
-        message: error?.message,
-        status: error?.response?.status,
-        statusText: error?.response?.statusText,
-        data: error?.response?.data,
-        stack: error?.stack,
-      },
-      timestamp: new Date().toISOString(),
     });
     throw error;
   }
