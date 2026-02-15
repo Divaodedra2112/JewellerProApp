@@ -56,7 +56,7 @@ export const styles: Styles = StyleSheet.create({
   logo: {
     width: scale(64),
     height: verticalScale(64),
-    resizeMode: 'contain',
+    resizeMode: 'contain' as const,
   },
   title: {},
   phoneRow: {

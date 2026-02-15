@@ -11,7 +11,6 @@ import CustomHeader from '../../components/CustomHeader/Header';
 import { AppLoader } from '../../components/AppLoader';
 import { colors } from '../../utils/theme';
 import { moderateScale } from '../../utils/Responsive';
-import FloatingActionButton from '../../components/FloatingActionButton/FloatingActionButton';
 import { useFloatingActions } from '../../hooks/useFloatingActions';
 import NoResultsFoundScreen from '../UtilityScreens/NoResultsFoundScreen';
 import { logger } from '../../utils/logger';
@@ -242,7 +241,6 @@ const NotificationScreen = () => {
         onRefresh={handleRefresh}
       />
       {/* Floating Action Button */}
-      <FloatingActionButton actions={floatingActions} />
     </View>
   );
 };

@@ -10,20 +10,21 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAppAction } from './loginActions';
 import { RootState } from '../../../store';
 import { styles } from './styles';
-import { AppImage } from '../../../components';
+import { AppImage, SuccessOverlay } from '../../../components';
 import { Images } from '../../../utils';
 import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
+import { logger } from '../../../utils/logger';
 const LOGIN_LOGO = require('../../../assets/images/JP-Logo.png');
 import { verticalScale, isTab, scale } from '../../../utils/Responsive';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { AppText } from '../../../components/AppText/AppText';
 import { colors } from '../../../utils/theme';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ArrowRightIcon, EyeIcon, EyeOffIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 
 export const LoginScreen = () => {
@@ -38,6 +39,7 @@ export const LoginScreen = () => {
     mobileNumber?: string;
     password?: string;
   }>({});
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const dispatch = useDispatch();
   const { loading } = useSelector((state: RootState) => state.auth);
   const countryCode = '91'; // Fixed country code
@@ -98,37 +100,46 @@ export const LoginScreen = () => {
       );
 
       if (loginAppAction.fulfilled.match(result)) {
-        showToast(TOAST_TYPE.SUCCESS, TOAST_MESSAGES.AUTH.LOGIN_SUCCESS);
+        logger.info('Login Screen - Login successful', {
+          userId: (result.payload as any)?.userId,
+        });
+        // Show success overlay
+        setShowSuccessOverlay(true);
         // Navigation will be handled by the auth state change
       } else if (loginAppAction.rejected.match(result)) {
-        const payload = result.payload as string;
+        const errorPayload = result.payload as string;
+        logger.error('Login Screen - Login rejected', new Error(errorPayload), {
+          errorPayload,
+          errorType: typeof errorPayload,
+        });
         let errorMessage: string = TOAST_MESSAGES.AUTH.LOGIN_FAILED;
 
         // Handle specific error codes
-        if (payload === 'INVALID_CREDENTIALS' || payload === 'INVALID_MOBILE_NUMBER_OR_PASSWORD') {
+        if (errorPayload === 'INVALID_CREDENTIALS' || errorPayload === 'INVALID_MOBILE_NUMBER_OR_PASSWORD') {
           errorMessage = TOAST_MESSAGES.AUTH.INVALID_CREDENTIALS;
-        } else if (payload === 'USER_NOT_FOUND' || payload === 'MOBILE_NOT_FOUND') {
+        } else if (errorPayload === 'USER_NOT_FOUND' || errorPayload === 'MOBILE_NOT_FOUND') {
           errorMessage = TOAST_MESSAGES.AUTH.USER_NOT_FOUND;
-        } else if (payload === 'INVALID_PASSWORD' || payload === 'WRONG_PASSWORD') {
+        } else if (errorPayload === 'INVALID_PASSWORD' || errorPayload === 'WRONG_PASSWORD') {
           errorMessage = TOAST_MESSAGES.AUTH.INVALID_PASSWORD;
-        } else if (payload === 'ACCOUNT_LOCKED') {
+        } else if (errorPayload === 'ACCOUNT_LOCKED') {
           errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_LOCKED;
-        } else if (payload === 'ACCOUNT_SUSPENDED') {
+        } else if (errorPayload === 'ACCOUNT_SUSPENDED') {
           errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_SUSPENDED;
-        } else if (payload === 'SESSION_EXPIRED') {
+        } else if (errorPayload === 'SESSION_EXPIRED') {
           errorMessage = TOAST_MESSAGES.AUTH.SESSION_EXPIRED;
-        } else if (payload === 'NETWORK_ERROR' || payload === 'ERR_NETWORK') {
+        } else if (errorPayload === 'NETWORK_ERROR' || errorPayload === 'ERR_NETWORK' || errorPayload === 'Network Error') {
           errorMessage = TOAST_MESSAGES.AUTH.NETWORK_ERROR;
-        } else if (payload === 'SERVER_ERROR' || payload?.includes('500')) {
+        } else if (errorPayload === 'SERVER_ERROR' || errorPayload?.includes('500')) {
           errorMessage = TOAST_MESSAGES.AUTH.SERVER_ERROR;
-        } else if (payload) {
+        } else if (errorPayload) {
           // Use the error code as message if it's a known error
-          errorMessage = payload;
+          errorMessage = errorPayload;
         }
 
         showToast(TOAST_TYPE.ERROR, errorMessage);
       }
     } catch (error: any) {
+      logger.error('Login Screen - Exception during login', error as Error);
       const errorMessage =
         error?.message || error?.code || TOAST_MESSAGES.GENERIC.NETWORK_ERROR;
       showToast(TOAST_TYPE.ERROR, errorMessage);
@@ -218,7 +229,7 @@ export const LoginScreen = () => {
           activeOpacity={0.7}
         >
           {loading ? (
-            <Icon name="refresh" size={scale(20)} color={colors.white} />
+            <ActivityIndicator size="small" color={colors.white} />
           ) : (
             <>
               <AppText style={styles.signInButtonText}>Sign in</AppText>
@@ -255,6 +266,14 @@ export const LoginScreen = () => {
       ) : (
         <View style={styles.foregroundContent}>{content}</View>
       )}
+
+      {/* Success Overlay */}
+      <SuccessOverlay
+        visible={showSuccessOverlay}
+        message="You have logged in successfully"
+        onClose={() => setShowSuccessOverlay(false)}
+        autoCloseDelay={2000}
+      />
     </View>
   );
 };

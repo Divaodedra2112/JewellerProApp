@@ -18,6 +18,7 @@ import { sharePin } from './SharePin/SharePin';
 import { EmptyState } from './EmptyState/EmptyState';
 import NotAuthorized from './NotAuthorized/NotAuthorized';
 import PermissionGate from './PermissionGate';
+import { SuccessOverlay } from './SuccessOverlay';
 
 // Navigation Components
 import CustomHeader from './CustomHeader/Header';
@@ -46,6 +47,7 @@ export {
   EmptyState,
   NotAuthorized,
   PermissionGate,
+  SuccessOverlay,
   // Navigation
   CustomHeader,
   LanguageSelector,

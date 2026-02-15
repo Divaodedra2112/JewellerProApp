@@ -48,18 +48,20 @@ class Logger {
       const logMessage = `[${level}] ${message}`;
       const logData = error ? { error, data } : data;
 
+      // Use console.log for better visibility in React Native
+      // Format: [LEVEL] Message + Data
       switch (level) {
         case LogLevel.DEBUG:
-          console.debug(logMessage, logData || '');
+          console.log(`🔵 ${logMessage}`, logData || '');
           break;
         case LogLevel.INFO:
-          console.info(logMessage, logData || '');
+          console.log(`🟢 ${logMessage}`, logData || '');
           break;
         case LogLevel.WARN:
-          console.warn(logMessage, logData || '');
+          console.warn(`🟡 ${logMessage}`, logData || '');
           break;
         case LogLevel.ERROR:
-          console.error(logMessage, logData || '');
+          console.error(`🔴 ${logMessage}`, logData || '');
           break;
       }
     } else {

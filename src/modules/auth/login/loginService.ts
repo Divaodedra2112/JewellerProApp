@@ -1,4 +1,5 @@
 import { post } from '../../../services/api';
+import { logger } from '../../../utils/logger';
 
 export interface SendOtpResponse {
   isSuccess: boolean;
@@ -80,20 +81,25 @@ export interface LoginAppResponse {
 }
 
 export const loginApp = async (requestData: LoginAppRequest): Promise<LoginAppResponse> => {
-  const response = await post<LoginAppResponse>('/auth/login-app', requestData);
-  
-  // Check if the response indicates failure
-  if (response && response.code && response.code !== 'SUCCESS' && !response.isSuccess) {
-    const error: any = new Error(response.code || response.message || 'Failed to login');
-    error.response = {
-      data: {
-        code: response.code,
-        message: response.message,
-        isSuccess: false,
-      },
-    };
+  try {
+    const response = await post<LoginAppResponse>('/auth/login-app', requestData);
+    
+    // Check if the response indicates failure
+    if (response && response.code && response.code !== 'SUCCESS' && !response.isSuccess) {
+      const error: any = new Error(response.code || response.message || 'Failed to login');
+      error.response = {
+        data: {
+          code: response.code,
+          message: response.message,
+          isSuccess: false,
+        },
+      };
+      throw error;
+    }
+    
+    return response;
+  } catch (error: any) {
+    logger.error('Login Service - Error in loginApp', error as Error);
     throw error;
   }
-  
-  return response;
 };

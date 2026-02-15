@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { sendOtp, SendOtpResponse, loginApp, LoginAppRequest } from './loginService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setModules, setUser } from '../../../store/slices/authSlice';
+import { logger } from '../../../utils/logger';
 
 export const requestOtp = createAsyncThunk(
   'auth/requestOtp',
@@ -39,6 +40,7 @@ export const loginAppAction = createAsyncThunk(
       const userData = responseData?.user;
 
       if (!accessToken) {
+        logger.error('Login Action - No access token in response', new Error('No access token'));
         return rejectWithValue('No access token received from server');
       }
 
@@ -92,6 +94,14 @@ export const loginAppAction = createAsyncThunk(
         } : null,
       };
     } catch (error: any) {
+      // Check if it's a network error
+      const isNetworkError = (error as any)?.isNetworkError || error?.code === 'ERR_NETWORK' || error?.message === 'Network Error';
+      
+      if (isNetworkError) {
+        logger.error('Login Action - Network Error', error as Error);
+        return rejectWithValue('Network Error');
+      }
+      
       const errorCode = error?.response?.data?.code || error?.response?.data?.message || error?.message || 'LOGIN_FAILED';
       return rejectWithValue(errorCode);
     }

@@ -2,6 +2,7 @@ import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
 import { API_BASE_URL, API_TIMEOUT } from './envConfig';
+import { logger } from '../utils/logger';
 
 // Export API_URL as alias for API_BASE_URL for backward compatibility
 export const API_URL = API_BASE_URL;

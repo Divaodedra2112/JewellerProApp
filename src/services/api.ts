@@ -33,9 +33,28 @@ const api = axios.create({
   timeout: API_TIMEOUT,
 });
 
+// Log API configuration on startup (dev only)
+if (__DEV__) {
+  logger.debug('API Configuration Initialized', {
+    baseURL: `${API_URL}/api/${API_VERSION}`,
+    API_URL,
+    API_VERSION,
+    platform: Platform.OS,
+  });
+}
+
 // Request interceptor to add device id and platform headers
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Log the full URL being called (only in dev mode)
+    if (__DEV__) {
+      const fullUrl = `${config.baseURL}${config.url}`;
+      logger.debug('API Request', {
+        method: config.method?.toUpperCase() || 'UNKNOWN',
+        url: fullUrl,
+      });
+    }
+
     const isOtpEndpoint =
       typeof config.url === 'string' &&
       (config.url.includes('/auth/verify-pin') || config.url.includes('/auth/resend-otp'));
@@ -46,7 +65,6 @@ api.interceptors.request.use(
     }
     // Add dynamic device id and platform headers
     const deviceId = await DeviceInfo.getUniqueId();
-    const platform = Platform.OS;
     config.headers['x-current-device-id'] = deviceId;
     
     // Add x-login-type header for login-app and logout-app endpoints
@@ -75,9 +93,29 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response: AxiosResponse) => {
+    // Log successful responses
+    if (__DEV__) {
+      logger.debug('API Response Success', {
+        url: response.config.url,
+        status: response.status,
+      });
+    }
     return response;
   },
   async (error: AxiosError) => {
+    // Log all errors with full details
+    const originalRequest = error.config;
+    const fullUrl = originalRequest ? `${originalRequest.baseURL}${originalRequest.url}` : 'Unknown URL';
+    
+    logger.error('API Response Error', error as Error, {
+      url: originalRequest?.url || 'Unknown',
+      method: originalRequest?.method?.toUpperCase() || 'UNKNOWN',
+      fullURL: fullUrl,
+      status: error.response?.status,
+      errorMessage: error.message,
+      errorCode: (error as any)?.code,
+    });
+
     // Check for Response construction errors first (before accessing error properties)
     const errorMsg = (error as any)?.message || String(error);
     const errorName = (error as any)?.name || '';
@@ -90,18 +128,21 @@ api.interceptors.response.use(
       errorName === 'TypeError'
     ) {
       // Response construction error detected
+      logger.error('Response Construction Error Detected', new Error(errorMsg), {
+        fullURL: fullUrl,
+        platform: Platform.OS,
+      });
       const networkError = new Error(
         'Network Error: Unable to connect to server. Please check your internet connection.'
       );
       (networkError as any).isNetworkError = true;
       (networkError as any).code = (error as any)?.code;
+      (networkError as any).config = originalRequest;
       return Promise.reject(networkError);
     }
 
-    const originalRequest = error.config;
-
     if (!originalRequest) {
-      logger.error('No original request found');
+      logger.error('No original request found in error', error as Error);
       return Promise.reject(error);
     }
 
@@ -119,7 +160,16 @@ api.interceptors.response.use(
         const networkError = new Error(error?.message || 'Network Error');
         (networkError as any).isNetworkError = true;
         (networkError as any).code = error?.code;
-        (networkError as any).config = error.config;
+        (networkError as any).config = originalRequest || error.config;
+        
+        // Log network error details for debugging
+        if (__DEV__) {
+          logger.error('Network Error - Request failed', networkError as Error, {
+            url: originalRequest?.url || error.config?.url,
+            fullURL: originalRequest ? `${originalRequest.baseURL}${originalRequest.url}` : 'Unknown',
+          });
+        }
+        
         return Promise.reject(networkError);
       }
     }
@@ -207,6 +257,7 @@ api.interceptors.response.use(
 
 export const get = async <T>(url: string, params?: any): Promise<T | null> => {
   logger.logApiRequest(url, 'GET', params);
+  
 
   try {
     const response = await api.get<T>(url, {
@@ -227,7 +278,6 @@ export const get = async <T>(url: string, params?: any): Promise<T | null> => {
 
     logger.error(`GET ${url} failed`, error as Error, {
       status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
-      data: error?.response?.data,
       code: error?.code,
     });
 
@@ -240,6 +290,13 @@ export const get = async <T>(url: string, params?: any): Promise<T | null> => {
       const networkError = new Error(error?.message || 'Network Error');
       (networkError as any).isNetworkError = true;
       (networkError as any).code = error?.code;
+      (networkError as any).config = error.config;
+      
+      // Log network error details for debugging
+      if (__DEV__) {
+          logger.error(`GET ${url} - Network Error`, networkError as Error);
+      }
+      
       throw networkError;
     }
 
@@ -249,6 +306,7 @@ export const get = async <T>(url: string, params?: any): Promise<T | null> => {
 
 export const post = async <T>(url: string, data?: any): Promise<T | null> => {
   logger.logApiRequest(url, 'POST', data);
+  
 
   try {
     const response = await api.post<T>(url, data, {
@@ -286,7 +344,6 @@ export const post = async <T>(url: string, data?: any): Promise<T | null> => {
 
     logger.error(`POST ${url} failed`, error as Error, {
       status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
-      data: error?.response?.data,
       code: error?.code,
     });
 
@@ -300,6 +357,13 @@ export const post = async <T>(url: string, data?: any): Promise<T | null> => {
       const networkError = new Error(error?.message || 'Network Error');
       (networkError as any).isNetworkError = true;
       (networkError as any).code = error?.code;
+      (networkError as any).config = error.config;
+      
+      // Log network error details for debugging
+      if (__DEV__) {
+        logger.error(`POST ${url} - Network Error`, networkError as Error);
+      }
+      
       throw networkError;
     }
 
