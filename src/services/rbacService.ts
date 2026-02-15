@@ -1,12 +1,8 @@
-import { productPermissions } from '../modules/main/Products/permissions';
-import { chatPermissions } from '../modules/main/Chat/permissions';
-import { roadPermissions } from '../modules/main/Road/permissions';
+import { homePermissions } from '../modules/main/Home/permissions';
 import { EffectivePermissions, PermissionActionKey } from '../rbac/types';
 
 export type ModulePermissions = {
-  product: typeof productPermissions;
-  chat: typeof chatPermissions;
-  road: typeof roadPermissions;
+  home: typeof homePermissions;
   // Extend with other modules as you add their permissions.ts
 };
 

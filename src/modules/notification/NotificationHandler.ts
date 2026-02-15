@@ -18,8 +18,6 @@ let currentlyProcessing: { id: string | number; timestamp: number } | undefined 
 const PROCESSING_WINDOW_MS = 1000; // Block concurrent processing within 1 second
 
 export const handleNotificationNavigation = async (data: NotificationData) => {
-  console.log('[NOTIFICATION HANDLER] handleNotificationNavigation called!', data);
-  
   const id = (data as any).id ?? (data.data as any)?.id;
   const screen = (data.data as any)?.screen || (data as any).screen;
   const type = (data as any).type ?? (data.data as any)?.type;
@@ -36,7 +34,6 @@ export const handleNotificationNavigation = async (data: NotificationData) => {
     currentlyProcessing.id === notificationId &&
     now - currentlyProcessing.timestamp < PROCESSING_WINDOW_MS
   ) {
-    console.log('[NOTIFICATION HANDLER] Skipping - same notification already processing');
     return;
   }
   
@@ -57,13 +54,12 @@ export const handleNotificationNavigation = async (data: NotificationData) => {
     try {
       await markNotificationAsRead(notificationId);
     } catch (e) {
-      console.error('Failed to mark notification as read:', e);
+      // Failed to mark notification as read
     }
   }
 
   // Navigate to screen if provided
   if (screen) {
-    console.log('[NOTIFICATION HANDLER] Navigating to screen:', screen, 'with id:', id);
     (navigationRef.current as any)?.navigate(screen, id ? { id } : {});
     return;
   }
@@ -76,14 +72,8 @@ export const handleNotificationNavigation = async (data: NotificationData) => {
   const targetScreen = screenMapping[type ?? ''];
 
   if (!targetScreen) {
-    console.log('[NOTIFICATION HANDLER] No screen mapping found for type:', type);
     return;
   }
-
-  console.log('[NOTIFICATION HANDLER] Navigating to:', {
-    screen: targetScreen,
-    params: { id },
-  });
 
   navigationRef.current?.navigate(targetScreen as any, { id });
 };

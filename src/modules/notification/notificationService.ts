@@ -1,5 +1,6 @@
 import api from '../../services/api';
 import axios from 'axios';
+import { logger } from '../../utils/logger';
 
 interface Notification {
   id: string;
@@ -28,7 +29,6 @@ export const getNotifications = async (page = 1, limit = 10): Promise<Notificati
   try {
     const response = await api.post('/notification/list', { page, limit });
     const data = response?.data;
-    console.log('data', data);
     return {
       notifications: data?.data || [],
       unreadCount: data?.unreadCount || 0,
@@ -38,7 +38,6 @@ export const getNotifications = async (page = 1, limit = 10): Promise<Notificati
       limit: data?.limit || limit,
     };
   } catch (error) {
-    console.error('Failed to fetch notifications:', error);
     throw error;
   }
 };
@@ -51,7 +50,6 @@ export const markNotificationAsRead = async (id: string | number | null | undefi
     await api.put(`/notification/update/${id}`);
     return { success: true };
   } catch (error) {
-    console.error('Failed to mark notification as read:', error);
     throw error;
   }
 };
@@ -80,19 +78,6 @@ export const sendChatNotification = async ({
   mentionedUserIds?: string[];
 }) => {
   try {
-    console.log('[NotificationService] Sending notification with payload:', {
-      chatId,
-      senderId,
-      message,
-      participantsCount: participants.length,
-      participants: participants.map(p => ({
-        userId: p.userId,
-        name: p.name,
-        hasToken: !!p.fcmToken,
-      })),
-      groupName,
-    });
-
     // Use the deployed Cloud Function URL
     const url = 'https://sendchatnotification-gh7eew2wwq-uc.a.run.app';
     const payload = {
@@ -104,42 +89,28 @@ export const sendChatNotification = async ({
       mentionedUserIds,
     };
 
-    console.log('[NotificationService] Making request to:', url);
-    console.log('[NotificationService] Request payload:', payload);
-    console.log(
-      '[NotificationService] FCM tokens being sent:',
-      participants.map(p => ({
-        userId: p.userId,
-        name: p.name,
-        token: p.fcmToken?.substring(0, 20) + '...', // Show first 20 chars
-        tokenLength: p.fcmToken?.length,
-        isValidFormat: p.fcmToken?.includes(':') && p.fcmToken?.length > 100,
-      }))
-    );
+    logger.debug('Sending chat notification', {
+      chatId,
+      senderId,
+      participantsCount: participants.length,
+      groupName,
+    });
 
     const res = await axios.post(url, payload);
 
     try {
       const d = res.data as any;
       const meta = d?.response || d;
-      console.log('[NotificationService] Response received:', d);
-      console.log(
-        '[NotificationService] successCount:',
-        meta?.successCount,
-        'failureCount:',
-        meta?.failureCount
-      );
-      if (Array.isArray(meta?.responses)) {
-        meta.responses.forEach((r: any, i: number) => {
-          console.log(`[NotificationService] response[${i}]:`, r);
-        });
-      }
+      logger.debug('Chat notification response', {
+        successCount: meta?.successCount,
+        failureCount: meta?.failureCount,
+      });
     } catch {}
     return res.data;
   } catch (error) {
-    console.error('[NotificationService] Error sending chat notification:', error);
+    logger.error('Error sending chat notification', error as Error);
     if (error.response) {
-      console.error('[NotificationService] Response error:', error.response.data);
+      logger.error('Chat notification response error', new Error('Response error'), error.response.data);
       console.error('[NotificationService] Response status:', error.response.status);
     }
     throw error;

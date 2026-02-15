@@ -56,7 +56,6 @@ const HomeScreen = () => {
           <AppButton
             onPress={() => {
               // TODO: Add your action
-              console.log('Button pressed');
             }}
             style={styles.actionButton}>
             {t('home.getStarted') || 'Get Started'}

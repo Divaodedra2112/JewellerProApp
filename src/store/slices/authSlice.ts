@@ -70,14 +70,8 @@ const authSlice = createSlice({
         if (userId && refreshToken) {
           api
             .post('/auth/logout', { userId, refreshToken })
-            .then(response => {
-              console.log('[Auth] Logout API call successful:', response.data);
-            })
-            .catch(error => {
-              console.error(
-                '[Auth] Logout API call failed:',
-                error?.response?.data || error.message
-              );
+            .catch(() => {
+              // Logout API call failed silently
             });
         }
       });

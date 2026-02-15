@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   ImageBackground,
@@ -23,13 +23,8 @@ import { verticalScale, isTab, scale } from '../../../utils/Responsive';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { AppText } from '../../../components/AppText/AppText';
 import { colors } from '../../../utils/theme';
-import packageJson from '../../../../package.json';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { requestAllPermissions } from '../../../utils/permissionModule';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ArrowRightIcon, EyeIcon, EyeOffIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
-
-const PERMISSIONS_REQUESTED_KEY = '@permissions_requested';
 
 export const LoginScreen = () => {
   const { width, height } = useWindowDimensions();
@@ -46,51 +41,6 @@ export const LoginScreen = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state: RootState) => state.auth);
   const countryCode = '91'; // Fixed country code
-
-  // Request permissions on first login (using native system dialogs)
-  useEffect(() => {
-    const requestPermissionsIfNeeded = async () => {
-      try {
-        // For testing: To force request permissions every time, uncomment:
-        // await AsyncStorage.removeItem(PERMISSIONS_REQUESTED_KEY);
-
-        const hasRequested = await AsyncStorage.getItem(PERMISSIONS_REQUESTED_KEY);
-        console.log('[Login] ===== Permission Check =====');
-        console.log('[Login] Has requested before?', hasRequested);
-        console.log('[Login] Platform:', Platform.OS);
-        console.log('[Login] Permission key:', PERMISSIONS_REQUESTED_KEY);
-
-        if (!hasRequested) {
-          console.log('[Login] ✅ Permissions not requested yet, will request after 1 second...');
-          // Wait a bit for login screen to render
-          setTimeout(async () => {
-            try {
-              console.log('[Login] ===== Starting permission requests =====');
-              console.log('[Login] Calling requestAllPermissions()...');
-              const permissions = await requestAllPermissions();
-              console.log('[Login] ===== Permission requests completed =====');
-              console.log('[Login] Final permissions result:', JSON.stringify(permissions, null, 2));
-
-              // Mark as requested (even if some were denied)
-              await AsyncStorage.setItem(PERMISSIONS_REQUESTED_KEY, 'true');
-              console.log('[Login] ✅ Saved permission request flag to AsyncStorage');
-            } catch (error) {
-              console.error('[Login] ❌ Error in permission request timeout:', error);
-              console.error('[Login] Error details:', error instanceof Error ? error.stack : String(error));
-            }
-          }, 1000);
-        } else {
-          console.log('[Login] ⚠️ Permissions already requested previously, skipping...');
-          console.log('[Login] To test again, uncomment: await AsyncStorage.removeItem(PERMISSIONS_REQUESTED_KEY);');
-        }
-      } catch (error) {
-        console.error('[Login] ❌ Error checking permission status:', error);
-        console.error('[Login] Error details:', error instanceof Error ? error.stack : String(error));
-      }
-    };
-
-    requestPermissionsIfNeeded();
-  }, []);
 
   const handleMobileNumberChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, '');
@@ -214,7 +164,7 @@ export const LoginScreen = () => {
             keyboardType="phone-pad"
             maxLength={10}
             placeholder="Enter your phone number"
-            placeholderTextColor={colors.gray1000}
+            placeholderTextColor={colors.inputLabel}
             style={styles.phoneInput}
             cursorColor={colors.black}
             selectionColor={colors.black}
@@ -236,7 +186,7 @@ export const LoginScreen = () => {
             onChangeText={handlePasswordChange}
             secureTextEntry={!showPassword}
             placeholder="Enter your password"
-            placeholderTextColor={colors.gray1000}
+            placeholderTextColor={colors.inputLabel}
             style={[styles.phoneInput, { flex: 1 }]}
             cursorColor={colors.black}
             selectionColor={colors.black}
@@ -281,7 +231,7 @@ export const LoginScreen = () => {
       {/* App Version */}
       <View style={styles.versionContainer}>
         <AppText style={styles.versionText} variant={TEXT_VARIANTS.h4_small}>
-          Version {packageJson.version}
+          Version 1.0.0
         </AppText>
       </View>
     </ScrollView>

@@ -40,7 +40,8 @@ export const styles: Styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     width: '100%',
-    marginBottom: verticalScale(10),
+    justifyContent: 'space-between',
+    paddingBottom: verticalScale(20),
   },
   backgroundImage: {
     flex: 1,
@@ -63,8 +64,8 @@ export const styles: Styles = StyleSheet.create({
     alignItems: 'center',
   },
   phonePrefix: {
-    fontSize: 16,
-    marginRight: 8,
+    fontSize: scale(16),
+    marginRight: scale(8),
     color: colors.black,
   },
 
@@ -74,12 +75,11 @@ export const styles: Styles = StyleSheet.create({
     gap: verticalScale(0),
   },
   inputLabel: {
-    fontSize: scale(16),
-    fontWeight: '600',
+    fontSize: scale(14),
+    fontWeight: '500',
     marginLeft: scale(8),
-    marginBottom: verticalScale(8),
-    color: colors.textPrimary,
-    fontFamily: Fonts.semi_bold,
+    color: colors.inputLabel,
+    fontFamily: Fonts.medium,
   },
   input: {
     width: '100%',
@@ -112,22 +112,23 @@ export const styles: Styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: colors.white,
-    minHeight: 60,
+    minHeight: verticalScale(60),
     borderRadius: moderateScale(50),
     borderWidth: 1,
     borderColor: colors.gray100,
     borderTopWidth: 0,
     paddingHorizontal: scale(20),
+    marginBottom: verticalScale(4),
     marginTop: verticalScale(8),
     gap: scale(10),
     // Shadow properties: X: 0, Y: 1, Blur: 2, Spread: 0, Color: #000000, Opacity: 8%
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: verticalScale(1),
     },
     shadowOpacity: 0.08,
-    shadowRadius: 2,
+    shadowRadius: scale(2),
     elevation: 2, // For Android
   },
   countryCode: {
@@ -162,6 +163,8 @@ export const styles: Styles = StyleSheet.create({
   },
   versionContainer: {
     alignItems: 'center',
+    marginTop: 'auto',
+    paddingTop: verticalScale(20),
     paddingBottom: verticalScale(30),
   },
   versionText: {
@@ -192,7 +195,7 @@ export const styles: Styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: verticalScale(32),
     gap: scale(10),
-    minHeight: 56,
+    minHeight: verticalScale(56),
   },
   signInButtonText: {
     color: colors.white,

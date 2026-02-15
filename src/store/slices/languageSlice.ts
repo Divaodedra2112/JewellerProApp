@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LanguageCode } from '../../config/i18n';
+import { logger } from '../../utils/logger';
 
 interface LanguageState {
   currentLanguage: LanguageCode;
@@ -18,7 +19,7 @@ const languageSlice = createSlice({
       state.currentLanguage = action.payload;
       // Save to AsyncStorage
       AsyncStorage.setItem('userLanguage', action.payload).catch((error) => {
-        console.error('Error saving language preference:', error);
+        logger.error('Error saving language preference', error as Error);
       });
     },
     loadLanguage: (state, action: PayloadAction<LanguageCode>) => {

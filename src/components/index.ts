@@ -11,7 +11,6 @@ import AppModal from './AppModal/AppModal';
 import { AppLoader } from './AppLoader';
 
 // Layout Components
-import GridItem from './GridItem/GridItem';
 import AppListViewCard from './AppListViewCard/AppListViewCard';
 
 // Utility Components
@@ -42,7 +41,6 @@ export {
   AppModal,
   AppLoader,
   // Layout
-  GridItem,
   AppListViewCard,
   // Utility
   sharePin,

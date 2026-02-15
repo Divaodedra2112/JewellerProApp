@@ -30,7 +30,6 @@ type OTPScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'OT
 type OTPScreenRouteProp = RouteProp<AuthStackParamList, 'OTP'>;
 
 const OTP = () => {
-  console.log('Platform version+++++++:', Platform.OS, Platform.Version);
   const navigation = useNavigation<OTPScreenNavigationProp>();
   const route = useRoute<OTPScreenRouteProp>();
   const {phoneNumber} = route.params;
@@ -69,18 +68,14 @@ const OTP = () => {
     }
 
     try {
-      console.log('[PIN] Verifying PIN for phone:', phoneNumber, 'with PIN:', otp);
       const result = await dispatch(submitOtp({phoneNumber, otp}));
-      console.log('[PIN] submitOtp result:', result);
 
       if (submitOtp.fulfilled.match(result)) {
         // Reset failed attempts on successful verification
         setFailedAttempts(0);
         // FCM registration logic after PIN verification
         const {userId} = result.payload;
-        console.log('[PIN] PIN verified, userId:', userId);
         const granted = await requestNotificationPermission();
-        console.log('[OTP] Notification permission granted:', granted);
 
         // If permission was denied, check if it's blocked and show alert
         if (!granted) {
@@ -110,13 +105,13 @@ const OTP = () => {
                 vibration: true,
                 lights: true,
               });
-              console.log('[OTP] Notification channel created');
+              // Notification channel created
             } catch (e) {
-              console.error('[OTP] Error creating notification channel:', e);
+              // Error creating notification channel
             }
           }
           // Note: FCM token functionality removed - add your notification service here if needed
-          console.log('[OTP] Notification permission granted successfully');
+          // Notification permission granted successfully
         }
         // Fetch unread notification count after login
         try {
@@ -125,7 +120,7 @@ const OTP = () => {
           const notificationResult = await getNotifications();
           dispatch(setUnreadCount(notificationResult.unreadCount));
         } catch (e) {
-          console.error('[PIN] Failed to fetch unread notification count after login:', e);
+          // Failed to fetch unread notification count
         }
       } else if (submitOtp.rejected.match(result)) {
         const payload = result.payload as string;
@@ -158,7 +153,7 @@ const OTP = () => {
         }
 
         setError(errorMessage);
-        console.log('[PIN] PIN verification failed:', errorMessage);
+        // PIN verification failed
 
         // Clear PIN input, dismiss keyboard, don't auto-focus
         setAutoFocusOnClear(false);
@@ -171,7 +166,7 @@ const OTP = () => {
           ? TOAST_MESSAGES.GENERIC.NETWORK_ERROR
           : TOAST_MESSAGES.GENERIC.SOMETHING_WENT_WRONG;
       setError(errorMessage);
-      console.error('[PIN] Exception during PIN verification:', error);
+      // Exception during PIN verification
     } finally {
       setVerifying(false);
     }
