@@ -1,7 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GenericParamList } from '../types/navigation';
-import { colors } from '../utils/theme';
 import { moderateScale } from '../utils/Responsive';
 import Header from '../components/Header/Header';
 import { navigationModulesConfig, NavigationItem } from '../config/navigationConfig';
@@ -36,11 +35,34 @@ const BottomTabNavigator = () => {
           backgroundColor: 'transparent', // Transparent to show background from CustomTabBar
           elevation: 0,
           shadowOpacity: 0,
+          overflow: 'visible', // Allow active tab to show
         },
         tabBarButton: (props) => {
           const { children, onPress, accessibilityState } = props;
           const focused = accessibilityState?.selected ?? false;
           
+          if (focused) {
+            // Active tab - background is rendered separately in CustomTabBar
+            return (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={onPress}
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: moderateScale(8),
+                  paddingHorizontal: moderateScale(4),
+                  zIndex: 2, // Ensure content is above background
+                  elevation: 2,
+                }}
+              >
+                {children}
+              </TouchableOpacity>
+            );
+          }
+
+          // Inactive tabs - no background
           return (
             <TouchableOpacity
               activeOpacity={0.7}
@@ -49,33 +71,12 @@ const BottomTabNavigator = () => {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingVertical: moderateScale(6),
-                // Active tab background - oval white pill matching Figma
-                ...(focused && {
-                  backgroundColor: '#FFFFFF', // White background for active tab (matching Figma)
-                  borderRadius: moderateScale(25), // More oval/pill-shaped
-                  paddingHorizontal: moderateScale(16),
-                  paddingVertical: moderateScale(8),
-                  marginHorizontal: moderateScale(4),
-                  minHeight: moderateScale(48), // Ensure enough height for icon + text
-                  // Add shadow for depth
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.12,
-                  shadowRadius: 6,
-                  elevation: 4,
-                }),
+                paddingVertical: moderateScale(8),
+                paddingHorizontal: moderateScale(4),
+                backgroundColor: 'transparent',
               }}
             >
-              <View 
-                style={{ 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  width: '100%',
-                }}
-              >
-                {children}
-              </View>
+              {children}
             </TouchableOpacity>
           );
         },
@@ -96,18 +97,17 @@ const BottomTabNavigator = () => {
         tabBarIcon: ({ focused, color: _color }) => {
           // Find the tab config for this route
           const tab = bottomTabs.find(t => t.name === route.name);
-          // Use dark blue for focused (filled), white for unfocused (matching Figma exactly)
-          const iconColor = focused ? '#1E40AF' : '#FFFFFF';
+          // Use dark gray/blue for focused, white for unfocused (matching Figma exactly)
+          const iconColor = focused ? '#4B5563' : '#FFFFFF';
           return (
             <View 
               style={{ 
                 alignItems: 'center', 
                 justifyContent: 'center',
                 marginBottom: 0,
-                width: '100%',
               }}
             >
-              {tab?.icon?.({ color: iconColor, focused, fill: focused ? iconColor : 'none' })}
+              {tab?.icon?.({ color: iconColor, focused })}
             </View>
           );
         },
@@ -122,6 +122,8 @@ const BottomTabNavigator = () => {
           flex: 1,
           paddingVertical: 0, // Remove default padding
           paddingHorizontal: 0,
+          margin: 0,
+          backgroundColor: 'transparent', // Ensure no background override
         },
         tabBarIconStyle: {
           width: moderateScale(20),
