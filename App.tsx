@@ -74,21 +74,29 @@ const App = () => {
         }
 
         const token = await AsyncStorage.getItem('access_token');
-        if (token) {
-          store.dispatch(restoreToken(token));
+        // Only restore token if it exists and has valid format
+        // Token expiration will be validated by API on first call
+        if (token && token.trim().length > 0) {
+          // Basic validation: check if token looks like a JWT (has 3 parts separated by dots)
+          const tokenParts = token.split('.');
+          if (tokenParts.length === 3 && tokenParts[1].length > 0) {
+            // Token format is valid, restore it
+            // API will handle expiration validation on first request
+            store.dispatch(restoreToken(token));
 
-          // Try initial permission refresh if user already present (e.g., persisted)
-          try {
-            const state: any = store.getState();
-            const userPermissions = state?.auth?.user?.permissions;
-            if (userPermissions) {
-              await store.dispatch(fetchPermissionCatalog()).unwrap();
-              const catalog = store.getState().permission.catalog;
-              const effective = buildEffectivePermissions(userPermissions, catalog);
-              store.dispatch(setEffectivePermissions(effective));
+            // Try initial permission refresh if user already present (e.g., persisted)
+            try {
+              const state: any = store.getState();
+              const userPermissions = state?.auth?.user?.permissions;
+              if (userPermissions) {
+                await store.dispatch(fetchPermissionCatalog()).unwrap();
+                const catalog = store.getState().permission.catalog;
+                const effective = buildEffectivePermissions(userPermissions, catalog);
+                store.dispatch(setEffectivePermissions(effective));
+              }
+            } catch (e) {
+              console.warn('[RBAC] Initial permission refresh failed:', e);
             }
-          } catch (e) {
-            console.warn('[RBAC] Initial permission refresh failed:', e);
           }
         }
         store.dispatch(setInitializing(false));

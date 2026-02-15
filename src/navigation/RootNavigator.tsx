@@ -10,14 +10,11 @@ import OfflineScreen from '../modules/UtilityScreens/OfflineScreen';
 import UpdateRequiredScreen from '../modules/UtilityScreens/ForceUpdate/forceUpdateScreen';
 import { useNetworkConnectivity } from '../hooks/useNetworkConnectivity';
 import { View, AppState } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { restoreToken, setUser } from '../store/slices/authSlice';
 import { useForceUpdate } from '../modules/UtilityScreens/ForceUpdate/ForceUpdateAction';
 import { InitialAppLoader } from '../components/InitialAppLoader';
 import { initializeAppData } from '../services/InitializationService';
 import { setNavigationState, clearNavigationState } from '../store/slices/navigationSlice';
 import { navigationRef } from './navigationRef';
-import store from '../store';
 import { logger } from '../utils/logger';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -43,43 +40,10 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
   }, [token, dispatch]);
 
   useEffect(() => {
-    const checkToken = async () => {
-      try {
-        // TEMPORARY: Set mock token for testing bottom bar - Remove when backend is ready
-        const TESTING_MODE = true; // Set to false to restore normal auth flow
-        if (TESTING_MODE && !token) {
-          // Set a mock token and user to bypass authentication
-          dispatch(restoreToken('mock_token_for_testing'));
-          dispatch(setUser({
-            id: 1,
-            name: 'Test User',
-            firstName: 'Test',
-            lastName: 'User',
-            mobile: '9999999999',
-            email: 'test@example.com',
-            roles: [{
-              id: 1,
-              name: 'User',
-              permissions: {},
-              roleType: 'USER',
-            }],
-            permissions: {},
-          }));
-        } else {
-          const storedToken = await AsyncStorage.getItem('access_token');
-          if (storedToken && !token) {
-            dispatch(restoreToken(storedToken));
-          }
-        }
-        setIsInitialized(true);
-      } catch (error) {
-        logger.error('Error checking token', error as Error);
-        setIsInitialized(true);
-      }
-    };
-
-    checkToken();
-  }, [dispatch, token]);
+    // Token restoration is handled in App.tsx
+    // We just need to mark as initialized here
+    setIsInitialized(true);
+  }, []);
 
   // Initialize app data when token changes
   useEffect(() => {
@@ -152,8 +116,7 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
         }}
       >
         <Stack.Navigator screenOptions={screenOptions}>
-          {/* TEMPORARY: Bypass auth for testing bottom bar - Remove this when backend is ready */}
-          {false && !token ? (
+          {!token ? (
             <Stack.Screen
               name="Auth"
               component={AuthNavigator}
