@@ -11,6 +11,8 @@ import { AppText, TEXT_VARIANTS } from '../AppText/AppText';
 import { colors, Fonts } from '../../utils/theme';
 import { moderateScale, verticalScale } from '../../utils/Responsive';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AppImage from '../AppImage/AppImage';
+import { Images } from '../../utils';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -21,6 +23,18 @@ interface SuccessOverlayProps {
   autoCloseDelay?: number; // in milliseconds
   iconSize?: number;
   showCloseButton?: boolean;
+  // Confirmation mode props
+  isConfirmation?: boolean;
+  onPrimaryAction?: () => void;
+  onSecondaryAction?: () => void;
+  primaryLabel?: string;
+  secondaryLabel?: string;
+  primaryButtonColor?: string;
+  customIcon?: number; // Image source for custom icon
+  iconName?: string; // MaterialIcons icon name (e.g., 'logout', 'warning')
+  iconComponent?: React.ComponentType<{ color?: string; width?: number; height?: number }>; // SVG icon component
+  iconBackgroundColor?: string; // Background color for icon circle
+  iconColor?: string; // Color for the icon itself
 }
 
 export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
@@ -30,6 +44,17 @@ export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
   autoCloseDelay = 2000,
   iconSize,
   showCloseButton = false,
+  isConfirmation = false,
+  onPrimaryAction,
+  onSecondaryAction,
+  primaryLabel = 'Confirm',
+  secondaryLabel = 'Cancel',
+  primaryButtonColor,
+  customIcon,
+  iconName,
+  iconComponent,
+  iconBackgroundColor,
+  iconColor,
 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -67,8 +92,8 @@ export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
         }).start();
       }, 200);
 
-      // Auto close after delay
-      if (autoCloseDelay > 0 && onClose) {
+      // Auto close after delay (only if not in confirmation mode)
+      if (!isConfirmation && autoCloseDelay > 0 && onClose) {
         const timer = setTimeout(() => {
           handleClose();
         }, autoCloseDelay);
@@ -123,7 +148,7 @@ export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
       <TouchableOpacity
         activeOpacity={1}
         style={styles.backdrop}
-        onPress={showCloseButton ? undefined : handleClose}
+        onPress={isConfirmation || showCloseButton ? undefined : handleClose}
       >
         <Animated.View
           style={[
@@ -143,7 +168,7 @@ export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
           ]}
         >
           <View style={styles.card}>
-            {/* Success Icon */}
+            {/* Icon */}
             <Animated.View
               style={[
                 styles.iconContainer,
@@ -152,12 +177,42 @@ export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
                 },
               ]}
             >
-              <View style={[styles.iconCircle, { width: calculatedIconSize, height: calculatedIconSize }]}>
-                <Icon
-                  name="check"
-                  size={calculatedIconSize * 0.6}
-                  color={colors.white}
-                />
+              <View
+                style={[
+                  styles.iconCircle,
+                  {
+                    width: calculatedIconSize,
+                    height: calculatedIconSize,
+                    backgroundColor: iconBackgroundColor || colors.success,
+                  },
+                ]}
+              >
+                {iconComponent ? (
+                  (() => {
+                    const IconComponent = iconComponent;
+                    return (
+                      <IconComponent
+                        color={iconColor || colors.white}
+                        width={calculatedIconSize * 0.6}
+                        height={calculatedIconSize * 0.6}
+                      />
+                    );
+                  })()
+                ) : customIcon ? (
+                  <AppImage
+                    image={customIcon}
+                    mainStyle={{
+                      width: calculatedIconSize * 0.6,
+                      height: calculatedIconSize * 0.6,
+                    }}
+                  />
+                ) : (
+                  <Icon
+                    name={iconName || "check"}
+                    size={calculatedIconSize * 0.6}
+                    color={iconColor || colors.white}
+                  />
+                )}
               </View>
             </Animated.View>
 
@@ -169,8 +224,34 @@ export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
               {message}
             </AppText>
 
+            {/* Action Buttons (for confirmation mode) */}
+            {isConfirmation && (
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={onSecondaryAction || handleClose}
+                >
+                  <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.secondaryButtonText}>
+                    {secondaryLabel}
+                  </AppText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.button,
+                    styles.primaryButton,
+                    primaryButtonColor && { backgroundColor: primaryButtonColor },
+                  ]}
+                  onPress={onPrimaryAction}
+                >
+                  <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.primaryButtonText}>
+                    {primaryLabel}
+                  </AppText>
+                </TouchableOpacity>
+              </View>
+            )}
+
             {/* Close Button (optional) */}
-            {showCloseButton && (
+            {showCloseButton && !isConfirmation && (
               <TouchableOpacity
                 onPress={handleClose}
                 style={styles.closeButton}
@@ -260,6 +341,32 @@ const styles = StyleSheet.create({
     padding: moderateScale(8),
     borderRadius: moderateScale(20),
     backgroundColor: colors.gray50,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    marginTop: verticalScale(24),
+    gap: moderateScale(12),
+    width: '100%',
+  },
+  button: {
+    flex: 1,
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: moderateScale(20),
+    borderRadius: moderateScale(12),
+    backgroundColor: colors.gray100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryButton: {
+    backgroundColor: colors.primary,
+  },
+  secondaryButtonText: {
+    color: colors.textPrimary,
+    fontFamily: Fonts.medium,
+  },
+  primaryButtonText: {
+    color: colors.white,
+    fontFamily: Fonts.medium,
   },
 });
 

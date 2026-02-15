@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { AppText } from '../../../components/AppText/AppText';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
+import { SuccessOverlay } from '../../../components/SuccessOverlay/SuccessOverlay';
 import { styles } from './styles';
 import {
   ProfilIcon,
@@ -16,13 +17,24 @@ import {
 import { logoutAppAction } from '../../../modules/auth/login/loginActions';
 import { scale } from '../../../utils/Responsive';
 import { colors } from '../../../utils/theme';
+import { Images } from '../../../utils';
 
 const SettingsScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
     dispatch(logoutAppAction());
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   const handleProfilePress = () => {
@@ -136,6 +148,22 @@ const SettingsScreen = () => {
           </View>
         </View>
       </ScrollView>
+
+      {/* Logout Confirmation Overlay */}
+      <SuccessOverlay
+        visible={showLogoutModal}
+        message={t('settings.logoutConfirm', 'Are you sure you want to log out?')}
+        isConfirmation={true}
+        onPrimaryAction={handleConfirmLogout}
+        onSecondaryAction={handleCancelLogout}
+        primaryLabel={t('settings.logout', 'Log Out')}
+        secondaryLabel={t('common.cancel', 'Cancel')}
+        primaryButtonColor={colors.red}
+        iconComponent={LogoutSVGIcon}
+        iconBackgroundColor={colors.textPrimary}
+        iconColor={colors.white}
+        autoCloseDelay={0}
+      />
     </View>
   );
 };
