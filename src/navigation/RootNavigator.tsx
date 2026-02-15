@@ -18,6 +18,7 @@ import { initializeAppData } from '../services/InitializationService';
 import { setNavigationState, clearNavigationState } from '../store/slices/navigationSlice';
 import { navigationRef } from './navigationRef';
 import store from '../store';
+import { logger } from '../utils/logger';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -50,7 +51,7 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
         }
         setIsInitialized(true);
       } catch (error) {
-        console.error('Error checking token:', error);
+        logger.error('Error checking token', error as Error);
         setIsInitialized(true);
       }
     };
@@ -69,11 +70,11 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.match(/inactive|background/) && nextAppState === 'active' && token) {
-        console.log('App came to foreground');
+        logger.debug('App came to foreground');
         initializeAppData(dispatch);
       }
       if (nextAppState.match(/inactive|background/)) {
-        console.log('App went to background');
+        logger.debug('App went to background');
       }
       setAppState(nextAppState);
     });

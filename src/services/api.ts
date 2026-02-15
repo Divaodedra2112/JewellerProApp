@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import store from '../store';
 import { logout } from '../store/slices/authSlice';
+import { logger } from '../utils/logger';
 
 interface TokenResponse {
   access: {
@@ -32,9 +33,28 @@ const api = axios.create({
   timeout: API_TIMEOUT,
 });
 
+// Log API configuration on startup (dev only)
+if (__DEV__) {
+  logger.debug('API Configuration Initialized', {
+    baseURL: `${API_URL}/api/${API_VERSION}`,
+    API_URL,
+    API_VERSION,
+    platform: Platform.OS,
+  });
+}
+
 // Request interceptor to add device id and platform headers
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Log the full URL being called (only in dev mode)
+    if (__DEV__) {
+      const fullUrl = `${config.baseURL}${config.url}`;
+      logger.debug('API Request', {
+        method: config.method?.toUpperCase() || 'UNKNOWN',
+        url: fullUrl,
+      });
+    }
+
     const isOtpEndpoint =
       typeof config.url === 'string' &&
       (config.url.includes('/auth/verify-pin') || config.url.includes('/auth/resend-otp'));
@@ -45,7 +65,6 @@ api.interceptors.request.use(
     }
     // Add dynamic device id and platform headers
     const deviceId = await DeviceInfo.getUniqueId();
-    const platform = Platform.OS;
     config.headers['x-current-device-id'] = deviceId;
     
     // Add x-login-type header for login-app and logout-app endpoints
@@ -67,7 +86,6 @@ api.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
-    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -75,9 +93,29 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response: AxiosResponse) => {
+    // Log successful responses
+    if (__DEV__) {
+      logger.debug('API Response Success', {
+        url: response.config.url,
+        status: response.status,
+      });
+    }
     return response;
   },
   async (error: AxiosError) => {
+    // Log all errors with full details
+    const originalRequest = error.config;
+    const fullUrl = originalRequest ? `${originalRequest.baseURL}${originalRequest.url}` : 'Unknown URL';
+    
+    logger.error('API Response Error', error as Error, {
+      url: originalRequest?.url || 'Unknown',
+      method: originalRequest?.method?.toUpperCase() || 'UNKNOWN',
+      fullURL: fullUrl,
+      status: error.response?.status,
+      errorMessage: error.message,
+      errorCode: (error as any)?.code,
+    });
+
     // Check for Response construction errors first (before accessing error properties)
     const errorMsg = (error as any)?.message || String(error);
     const errorName = (error as any)?.name || '';
@@ -89,19 +127,22 @@ api.interceptors.response.use(
       errorName === 'RangeError' ||
       errorName === 'TypeError'
     ) {
-      console.error('[API Interceptor] Response construction error detected:', errorMsg, 'Error name:', errorName);
+      // Response construction error detected
+      logger.error('Response Construction Error Detected', new Error(errorMsg), {
+        fullURL: fullUrl,
+        platform: Platform.OS,
+      });
       const networkError = new Error(
         'Network Error: Unable to connect to server. Please check your internet connection.'
       );
       (networkError as any).isNetworkError = true;
       (networkError as any).code = (error as any)?.code;
+      (networkError as any).config = originalRequest;
       return Promise.reject(networkError);
     }
 
-    const originalRequest = error.config;
-
     if (!originalRequest) {
-      console.error('No original request found');
+      logger.error('No original request found in error', error as Error);
       return Promise.reject(error);
     }
 
@@ -119,7 +160,16 @@ api.interceptors.response.use(
         const networkError = new Error(error?.message || 'Network Error');
         (networkError as any).isNetworkError = true;
         (networkError as any).code = error?.code;
-        (networkError as any).config = error.config;
+        (networkError as any).config = originalRequest || error.config;
+        
+        // Log network error details for debugging
+        if (__DEV__) {
+          logger.error('Network Error - Request failed', networkError as Error, {
+            url: originalRequest?.url || error.config?.url,
+            fullURL: originalRequest ? `${originalRequest.baseURL}${originalRequest.url}` : 'Unknown',
+          });
+        }
+        
         return Promise.reject(networkError);
       }
     }
@@ -172,8 +222,7 @@ api.interceptors.response.use(
 
           return api(originalRequest);
         } catch (refreshError) {
-          console.error('=== Token Refresh Failed ===');
-          console.error('Error:', refreshError);
+          logger.error('Token Refresh Failed', refreshError as Error);
           if (axios.isAxiosError(refreshError)) {
           }
 
@@ -196,7 +245,7 @@ api.interceptors.response.use(
             return api(originalRequest);
           })
           .catch(err => {
-            console.error('Queued request failed:', err);
+            logger.error('Queued request failed', err as Error);
             return Promise.reject(err);
           });
       }
@@ -207,10 +256,8 @@ api.interceptors.response.use(
 );
 
 export const get = async <T>(url: string, params?: any): Promise<T | null> => {
-  console.log(`[GET ${url}] Request:`, {
-    params,
-    timestamp: new Date().toISOString(),
-  });
+  logger.logApiRequest(url, 'GET', params);
+  
 
   try {
     const response = await api.get<T>(url, {
@@ -218,11 +265,7 @@ export const get = async <T>(url: string, params?: any): Promise<T | null> => {
       signal: params?.signal,
     });
 
-    console.log(`[GET ${url}] Response:`, {
-      status: response.status,
-      data: response.data,
-      timestamp: new Date().toISOString(),
-    });
+    logger.logApiResponse(url, response.status, response.data);
 
     return response.data;
   } catch (error: any) {
@@ -233,14 +276,9 @@ export const get = async <T>(url: string, params?: any): Promise<T | null> => {
         error.code === 'ERR_NETWORK' ||
         error.code === 'ECONNABORTED');
 
-    console.error(`[GET ${url}] Error:`, {
-      error: {
-        message: error?.message,
-        status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
-        data: error?.response?.data,
-        code: error?.code,
-      },
-      timestamp: new Date().toISOString(),
+    logger.error(`GET ${url} failed`, error as Error, {
+      status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
+      code: error?.code,
     });
 
     if (error.name === 'AbortError') {
@@ -252,6 +290,13 @@ export const get = async <T>(url: string, params?: any): Promise<T | null> => {
       const networkError = new Error(error?.message || 'Network Error');
       (networkError as any).isNetworkError = true;
       (networkError as any).code = error?.code;
+      (networkError as any).config = error.config;
+      
+      // Log network error details for debugging
+      if (__DEV__) {
+          logger.error(`GET ${url} - Network Error`, networkError as Error);
+      }
+      
       throw networkError;
     }
 
@@ -260,21 +305,15 @@ export const get = async <T>(url: string, params?: any): Promise<T | null> => {
 };
 
 export const post = async <T>(url: string, data?: any): Promise<T | null> => {
-  console.log(`[POST ${url}] Request:`, {
-    data,
-    timestamp: new Date().toISOString(),
-  });
+  logger.logApiRequest(url, 'POST', data);
+  
 
   try {
     const response = await api.post<T>(url, data, {
       signal: data?.signal,
     });
 
-    console.log(`[POST ${url}] Response:`, {
-      status: response.status,
-      data: response.data,
-      timestamp: new Date().toISOString(),
-    });
+    logger.logApiResponse(url, response.status, response.data);
 
     return response.data;
   } catch (error: any) {
@@ -288,7 +327,7 @@ export const post = async <T>(url: string, data?: any): Promise<T | null> => {
       errorMsg.includes('status (0)') ||
       errorName === 'RangeError'
     ) {
-      console.error(`[POST ${url}] Response construction error detected:`, errorMsg);
+      logger.error(`POST ${url} - Response construction error`, new Error(errorMsg));
       const networkError = new Error(
         'Network Error: Unable to connect to server. Please check your internet connection.'
       );
@@ -303,18 +342,13 @@ export const post = async <T>(url: string, data?: any): Promise<T | null> => {
         error.code === 'ERR_NETWORK' ||
         error.code === 'ECONNABORTED');
 
-    console.error(`[POST ${url}] Error:`, {
-      error: {
-        message: error?.message,
-        status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
-        data: error?.response?.data,
-        code: error?.code,
-      },
-      timestamp: new Date().toISOString(),
+    logger.error(`POST ${url} failed`, error as Error, {
+      status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
+      code: error?.code,
     });
 
     if (error.name === 'AbortError') {
-      console.log(`[POST ${url}] Request aborted`);
+      logger.debug(`POST ${url} - Request aborted`);
       return null;
     }
 
@@ -323,6 +357,13 @@ export const post = async <T>(url: string, data?: any): Promise<T | null> => {
       const networkError = new Error(error?.message || 'Network Error');
       (networkError as any).isNetworkError = true;
       (networkError as any).code = error?.code;
+      (networkError as any).config = error.config;
+      
+      // Log network error details for debugging
+      if (__DEV__) {
+        logger.error(`POST ${url} - Network Error`, networkError as Error);
+      }
+      
       throw networkError;
     }
 
@@ -331,19 +372,12 @@ export const post = async <T>(url: string, data?: any): Promise<T | null> => {
 };
 
 export const put = async <T>(url: string, data: any): Promise<T> => {
-  console.log(`[PUT ${url}] Request:`, {
-    data,
-    timestamp: new Date().toISOString(),
-  });
+  logger.logApiRequest(url, 'PUT', data);
 
   try {
     const response = await api.put<T>(url, data);
 
-    console.log(`[PUT ${url}] Response:`, {
-      status: response.status,
-      data: response.data,
-      timestamp: new Date().toISOString(),
-    });
+    logger.logApiResponse(url, response.status, response.data);
 
     return response.data;
   } catch (error: any) {
@@ -354,14 +388,10 @@ export const put = async <T>(url: string, data: any): Promise<T> => {
         error.code === 'ERR_NETWORK' ||
         error.code === 'ECONNABORTED');
 
-    console.error(`[PUT ${url}] Error:`, {
-      error: {
-        message: error?.message,
-        status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
-        data: error?.response?.data,
-        code: error?.code,
-      },
-      timestamp: new Date().toISOString(),
+    logger.error(`PUT ${url} failed`, error as Error, {
+      status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
+      data: error?.response?.data,
+      code: error?.code,
     });
 
     // For network errors, create a proper error object without trying to construct Response
@@ -377,18 +407,12 @@ export const put = async <T>(url: string, data: any): Promise<T> => {
 };
 
 export const del = async <T>(url: string): Promise<T> => {
-  console.log(`[DELETE ${url}] Request:`, {
-    timestamp: new Date().toISOString(),
-  });
+  logger.logApiRequest(url, 'DELETE');
 
   try {
     const response = await api.delete<T>(url);
 
-    console.log(`[DELETE ${url}] Response:`, {
-      status: response.status,
-      data: response.data,
-      timestamp: new Date().toISOString(),
-    });
+    logger.logApiResponse(url, response.status, response.data);
 
     return response.data;
   } catch (error: any) {
@@ -399,14 +423,10 @@ export const del = async <T>(url: string): Promise<T> => {
         error.code === 'ERR_NETWORK' ||
         error.code === 'ECONNABORTED');
 
-    console.error(`[DELETE ${url}] Error:`, {
-      error: {
-        message: error?.message,
-        status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
-        data: error?.response?.data,
-        code: error?.code,
-      },
-      timestamp: new Date().toISOString(),
+    logger.error(`DELETE ${url} failed`, error as Error, {
+      status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
+      data: error?.response?.data,
+      code: error?.code,
     });
 
     // For network errors, create a proper error object without trying to construct Response
@@ -423,19 +443,12 @@ export const del = async <T>(url: string): Promise<T> => {
 
 // Add a new DELETE function that accepts data
 export const deleteWithData = async <T>(url: string, data?: any): Promise<T> => {
-  console.log(`[DELETE ${url}] Request:`, {
-    data,
-    timestamp: new Date().toISOString(),
-  });
+  logger.logApiRequest(url, 'DELETE', data);
 
   try {
     const response = await api.delete<T>(url, { data });
 
-    console.log(`[DELETE ${url}] Response:`, {
-      status: response.status,
-      data: response.data,
-      timestamp: new Date().toISOString(),
-    });
+    logger.logApiResponse(url, response.status, response.data);
 
     return response.data;
   } catch (error: any) {
@@ -446,14 +459,10 @@ export const deleteWithData = async <T>(url: string, data?: any): Promise<T> => 
         error.code === 'ERR_NETWORK' ||
         error.code === 'ECONNABORTED');
 
-    console.error(`[DELETE ${url}] Error:`, {
-      error: {
-        message: error?.message,
-        status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
-        data: error?.response?.data,
-        code: error?.code,
-      },
-      timestamp: new Date().toISOString(),
+    logger.error(`DELETE ${url} failed`, error as Error, {
+      status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
+      data: error?.response?.data,
+      code: error?.code,
     });
 
     // For network errors, create a proper error object without trying to construct Response

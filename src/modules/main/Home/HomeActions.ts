@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getDashboardData } from './HomeService';
+import { logger } from '../../../utils/logger';
 
 export const fetchDashboardData = createAsyncThunk(
   'home/fetchDashboardData',
@@ -8,10 +9,7 @@ export const fetchDashboardData = createAsyncThunk(
       const response = await getDashboardData();
       return response;
     } catch (error: any) {
-      console.error('❌ Home Actions - Fetch Error:', {
-        error: error?.response?.data || error?.message || error,
-        timestamp: new Date().toISOString(),
-      });
+      logger.error('Home Actions - Fetch Error', error as Error);
 
       return rejectWithValue(
         error?.response?.data?.message || error?.message || 'Failed to fetch dashboard data'

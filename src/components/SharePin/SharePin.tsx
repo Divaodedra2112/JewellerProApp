@@ -1,5 +1,6 @@
 import { Share, Platform } from 'react-native';
 import { showToast, TOAST_TYPE } from '../../utils/toast';
+import { logger } from '../../utils/logger';
 
 interface SharePinProps {
   pin: string | null;
@@ -81,7 +82,7 @@ export const sharePin = async ({ pin, mobile, staffName, roleName }: SharePinPro
       // No need to show error, user just cancelled
     }
   } catch (error: any) {
-    console.error('Error sharing PIN:', error);
+    logger.error('Error sharing PIN', error as Error);
     const errorMessage = error?.message || 'Failed to share PIN. Please try again.';
     showToast(TOAST_TYPE.ERROR, errorMessage);
   }

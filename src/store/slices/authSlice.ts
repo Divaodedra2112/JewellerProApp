@@ -64,19 +64,14 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: state => {
-      // Get access token from AsyncStorage before clearing
-      AsyncStorage.getItem('access_token').then(accessToken => {
-        if (accessToken) {
+      const userId = state.user?.id;
+      // Get refresh token from AsyncStorage
+      AsyncStorage.getItem('refresh_token').then(refreshToken => {
+        if (userId && refreshToken) {
           api
-            .post('/auth/logout-app', { access_token: accessToken })
-            .then(response => {
-              console.log('[Auth] Logout API call successful:', response.data);
-            })
-            .catch(error => {
-              console.error(
-                '[Auth] Logout API call failed:',
-                error?.response?.data || error.message
-              );
+            .post('/auth/logout', { userId, refreshToken })
+            .catch(() => {
+              // Logout API call failed silently
             });
         }
       });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   ImageBackground,
@@ -10,37 +10,28 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import { Text, Icon } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { AuthStackParamList } from '../../../types/navigation';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { loginAppAction } from './loginActions';
 import { RootState } from '../../../store';
 import { styles } from './styles';
-import { AppButton, AppImage } from '../../../components';
+import { AppImage, SuccessOverlay } from '../../../components';
 import { Images } from '../../../utils';
 import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
-import { verticalScale, isTab, scale, moderateScale } from '../../../utils/Responsive';
+import { logger } from '../../../utils/logger';
+const LOGIN_LOGO = require('../../../assets/images/JP-Logo.png');
+import { verticalScale, isTab, scale } from '../../../utils/Responsive';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { AppText } from '../../../components/AppText/AppText';
 import { colors } from '../../../utils/theme';
-import packageJson from '../../../../package.json';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { requestAllPermissions } from '../../../utils/permissionModule';
-
-type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
-
-const PERMISSIONS_REQUESTED_KEY = '@permissions_requested';
+import { ArrowRightIcon, EyeIcon, EyeOffIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 
 export const LoginScreen = () => {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const dynamicMarginTop = isTab || isLandscape ? verticalScale(50) : verticalScale(140);
 
-  const navigation = useNavigation<NavigationProp>();
-  const countryCode = '91'; // Fixed country code for India
   const [mobileNumber, setMobileNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -48,53 +39,10 @@ export const LoginScreen = () => {
     mobileNumber?: string;
     password?: string;
   }>({});
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const dispatch = useDispatch();
   const { loading } = useSelector((state: RootState) => state.auth);
-
-  // Request permissions on first login (using native system dialogs)
-  useEffect(() => {
-    const requestPermissionsIfNeeded = async () => {
-      try {
-        // For testing: To force request permissions every time, uncomment:
-        // await AsyncStorage.removeItem(PERMISSIONS_REQUESTED_KEY);
-
-        const hasRequested = await AsyncStorage.getItem(PERMISSIONS_REQUESTED_KEY);
-        console.log('[Login] ===== Permission Check =====');
-        console.log('[Login] Has requested before?', hasRequested);
-        console.log('[Login] Platform:', Platform.OS);
-        console.log('[Login] Permission key:', PERMISSIONS_REQUESTED_KEY);
-
-        if (!hasRequested) {
-          console.log('[Login] ✅ Permissions not requested yet, will request after 1 second...');
-          // Wait a bit for login screen to render
-          setTimeout(async () => {
-            try {
-              console.log('[Login] ===== Starting permission requests =====');
-              console.log('[Login] Calling requestAllPermissions()...');
-              const permissions = await requestAllPermissions();
-              console.log('[Login] ===== Permission requests completed =====');
-              console.log('[Login] Final permissions result:', JSON.stringify(permissions, null, 2));
-
-              // Mark as requested (even if some were denied)
-              await AsyncStorage.setItem(PERMISSIONS_REQUESTED_KEY, 'true');
-              console.log('[Login] ✅ Saved permission request flag to AsyncStorage');
-            } catch (error) {
-              console.error('[Login] ❌ Error in permission request timeout:', error);
-              console.error('[Login] Error details:', error instanceof Error ? error.stack : String(error));
-            }
-          }, 1000);
-        } else {
-          console.log('[Login] ⚠️ Permissions already requested previously, skipping...');
-          console.log('[Login] To test again, uncomment: await AsyncStorage.removeItem(PERMISSIONS_REQUESTED_KEY);');
-        }
-      } catch (error) {
-        console.error('[Login] ❌ Error checking permission status:', error);
-        console.error('[Login] Error details:', error instanceof Error ? error.stack : String(error));
-      }
-    };
-
-    requestPermissionsIfNeeded();
-  }, []);
+  const countryCode = '91'; // Fixed country code
 
   const handleMobileNumberChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, '');
@@ -152,37 +100,46 @@ export const LoginScreen = () => {
       );
 
       if (loginAppAction.fulfilled.match(result)) {
-        // Don't show toast here, navigation will happen automatically via RootNavigator
-        // The token is already stored and Redux state is updated
+        logger.info('Login Screen - Login successful', {
+          userId: (result.payload as any)?.userId,
+        });
+        // Show success overlay
+        setShowSuccessOverlay(true);
+        // Navigation will be handled by the auth state change
       } else if (loginAppAction.rejected.match(result)) {
-        const payload = result.payload as string;
+        const errorPayload = result.payload as string;
+        logger.error('Login Screen - Login rejected', new Error(errorPayload), {
+          errorPayload,
+          errorType: typeof errorPayload,
+        });
         let errorMessage: string = TOAST_MESSAGES.AUTH.LOGIN_FAILED;
 
         // Handle specific error codes
-        if (payload === 'INVALID_CREDENTIALS' || payload === 'INVALID_MOBILE_NUMBER_OR_PASSWORD') {
+        if (errorPayload === 'INVALID_CREDENTIALS' || errorPayload === 'INVALID_MOBILE_NUMBER_OR_PASSWORD') {
           errorMessage = TOAST_MESSAGES.AUTH.INVALID_CREDENTIALS;
-        } else if (payload === 'USER_NOT_FOUND' || payload === 'MOBILE_NOT_FOUND') {
+        } else if (errorPayload === 'USER_NOT_FOUND' || errorPayload === 'MOBILE_NOT_FOUND') {
           errorMessage = TOAST_MESSAGES.AUTH.USER_NOT_FOUND;
-        } else if (payload === 'INVALID_PASSWORD' || payload === 'WRONG_PASSWORD') {
+        } else if (errorPayload === 'INVALID_PASSWORD' || errorPayload === 'WRONG_PASSWORD') {
           errorMessage = TOAST_MESSAGES.AUTH.INVALID_PASSWORD;
-        } else if (payload === 'ACCOUNT_LOCKED') {
+        } else if (errorPayload === 'ACCOUNT_LOCKED') {
           errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_LOCKED;
-        } else if (payload === 'ACCOUNT_SUSPENDED') {
+        } else if (errorPayload === 'ACCOUNT_SUSPENDED') {
           errorMessage = TOAST_MESSAGES.AUTH.ACCOUNT_SUSPENDED;
-        } else if (payload === 'SESSION_EXPIRED') {
+        } else if (errorPayload === 'SESSION_EXPIRED') {
           errorMessage = TOAST_MESSAGES.AUTH.SESSION_EXPIRED;
-        } else if (payload === 'NETWORK_ERROR' || payload === 'ERR_NETWORK') {
+        } else if (errorPayload === 'NETWORK_ERROR' || errorPayload === 'ERR_NETWORK' || errorPayload === 'Network Error') {
           errorMessage = TOAST_MESSAGES.AUTH.NETWORK_ERROR;
-        } else if (payload === 'SERVER_ERROR' || payload?.includes('500')) {
+        } else if (errorPayload === 'SERVER_ERROR' || errorPayload?.includes('500')) {
           errorMessage = TOAST_MESSAGES.AUTH.SERVER_ERROR;
-        } else if (payload) {
+        } else if (errorPayload) {
           // Use the error code as message if it's a known error
-          errorMessage = payload;
+          errorMessage = errorPayload;
         }
 
         showToast(TOAST_TYPE.ERROR, errorMessage);
       }
     } catch (error: any) {
+      logger.error('Login Screen - Exception during login', error as Error);
       const errorMessage =
         error?.message || error?.code || TOAST_MESSAGES.GENERIC.NETWORK_ERROR;
       showToast(TOAST_TYPE.ERROR, errorMessage);
@@ -200,24 +157,25 @@ export const LoginScreen = () => {
       bounces={false}
     >
       <View style={[styles.logoContainer, { marginTop: dynamicMarginTop }]}>
-        <AppImage image={Images.LOGO} mainStyle={styles.logo} isDisabled from="Login" />
-        <AppText variant={TEXT_VARIANTS.h1}>Sign In</AppText>
+        <AppImage image={LOGIN_LOGO} mainStyle={styles.logo} isDisabled from="Login" />
+        <AppText variant={TEXT_VARIANTS.h1} style={styles.titleText}>
+          Sign in to Jeweller Pro
+        </AppText>
       </View>
 
       <View style={styles.form}>
-        {/* Mobile Number with Country Code */}
+        {/* Phone Number */}
         <AppText variant={TEXT_VARIANTS.h4_large} style={styles.inputLabel}>
-          Mobile Number
+          Phone Number
         </AppText>
         <View style={styles.phoneInputContainer}>
-          <Text style={styles.countryCode}>+{countryCode}</Text>
           <TextInput
             value={mobileNumber}
             onChangeText={handleMobileNumberChange}
             keyboardType="phone-pad"
             maxLength={10}
-            placeholder="Enter your mobile number"
-            placeholderTextColor={colors.gray1000}
+            placeholder="Enter your phone number"
+            placeholderTextColor={colors.inputLabel}
             style={styles.phoneInput}
             cursorColor={colors.black}
             selectionColor={colors.black}
@@ -239,7 +197,7 @@ export const LoginScreen = () => {
             onChangeText={handlePasswordChange}
             secureTextEntry={!showPassword}
             placeholder="Enter your password"
-            placeholderTextColor={colors.gray1000}
+            placeholderTextColor={colors.inputLabel}
             style={[styles.phoneInput, { flex: 1 }]}
             cursorColor={colors.black}
             selectionColor={colors.black}
@@ -250,12 +208,12 @@ export const LoginScreen = () => {
             onPress={() => setShowPassword(!showPassword)}
             style={{ padding: scale(8) }}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            activeOpacity={0.7}
           >
-            <Icon
-              name={showPassword ? 'eye' : 'eye-off'}
-              style={{ width: scale(24), height: scale(24), tintColor: colors.gray1000 }}
-            />
+            {showPassword ? (
+              <EyeIcon width={scale(24)} height={scale(24)} color={colors.gray1000} />
+            ) : (
+              <EyeOffIcon width={scale(24)} height={scale(24)} color={colors.gray1000} />
+            )}
           </TouchableOpacity>
         </View>
         {errors.password && (
@@ -264,19 +222,27 @@ export const LoginScreen = () => {
           </AppText>
         )}
 
-        <AppButton
+        <TouchableOpacity
           onPress={handleLogin}
-          style={{ marginTop: verticalScale(32), marginBottom: verticalScale(50) }}
-          loading={loading}
+          style={[styles.signInButton, loading && styles.signInButtonDisabled]}
+          disabled={loading}
+          activeOpacity={0.7}
         >
-          Sign In
-        </AppButton>
+          {loading ? (
+            <ActivityIndicator size="small" color={colors.white} />
+          ) : (
+            <>
+              <AppText style={styles.signInButtonText}>Sign in</AppText>
+              <ArrowRightIcon width={scale(20)} height={scale(20)} color={colors.white} />
+            </>
+          )}
+        </TouchableOpacity>
       </View>
 
       {/* App Version */}
       <View style={styles.versionContainer}>
         <AppText style={styles.versionText} variant={TEXT_VARIANTS.h4_small}>
-          Version {packageJson.version}
+          Version 1.0.0
         </AppText>
       </View>
     </ScrollView>
@@ -300,6 +266,14 @@ export const LoginScreen = () => {
       ) : (
         <View style={styles.foregroundContent}>{content}</View>
       )}
+
+      {/* Success Overlay */}
+      <SuccessOverlay
+        visible={showSuccessOverlay}
+        message="You have logged in successfully"
+        onClose={() => setShowSuccessOverlay(false)}
+        autoCloseDelay={2000}
+      />
     </View>
   );
 };

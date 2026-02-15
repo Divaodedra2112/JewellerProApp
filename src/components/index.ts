@@ -11,7 +11,6 @@ import AppModal from './AppModal/AppModal';
 import { AppLoader } from './AppLoader';
 
 // Layout Components
-import GridItem from './GridItem/GridItem';
 import AppListViewCard from './AppListViewCard/AppListViewCard';
 
 // Utility Components
@@ -19,10 +18,10 @@ import { sharePin } from './SharePin/SharePin';
 import { EmptyState } from './EmptyState/EmptyState';
 import NotAuthorized from './NotAuthorized/NotAuthorized';
 import PermissionGate from './PermissionGate';
+import { SuccessOverlay } from './SuccessOverlay';
 
 // Navigation Components
 import CustomHeader from './CustomHeader/Header';
-import DrawerContent from './Drawer/DrawerContent';
 import LanguageSelector from './LanguageSelector/LanguageSelector';
 
 // Error Handling
@@ -42,16 +41,15 @@ export {
   AppModal,
   AppLoader,
   // Layout
-  GridItem,
   AppListViewCard,
   // Utility
   sharePin,
   EmptyState,
   NotAuthorized,
   PermissionGate,
+  SuccessOverlay,
   // Navigation
   CustomHeader,
-  DrawerContent,
   LanguageSelector,
   // Error Handling
   ErrorBoundary,

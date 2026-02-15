@@ -231,11 +231,6 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
             return (
               <PermissionGate moduleKey={moduleKey} action="add">
                 {(() => {
-                  console.log('[RBAC][Header][Plus]', {
-                    route: onPlusPressNavigateTo,
-                    moduleKey,
-                    action: 'add',
-                  });
                   return null;
                 })()}
                 <TouchableOpacity
