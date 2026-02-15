@@ -91,24 +91,25 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     height: '100%',
-    paddingVertical: moderateScale(10),
+    paddingVertical: moderateScale(6), // Reduced to match Figma spacing
     paddingHorizontal: moderateScale(4),
     backgroundColor: 'transparent',
   },
   activeTabBackground: {
     position: 'absolute',
-    backgroundColor: '#E5E7EB', // Light gray/off-white background
+    backgroundColor: '#F0F5FA', // Whitish-blue background (very light blue-white, not gray)
     borderRadius: moderateScale(32), // Very rounded for oval/pill shape
     width: moderateScale(85),
-    height: moderateScale(60),
-    top: moderateScale(6),
+    height: moderateScale(58),
+    top: moderateScale(6), 
+    // Space from top matching Figma
     zIndex: 1,
     // Subtle shadow for depth
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+    elevation: 5,
   },
 });
 

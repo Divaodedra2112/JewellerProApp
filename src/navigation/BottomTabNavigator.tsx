@@ -85,7 +85,7 @@ const BottomTabNavigator = () => {
             style={{
               fontFamily: focused ? Fonts.medium : Fonts.regular,
               fontWeight: focused ? '600' : '400',
-              color: focused ? '#4B5563' : '#FFFFFF', // Dark gray for active, white for inactive (matching Figma)
+              color: focused ? '#1E3A5F' : '#FFFFFF', // Dark blue-grey for active, white for inactive (matching first image)
               fontSize: moderateScale(11),
               marginTop: moderateScale(2), // Small spacing between icon and text
               textAlign: 'center',
@@ -97,8 +97,8 @@ const BottomTabNavigator = () => {
         tabBarIcon: ({ focused, color: _color }) => {
           // Find the tab config for this route
           const tab = bottomTabs.find(t => t.name === route.name);
-          // Use dark gray/blue for focused, white for unfocused (matching Figma exactly)
-          const iconColor = focused ? '#4B5563' : '#FFFFFF';
+          // Use dark blue-grey for focused, white for unfocused (matching first image)
+          const iconColor = focused ? '#1E3A5F' : '#FFFFFF';
           return (
             <View 
               style={{ 
