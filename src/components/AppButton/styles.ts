@@ -1,36 +1,54 @@
-import { StyleSheet } from 'react-native';
-import { colors } from '../../utils/theme';
-import { moderateScale, verticalScale } from '../../utils/Responsive';
+import { StyleSheet, ViewStyle } from 'react-native';
+import { colors, Fonts } from '../../utils/theme';
+import { moderateScale, verticalScale, scale } from '../../utils/Responsive';
+
+const BUTTON_COLOR = '#173051';
 
 export const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.primary,
-    borderRadius: moderateScale(50),
+    borderRadius: moderateScale(24),
     justifyContent: 'center',
     alignItems: 'center',
+    minHeight: verticalScale(50),
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: scale(24),
+    flexDirection: 'row',
+    gap: scale(8),
     marginTop: verticalScale(8),
-    padding: verticalScale(16),
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: scale(8),
   },
   primary: {
-    backgroundColor: colors.primary,
+    backgroundColor: BUTTON_COLOR,
   },
   secondary: {
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.primary,
+    borderColor: BUTTON_COLOR,
   },
   disabled: {
-    backgroundColor: colors.gray1100,
+    backgroundColor: BUTTON_COLOR,
+    opacity: 0.6,
   },
   text: {
     color: colors.white,
-    fontSize: verticalScale(16),
+    fontSize: scale(16),
     fontWeight: '600',
+    fontFamily: Fonts.semi_bold,
   },
   disabledText: {
-    color: colors.gray100,
+    color: colors.white,
+    opacity: 0.6,
   },
   secondaryText: {
-    color: colors.primary,
+    color: BUTTON_COLOR,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -10,13 +10,12 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAppAction } from './loginActions';
 import { RootState } from '../../../store';
 import { styles } from './styles';
-import { AppImage, SuccessOverlay } from '../../../components';
+import { AppImage, SuccessOverlay, AppButton } from '../../../components';
 import { Images } from '../../../utils';
 import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
 import { logger } from '../../../utils/logger';
@@ -222,21 +221,19 @@ export const LoginScreen = () => {
           </AppText>
         )}
 
-        <TouchableOpacity
+        <AppButton
           onPress={handleLogin}
-          style={[styles.signInButton, loading && styles.signInButtonDisabled]}
           disabled={loading}
-          activeOpacity={0.7}
-        >
-          {loading ? (
-            <ActivityIndicator size="small" color={colors.white} />
-          ) : (
-            <>
-              <AppText style={styles.signInButtonText}>Sign in</AppText>
+          loading={loading}
+          style={{ marginTop: verticalScale(32) }}
+          rightSideIcon={
+            !loading ? (
               <ArrowRightIcon width={scale(20)} height={scale(20)} color={colors.white} />
-            </>
-          )}
-        </TouchableOpacity>
+            ) : undefined
+          }
+        >
+          Sign in
+        </AppButton>
       </View>
 
       {/* App Version */}

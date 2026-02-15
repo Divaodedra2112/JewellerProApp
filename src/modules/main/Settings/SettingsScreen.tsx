@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppText } from '../../../components/AppText/AppText';
 import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { SuccessOverlay } from '../../../components/SuccessOverlay/SuccessOverlay';
@@ -18,10 +20,14 @@ import { logoutAppAction } from '../../../modules/auth/login/loginActions';
 import { scale } from '../../../utils/Responsive';
 import { colors } from '../../../utils/theme';
 import { Images } from '../../../utils';
+import { MainStackParamList } from '../../../types/navigation';
+
+type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
 const SettingsScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const navigation = useNavigation<NavigationProp>();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
@@ -38,8 +44,7 @@ const SettingsScreen = () => {
   };
 
   const handleProfilePress = () => {
-    // TODO: Navigate to Profile screen
-    console.log('Navigate to Profile');
+    navigation.navigate('Profile');
   };
 
   const handleLanguagePress = () => {

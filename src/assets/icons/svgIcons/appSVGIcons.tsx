@@ -80,6 +80,29 @@ export function EditIcon({ color, width, height }: commonProps) {
   );
 }
 
+export function EditProfileIcon({ color, width, height }: commonProps) {
+  const iconColor = color || '#FEFEFE';
+  const circleColor = '#173051';
+  const strokeColor = '#FEFEFE';
+  
+  return (
+    <Svg width={width} height={height} viewBox="0 0 32 32" fill="none">
+      <Circle cx="16" cy="16" r="14.5" fill={circleColor} stroke={strokeColor} strokeWidth="3" />
+      <G clipPath="url(#clip0_92_2089)">
+        <Path
+          d="M21.55 12.5049L19.495 10.4499C19.2268 10.198 18.8753 10.0534 18.5075 10.0437C18.1396 10.0341 17.7811 10.1599 17.5 10.3974L10.75 17.1474C10.5076 17.3919 10.3566 17.7123 10.3225 18.0549L9.99998 21.1824C9.98988 21.2922 10.0041 21.403 10.0417 21.5067C10.0793 21.6104 10.1393 21.7045 10.2175 21.7824C10.2876 21.8519 10.3707 21.9069 10.462 21.9442C10.5534 21.9815 10.6513 22.0005 10.75 21.9999H10.8175L13.945 21.7149C14.2876 21.6808 14.608 21.5298 14.8525 21.2874L21.6025 14.5374C21.8645 14.2606 22.0061 13.8913 21.9962 13.5103C21.9864 13.1293 21.8259 12.7678 21.55 12.5049ZM19 15.0099L16.99 12.9999L18.4525 11.4999L20.5 13.5474L19 15.0099Z"
+          fill={iconColor}
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_92_2089">
+          <Rect width="18" height="18" fill="white" transform="translate(7 7)" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+}
+
 export function DeleteIcon({ color, width, height }: commonProps) {
   return (
     <Svg width={width} height={height} viewBox="0 0 24 24">

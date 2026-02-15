@@ -13,6 +13,7 @@ export type AuthStackParamList = {
 
 export type MainStackParamList = {
   Drawer: NavigatorScreenParams<GenericParamList>;
+  Profile: undefined;
   // Add your custom screens here
 };
 
@@ -22,6 +23,7 @@ export type GenericParamList = {
   Chatbot: undefined;
   Updates: undefined;
   Settings: undefined;
+  Profile: undefined;
   Dashboard: undefined; // Alias for Home
   Notification: undefined; // Alias for Updates
   // Add your drawer screens here
