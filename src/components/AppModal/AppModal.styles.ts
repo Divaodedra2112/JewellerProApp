@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { moderateScale } from '../../utils/Responsive';
+import { colors } from '../../utils/theme';
 
 const styles = StyleSheet.create({
   overlay: {
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   primaryButton: {
-    backgroundColor: '#65A30D',
+    backgroundColor: colors.primary,
   },
   primaryButtonText: {
     color: '#fff',

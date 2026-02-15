@@ -1,9 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { styles } from './styles';
 import { colors } from '../../utils/theme';
-import AppImage from '../AppImage/AppImage';
-import { Images } from '../../utils';
+import { AppText } from '../AppText/AppText';
 
 interface CustomButtonProps {
   variant?: 'primary' | 'secondary';
@@ -39,7 +38,12 @@ export const Button = ({
       {loading ? (
         <ActivityIndicator size="small" color={colors.white} />
       ) : (
-        <Text style={[styles.text, textStyle, disabled && styles.disabledText]}>{children}</Text>
+        <View style={styles.buttonContent}>
+          <AppText style={[styles.text, textStyle, disabled && styles.disabledText, variant === 'secondary' && styles.secondaryText]}>
+            {children}
+          </AppText>
+          {rightSideIcon && <View style={styles.iconContainer}>{rightSideIcon}</View>}
+        </View>
       )}
     </TouchableOpacity>
   );

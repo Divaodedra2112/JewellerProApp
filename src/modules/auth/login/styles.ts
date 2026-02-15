@@ -26,9 +26,6 @@ type Styles = {
   versionContainer: ViewStyle;
   versionText: TextStyle;
   titleText: TextStyle;
-  signInButton: ViewStyle;
-  signInButtonText: TextStyle;
-  signInButtonDisabled: ViewStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -185,26 +182,5 @@ export const styles: Styles = StyleSheet.create({
     marginTop: verticalScale(20),
     textAlign: 'center',
     letterSpacing: 0.5,
-  },
-  signInButton: {
-    backgroundColor: '#173051',
-    borderRadius: moderateScale(50),
-    paddingVertical: verticalScale(18),
-    paddingHorizontal: scale(24),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: verticalScale(32),
-    gap: scale(10),
-    minHeight: verticalScale(56),
-  },
-  signInButtonText: {
-    color: colors.white,
-    fontSize: scale(16),
-    fontWeight: '600',
-    fontFamily: Fonts.semi_bold,
-  },
-  signInButtonDisabled: {
-    opacity: 0.6,
   },
 });

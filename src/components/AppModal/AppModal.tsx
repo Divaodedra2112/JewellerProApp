@@ -4,6 +4,7 @@ import styles from './AppModal.styles';
 import { AppText, TEXT_VARIANTS } from '../AppText/AppText';
 import { Images } from '../../utils';
 import AppImage from '../AppImage/AppImage';
+import { colors } from '../../utils/theme';
 
 interface AppModalProps {
   visible: boolean;
@@ -13,6 +14,7 @@ interface AppModalProps {
   primaryLabel: string;
   secondaryLabel: string;
   showTopIcon?: boolean;
+  primaryButtonColor?: string;
 }
 
 const AppModal: React.FC<AppModalProps> = ({
@@ -23,13 +25,14 @@ const AppModal: React.FC<AppModalProps> = ({
   primaryLabel,
   secondaryLabel,
   showTopIcon = false,
+  primaryButtonColor,
 }) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           {showTopIcon && (
-            <AppImage tintColor={'green'} image={Images.RIGHT_ICON} mainStyle={styles.iconStyle} />
+            <AppImage tintColor={colors.success} image={Images.RIGHT_ICON} mainStyle={styles.iconStyle} />
           )}
 
           <AppText variant={TEXT_VARIANTS.h3_medium} style={styles.message}>
@@ -44,7 +47,11 @@ const AppModal: React.FC<AppModalProps> = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.button, styles.primaryButton]}
+              style={[
+                styles.button,
+                styles.primaryButton,
+                primaryButtonColor && { backgroundColor: primaryButtonColor },
+              ]}
               onPress={onPrimaryAction}
             >
               <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.primaryButtonText}>

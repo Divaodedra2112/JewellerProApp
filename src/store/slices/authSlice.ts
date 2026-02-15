@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { requestOtp, loginAppAction } from '../../modules/auth/login/loginActions';
+import { requestOtp, loginAppAction, logoutAppAction } from '../../modules/auth/login/loginActions';
 import { submitOtp } from '../../modules/auth/otp/otpActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import api from '../../services/api';
 
 interface AuthState {
   phoneNumber: string;
@@ -64,18 +63,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: state => {
-      const userId = state.user?.id;
-      // Get refresh token from AsyncStorage
-      AsyncStorage.getItem('refresh_token').then(refreshToken => {
-        if (userId && refreshToken) {
-          api
-            .post('/auth/logout', { userId, refreshToken })
-            .catch(() => {
-              // Logout API call failed silently
-            });
-        }
-      });
-
       // Clear state
       state.token = null;
       state.phoneNumber = '';
@@ -200,6 +187,38 @@ const authSlice = createSlice({
       .addCase(loginAppAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(logoutAppAction.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutAppAction.fulfilled, state => {
+        state.loading = false;
+        // Clear state
+        state.token = null;
+        state.phoneNumber = '';
+        state.otpSent = false;
+        state.error = null;
+        state.user = null;
+        state.modules = defaultModules;
+        
+        // Clear storage
+        AsyncStorage.removeItem('access_token');
+        AsyncStorage.removeItem('refresh_token');
+      })
+      .addCase(logoutAppAction.rejected, (state, action) => {
+        state.loading = false;
+        // Even on error, clear state
+        state.token = null;
+        state.phoneNumber = '';
+        state.otpSent = false;
+        state.error = null;
+        state.user = null;
+        state.modules = defaultModules;
+        
+        // Clear storage
+        AsyncStorage.removeItem('access_token');
+        AsyncStorage.removeItem('refresh_token');
       });
   },
 });

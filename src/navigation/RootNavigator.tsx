@@ -11,7 +11,7 @@ import UpdateRequiredScreen from '../modules/UtilityScreens/ForceUpdate/forceUpd
 import { useNetworkConnectivity } from '../hooks/useNetworkConnectivity';
 import { View, AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { restoreToken } from '../store/slices/authSlice';
+import { restoreToken, setUser } from '../store/slices/authSlice';
 import { useForceUpdate } from '../modules/UtilityScreens/ForceUpdate/ForceUpdateAction';
 import { InitialAppLoader } from '../components/InitialAppLoader';
 import { initializeAppData } from '../services/InitializationService';
@@ -45,9 +45,31 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const storedToken = await AsyncStorage.getItem('access_token');
-        if (storedToken && !token) {
-          dispatch(restoreToken(storedToken));
+        // TEMPORARY: Set mock token for testing bottom bar - Remove when backend is ready
+        const TESTING_MODE = true; // Set to false to restore normal auth flow
+        if (TESTING_MODE && !token) {
+          // Set a mock token and user to bypass authentication
+          dispatch(restoreToken('mock_token_for_testing'));
+          dispatch(setUser({
+            id: 1,
+            name: 'Test User',
+            firstName: 'Test',
+            lastName: 'User',
+            mobile: '9999999999',
+            email: 'test@example.com',
+            roles: [{
+              id: 1,
+              name: 'User',
+              permissions: {},
+              roleType: 'USER',
+            }],
+            permissions: {},
+          }));
+        } else {
+          const storedToken = await AsyncStorage.getItem('access_token');
+          if (storedToken && !token) {
+            dispatch(restoreToken(storedToken));
+          }
         }
         setIsInitialized(true);
       } catch (error) {
@@ -130,7 +152,8 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
         }}
       >
         <Stack.Navigator screenOptions={screenOptions}>
-          {!token ? (
+          {/* TEMPORARY: Bypass auth for testing bottom bar - Remove this when backend is ready */}
+          {false && !token ? (
             <Stack.Screen
               name="Auth"
               component={AuthNavigator}

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { sendOtp, SendOtpResponse, loginApp, LoginAppRequest } from './loginService';
+import { sendOtp, SendOtpResponse, loginApp, LoginAppRequest, logoutApp } from './loginService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setModules, setUser } from '../../../store/slices/authSlice';
 import { logger } from '../../../utils/logger';
@@ -104,6 +104,45 @@ export const loginAppAction = createAsyncThunk(
       
       const errorCode = error?.response?.data?.code || error?.response?.data?.message || error?.message || 'LOGIN_FAILED';
       return rejectWithValue(errorCode);
+    }
+  }
+);
+
+export const logoutAppAction = createAsyncThunk(
+  'auth/logoutApp',
+  async (_, { rejectWithValue }) => {
+    try {
+      const accessToken = await AsyncStorage.getItem('access_token');
+      
+      if (!accessToken) {
+        logger.warn('Logout Action - No access token found');
+        return { success: true };
+      }
+
+      const response = await logoutApp(accessToken);
+      
+      if (response && response.isSuccess) {
+        logger.info('Logout Action - Logout successful');
+        return { success: true };
+      } else {
+        const errorCode = response?.code || response?.message || 'LOGOUT_FAILED';
+        logger.error('Logout Action - Logout failed', new Error(errorCode));
+        return rejectWithValue(errorCode);
+      }
+    } catch (error: any) {
+      // Check if it's a network error
+      const isNetworkError = (error as any)?.isNetworkError || error?.code === 'ERR_NETWORK' || error?.message === 'Network Error';
+      
+      if (isNetworkError) {
+        logger.error('Logout Action - Network Error', error as Error);
+        // Even on network error, we should still clear local state
+        return { success: true };
+      }
+      
+      const errorCode = error?.response?.data?.code || error?.response?.data?.message || error?.message || 'LOGOUT_FAILED';
+      logger.error('Logout Action - Error', error as Error);
+      // Even on error, we should still clear local state
+      return { success: true };
     }
   }
 );

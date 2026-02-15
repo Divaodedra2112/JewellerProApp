@@ -1,55 +1,115 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { View, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { BottomTabBar } from '@react-navigation/bottom-tabs';
-import { colors } from '../../utils/theme';
+import { moderateScale } from '../../utils/Responsive';
 
 const CustomTabBar: React.FC<BottomTabBarProps> = props => {
+  const { state } = props;
+  const activeIndex = state.index;
+  const [tabBarWidth, setTabBarWidth] = useState(0);
+  
+  // Calculate active tab center position
+  const tabCount = state.routes.length;
+  const tabWidth = tabBarWidth / tabCount;
+  const activeTabCenter = tabWidth * activeIndex + tabWidth / 2;
+  const activeTabLeft = tabBarWidth > 0 ? activeTabCenter - moderateScale(42.5) : undefined;
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setTabBarWidth(width);
+  };
+
   return (
-    <SafeAreaView edges={[]} style={{ height: 80, backgroundColor: colors.ScreenBGColor }}>
+    <View style={styles.safeAreaContainer}>
       <View style={styles.outerContainer}>
-        <View style={styles.tabBarWrapper}>
+        {/* Single consistent background */}
+        <View style={styles.glassBackground} />
+        
+        {/* Active tab background - rendered separately to avoid clipping */}
+        {activeTabLeft !== undefined && (
+          <View
+            style={[
+              styles.activeTabBackground,
+              {
+                left: activeTabLeft,
+              },
+            ]}
+          />
+        )}
+        
+        {/* Content layer */}
+        <View 
+          style={styles.tabBarWrapper}
+          onLayout={handleLayout}
+        >
           <BottomTabBar {...props} style={styles.tabBar} />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+    backgroundColor: 'transparent',
+    pointerEvents: 'box-none',
+  },
   outerContainer: {
     position: 'absolute',
     left: 12,
     right: 12,
     bottom: 12,
     borderRadius: 40,
-    backgroundColor: 'transparent',
-    // Stronger bottom shadow for iOS
-    shadowColor: colors.gray1000,
-    shadowOffset: { width: 0, height: 16 }, // More bottom shadow
-    shadowOpacity: 0.45, // More visible
-    shadowRadius: 24, // Softer, larger spread
-    // Softer shadow for Android
-    elevation: 4,
+    overflow: 'visible', // Allow active tab to extend beyond container
+    // Subtle shadow for light background
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  glassBackground: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 40,
+    // Solid medium-dark gray background matching Figma
+    backgroundColor: '#9CA3AF', // Medium-dark gray background (solid, no two-shade effect)
   },
   tabBarWrapper: {
     borderRadius: 40,
-    overflow: 'hidden',
-    backgroundColor: colors.background,
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.08)',
-    borderLeftColor: 'rgba(0,0,0,0.08)',
-    borderRightColor: 'rgba(0,0,0,0.08)',
-    height: 72, // Adjust based on your Figma design
+    backgroundColor: 'transparent',
+    height: 72,
     justifyContent: 'center',
+    overflow: 'visible', // Allow active tab background to show
+    zIndex: 2, // Ensure it's above the background
+    elevation: 2,
   },
   tabBar: {
     height: '100%',
-    paddingVertical: 10,
-    paddingHorizontal: 4, // Reduced to decrease space between menu items
+    paddingVertical: moderateScale(6), // Reduced to match Figma spacing
+    paddingHorizontal: moderateScale(4),
+    backgroundColor: 'transparent',
+  },
+  activeTabBackground: {
+    position: 'absolute',
+    backgroundColor: '#F0F5FA', // Whitish-blue background (very light blue-white, not gray)
+    borderRadius: moderateScale(32), // Very rounded for oval/pill shape
+    width: moderateScale(85),
+    height: moderateScale(58),
+    top: moderateScale(6), 
+    // Space from top matching Figma
+    zIndex: 1,
+    // Subtle shadow for depth
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+    elevation: 5,
   },
 });
 

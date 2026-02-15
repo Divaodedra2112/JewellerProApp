@@ -103,3 +103,40 @@ export const loginApp = async (requestData: LoginAppRequest): Promise<LoginAppRe
     throw error;
   }
 };
+
+export interface LogoutAppRequest {
+  access_token: string;
+}
+
+export interface LogoutAppResponse {
+  isSuccess?: boolean;
+  code?: string;
+  message?: string;
+}
+
+export const logoutApp = async (accessToken: string): Promise<LogoutAppResponse> => {
+  try {
+    const requestData: LogoutAppRequest = {
+      access_token: accessToken,
+    };
+    const response = await post<LogoutAppResponse>('/auth/logout-app', requestData);
+    
+    // Check if the response indicates failure
+    if (response && response.code && response.code !== 'SUCCESS' && !response.isSuccess) {
+      const error: any = new Error(response.code || response.message || 'Failed to logout');
+      error.response = {
+        data: {
+          code: response.code,
+          message: response.message,
+          isSuccess: false,
+        },
+      };
+      throw error;
+    }
+    
+    return response || { isSuccess: true };
+  } catch (error: any) {
+    logger.error('Login Service - Error in logoutApp', error as Error);
+    throw error;
+  }
+};
