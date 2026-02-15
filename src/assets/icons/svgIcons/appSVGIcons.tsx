@@ -2553,3 +2553,28 @@ export function DownloadFilterIcon({ color, width, height }: commonProps) {
     </Svg>
   );
 }
+
+export function GlobeIcon({ color, width, height }: commonProps) {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.22L8.99 15L11 19.93ZM17.9 17.39C17.64 16.58 16.9 16 16.08 16H15.9L12.93 11.59C12.68 11.22 12.35 10.93 11.97 10.73L6.29 5.96C7.5 4.87 9.18 4.25 11 4.25C16.26 4.25 20.61 8.33 20.96 13.5L17.9 17.39ZM12 4.25C10.18 4.25 8.5 4.87 7.29 5.96L12.03 10.73C12.41 10.93 12.74 11.22 12.99 11.59L15.96 16H16.14C16.96 16 17.7 16.58 17.96 17.39L21.02 13.5C20.67 8.33 16.32 4.25 11.06 4.25H12Z"
+        fill={color}
+      />
+    </Svg>
+  );
+}
+
+export function ChevronRightIcon({ color, width, height }: commonProps) {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M9 18L15 12L9 6"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}

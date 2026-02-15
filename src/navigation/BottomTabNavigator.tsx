@@ -50,9 +50,9 @@ const BottomTabNavigator = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 paddingVertical: moderateScale(6),
-                // Active tab background - light gray/white pill matching Figma
+                // Active tab background - whitish pill matching Figma
                 ...(focused && {
-                  backgroundColor: '#F3F4F6', // Light gray background for active tab (matching Figma)
+                  backgroundColor: '#FFFFFF', // Whitish/white background for active tab (matching Figma)
                   borderRadius: moderateScale(18),
                   paddingHorizontal: moderateScale(12),
                   paddingVertical: moderateScale(6),
@@ -96,8 +96,8 @@ const BottomTabNavigator = () => {
         tabBarIcon: ({ focused, color: _color }) => {
           // Find the tab config for this route
           const tab = bottomTabs.find(t => t.name === route.name);
-          // Use dark blue for focused, white for unfocused (matching Figma exactly)
-          const iconColor = focused ? '#2563EB' : '#FFFFFF';
+          // Use dark blue for focused (filled), white for unfocused (matching Figma exactly)
+          const iconColor = focused ? '#1E40AF' : '#FFFFFF';
           return (
             <View 
               style={{ 
@@ -107,7 +107,7 @@ const BottomTabNavigator = () => {
                 width: '100%',
               }}
             >
-              {tab?.icon?.({ color: iconColor, focused })}
+              {tab?.icon?.({ color: iconColor, focused, fill: focused ? iconColor : 'none' })}
             </View>
           );
         },
