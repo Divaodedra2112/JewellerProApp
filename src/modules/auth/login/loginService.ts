@@ -101,7 +101,12 @@ export const loginApp = async (requestData: LoginAppRequest): Promise<LoginAppRe
     });
     
     // Check if the response indicates failure
-    if (response && response.code && response.code !== 'SUCCESS' && !response.isSuccess) {
+    // Accept both 'SUCCESS' and codes ending with 'SUCCESS' (like 'LOGIN_SUCCESS')
+    const isSuccessCode = response?.code === 'SUCCESS' || 
+                          (response?.code && response.code.endsWith('_SUCCESS')) ||
+                          response?.isSuccess === true;
+    
+    if (response && response.code && !isSuccessCode && response.isSuccess === false) {
       const errorMessage = response.code || response.message || 'Failed to login';
       logger.error('Login Service - Login API returned error', new Error(errorMessage), {
         code: response.code,
@@ -159,7 +164,12 @@ export const logoutApp = async (accessToken: string): Promise<LogoutAppResponse>
     const response = await post<LogoutAppResponse>('/auth/logout-app', requestData);
     
     // Check if the response indicates failure
-    if (response && response.code && response.code !== 'SUCCESS' && !response.isSuccess) {
+    // Accept both 'SUCCESS' and codes ending with 'SUCCESS' (like 'LOGOUT_SUCCESS')
+    const isSuccessCode = response?.code === 'SUCCESS' || 
+                          (response?.code && response.code.endsWith('_SUCCESS')) ||
+                          response?.isSuccess === true;
+    
+    if (response && response.code && !isSuccessCode && response.isSuccess === false) {
       const error: any = new Error(response.code || response.message || 'Failed to logout');
       error.response = {
         data: {

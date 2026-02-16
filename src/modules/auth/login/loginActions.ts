@@ -170,7 +170,12 @@ export const logoutAppAction = createAsyncThunk(
 
       const response = await logoutApp(accessToken);
       
-      if (response && response.isSuccess) {
+      // Check for success - accept isSuccess === true or codes ending with '_SUCCESS'
+      const isSuccess = response?.isSuccess === true || 
+                        response?.code === 'SUCCESS' ||
+                        (response?.code && response.code.endsWith('_SUCCESS'));
+      
+      if (response && isSuccess) {
         logger.info('Logout Action - Logout successful');
         return { success: true };
       } else {
