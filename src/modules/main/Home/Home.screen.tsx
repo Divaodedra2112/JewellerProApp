@@ -44,7 +44,16 @@ const HomeScreen = () => {
             <AppText style={styles.featureItem}>✓ Authentication Flow</AppText>
             <AppText style={styles.featureItem}>✓ Permission Handling</AppText>
             <AppText style={styles.featureItem}>✓ UI Kitten Components</AppText>
+            <AppText style={styles.featureItem}>✓ TypeScript with strict mode</AppText>
+            <AppText style={styles.featureItem}>✓ Redux Toolkit + Persist</AppText>
+            <AppText style={styles.featureItem}>✓ React Navigation</AppText>
+            <AppText style={styles.featureItem}>✓ i18next (Multi-language)</AppText>
+            <AppText style={styles.featureItem}>✓ RBAC System</AppText>
+            <AppText style={styles.featureItem}>✓ Authentication Flow</AppText>
+            <AppText style={styles.featureItem}>✓ Permission Handling</AppText>
+            <AppText style={styles.featureItem}>✓ UI Kitten Components</AppText>
           </View>
+
         </View>
 
         <View style={styles.actionsSection}>

@@ -79,23 +79,23 @@ const GlassTabBar: React.FC<BottomTabBarProps> = props => {
   return (
     <View style={[styles.safeAreaContainer, { paddingBottom: insets.bottom }]}>
       <View style={styles.outerContainer} onLayout={handleLayout}>
-        {/* Frosted Glass Background */}
-        {Platform.OS === 'ios' ? (
-          <BlurView
-            style={StyleSheet.absoluteFill}
-            blurType="light"
-            blurAmount={20}
-            reducedTransparencyFallbackColor="rgba(255, 255, 255, 0.85)"
-          />
-        ) : (
-          <View style={[StyleSheet.absoluteFill, styles.androidBlur]} />
-        )}
+          {/* Frosted Glass Background */}
+          {Platform.OS === 'ios' ? (
+            <BlurView
+              style={StyleSheet.absoluteFill}
+              blurType="light"
+              blurAmount={40}
+              reducedTransparencyFallbackColor="rgba(116, 130, 150, 0.5)"
+            />
+          ) : (
+            <View style={[StyleSheet.absoluteFill, styles.androidBlur]} />
+          )}
 
-        {/* Semi-transparent white overlay for glass effect */}
-        <View style={styles.overlay} />
+          {/* Semi-transparent overlay for glass effect - more transparent to see background */}
+          <View style={styles.overlay} />
 
-        {/* Thin white highlight border */}
-        <View style={styles.border} />
+          {/* Thin white highlight border */}
+          <View style={styles.border} />
 
         {/* Sliding Active Indicator */}
         <Animated.View style={[styles.activeIndicator, indicatorStyle]}>
@@ -135,8 +135,8 @@ const GlassTabBar: React.FC<BottomTabBarProps> = props => {
             };
 
             const icon = options.tabBarIcon;
-            const iconColor = isFocused ? '#007AFF' : 'rgba(0, 0, 0, 0.6)';
-            const labelColor = isFocused ? '#000000' : 'rgba(0, 0, 0, 0.6)';
+            const iconColor = isFocused ? '#007AFF' : '#FFFFFF'; // Blue for active, white for inactive
+            const labelColor = isFocused ? '#007AFF' : '#FFFFFF'; // Blue for active, white for inactive
 
             return (
               <TabButton
@@ -233,6 +233,8 @@ const styles = StyleSheet.create({
     height: moderateScale(70),
     borderRadius: moderateScale(35),
     overflow: 'hidden',
+    // Ensure consistent background - no color variants on edges
+    backgroundColor: 'transparent',
     // Soft shadow for depth
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
@@ -242,18 +244,18 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: 'rgba(116, 130, 150, 0.5)', // Gray background with transparency to see background
     borderRadius: moderateScale(35),
   },
   border: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: moderateScale(35),
     borderWidth: 0.5,
-    borderColor: 'rgba(255, 255, 255, 0.8)',
+    borderColor: 'rgba(255, 255, 255, 0.3)', // Lighter border for darker background
     pointerEvents: 'none',
   },
   androidBlur: {
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: 'rgba(116, 130, 150, 0.9)', // Gray background with transparency for Android
     borderRadius: moderateScale(35),
   },
   activeIndicator: {
@@ -262,18 +264,18 @@ const styles = StyleSheet.create({
     height: moderateScale(58),
     top: moderateScale(6),
     borderRadius: moderateScale(29),
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#E3EFFF', // Active pill color
     // Subtle shadow for indicator
-    shadowColor: '#000',
+    shadowColor: '#007AFF',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 5,
   },
   indicatorInner: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: moderateScale(29),
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: 'rgba(227, 239, 255, 0.8)', // Slightly transparent version of active pill color
   },
   tabItemsContainer: {
     flexDirection: 'row',

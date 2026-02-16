@@ -9,6 +9,16 @@ const Images = {
   FORCE_UPDATE_IMAGE: require('../assets/images/forceUpdate.png'),
   SUCCESS_IMAGE: require('../assets/images/success.png'),
   APP_LOGO: require('../assets/images/JP-Logo.webp'),
+  // Bottom tab icons - unselected
+  HOME_ICON: require('../assets/icons/home.png'),
+  CHAT_ICON: require('../assets/icons/chat.png'),
+  UPDATES_ICON: require('../assets/icons/notifications.png'),
+  SETTINGS_ICON: require('../assets/icons/settings.png'),
+  // Bottom tab icons - selected
+  HOME_ICON_SELECTED: require('../assets/icons/selectedHome.png'),
+  CHAT_ICON_SELECTED: require('../assets/icons/selectedchat.png'),
+  UPDATES_ICON_SELECTED: require('../assets/icons/selectednotifications.png'),
+  SETTINGS_ICON_SELECTED: require('../assets/icons/selectedsettings.png'),
 };
 
 export default Images;

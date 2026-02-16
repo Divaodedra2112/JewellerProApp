@@ -33,7 +33,9 @@ const BottomTabNavigator = () => {
           },
           tabBarIcon: ({ focused }) => {
             // Return the icon from navigation config
-            return tab?.icon ? tab.icon({ color: '#007AFF', focused }) : null;
+            // Blue filled for active, white for inactive
+            const iconColor = focused ? '#007AFF' : '#FFFFFF';
+            return tab?.icon ? tab.icon({ color: iconColor, focused }) : null;
           },
           tabBarLabel: route.name,
           header: () => <Header title={route.name} />,
