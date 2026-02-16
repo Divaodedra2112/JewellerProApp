@@ -116,7 +116,7 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
         }}
       >
         <Stack.Navigator screenOptions={screenOptions}>
-          {!token ? (
+          {token ? (
             <Stack.Screen
               name="Auth"
               component={AuthNavigator}
