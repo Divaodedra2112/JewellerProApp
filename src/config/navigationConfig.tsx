@@ -1,12 +1,11 @@
 import React from 'react';
-import { View } from 'react-native';
 import HomeScreen from '../modules/main/Home/Home.screen';
 import SettingsScreen from '../modules/main/Settings/SettingsScreen';
 import ChatbotScreen from '../modules/main/Chatbot/ChatbotScreen';
 import UpdatesScreen from '../modules/main/Updates/UpdatesScreen';
 import TabIcon from '../components/BottomTabNavigation/TabIcon';
+import UpdatesIconWithBadge from '../components/BottomTabNavigation/UpdatesIconWithBadge';
 import Images from '../utils/Images';
-import { moderateScale } from '../utils/Responsive';
 
 export interface NavigationItem {
   id: string;
@@ -56,28 +55,7 @@ export const navigationModulesConfig: NavigationItem[] = [
     name: 'Updates',
     component: UpdatesScreen,
     icon: ({ color, focused }) => (
-      <View style={{ position: 'relative' }}>
-        <TabIcon 
-          source={Images.UPDATES_ICON} 
-          selectedSource={Images.UPDATES_ICON_SELECTED}
-          focused={focused} 
-          size={focused ? 24 : 20} 
-        />
-        {/* Notification badge */}
-        <View
-          style={{
-            position: 'absolute',
-            top: -4,
-            right: -4,
-            width: moderateScale(10),
-            height: moderateScale(10),
-            borderRadius: moderateScale(5),
-            backgroundColor: '#FF3B30', // Red badge matching Figma
-            borderWidth: 2,
-            borderColor: '#FFFFFF', // White border matching Figma design
-          }}
-        />
-      </View>
+      <UpdatesIconWithBadge focused={focused} />
     ),
     type: 'bottomTab',
     permissionKey: 'list',

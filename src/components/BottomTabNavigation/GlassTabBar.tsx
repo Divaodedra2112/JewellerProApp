@@ -5,7 +5,6 @@ import {
   LayoutChangeEvent,
   Platform,
   TouchableOpacity,
-  Text,
 } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import Animated, {
@@ -29,7 +28,6 @@ const GlassTabBar: React.FC<BottomTabBarProps> = props => {
   const { state, descriptors, navigation } = props;
   const insets = useSafeAreaInsets();
   const activeIndex = state.index;
-  const tabCount = state.routes.length;
 
   // Animated values
   const indicatorPosition = useSharedValue(0);
@@ -37,14 +35,19 @@ const GlassTabBar: React.FC<BottomTabBarProps> = props => {
   const tabButtonPositions = useRef<{ [key: number]: number }>({});
 
   // Calculate tab width and positions
-  const indicatorWidth = moderateScale(85);
+  const indicatorWidth = moderateScale(100);
+  const edgePadding = moderateScale(4); // Reduced padding from edges for better centering
 
   // Update indicator position when active tab changes
   useEffect(() => {
     const tabCenter = tabButtonPositions.current[activeIndex];
-    if (tabCenter !== undefined) {
+    if (tabCenter !== undefined && tabBarWidth.value > 0) {
       const targetPosition = tabCenter - (indicatorWidth / 2);
-      indicatorPosition.value = withSpring(targetPosition, SPRING_CONFIG);
+      // Constrain the indicator to stay within tab bar bounds with padding
+      const minPosition = edgePadding; // Add padding from the start
+      const maxPosition = tabBarWidth.value - indicatorWidth - edgePadding; // Add padding from the end
+      const constrainedPosition = Math.max(minPosition, Math.min(maxPosition, targetPosition));
+      indicatorPosition.value = withSpring(constrainedPosition, SPRING_CONFIG);
     }
   }, [activeIndex, tabBarWidth.value]);
 
@@ -59,9 +62,13 @@ const GlassTabBar: React.FC<BottomTabBarProps> = props => {
     tabButtonPositions.current[index] = tabCenter;
     
     // Update indicator if this is the active tab
-    if (index === activeIndex) {
+    if (index === activeIndex && tabBarWidth.value > 0) {
       const targetPosition = tabCenter - (indicatorWidth / 2);
-      indicatorPosition.value = withSpring(targetPosition, SPRING_CONFIG);
+      // Constrain the indicator to stay within tab bar bounds with padding
+      const minPosition = edgePadding; // Add padding from the start
+      const maxPosition = tabBarWidth.value - indicatorWidth - edgePadding; // Add padding from the end
+      const constrainedPosition = Math.max(minPosition, Math.min(maxPosition, targetPosition));
+      indicatorPosition.value = withSpring(constrainedPosition, SPRING_CONFIG);
     }
   };
 
@@ -135,15 +142,15 @@ const GlassTabBar: React.FC<BottomTabBarProps> = props => {
             };
 
             const icon = options.tabBarIcon;
-            const iconColor = isFocused ? '#007AFF' : '#FFFFFF'; // Blue for active, white for inactive
-            const labelColor = isFocused ? '#007AFF' : '#FFFFFF'; // Blue for active, white for inactive
+            const iconColor = isFocused ? '#173051' : '#FFFFFF'; // Dark blue for active, white for inactive
+            const labelColor = isFocused ? '#173051' : '#FFFFFF'; // Dark blue for active, white for inactive
 
             return (
               <TabButton
                 key={route.key}
                 onPress={onPress}
                 onLongPress={onLongPress}
-                icon={icon}
+                icon={icon ? (props: any) => icon({ ...props, size: props.size ?? moderateScale(24) }) : undefined}
                 label={String(label)}
                 isFocused={isFocused}
                 iconColor={iconColor}
@@ -260,7 +267,7 @@ const styles = StyleSheet.create({
   },
   activeIndicator: {
     position: 'absolute',
-    width: moderateScale(85),
+    width: moderateScale(100),
     height: moderateScale(58),
     top: moderateScale(6),
     borderRadius: moderateScale(29),
@@ -289,6 +296,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   tabButton: {
     width: '100%',
@@ -300,6 +308,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: moderateScale(4),
+    width: '100%',
   },
   tabLabel: {
     fontSize: moderateScale(10),
