@@ -83,7 +83,7 @@
 		B57CB4542EC2127200335FF4 /* jewellerpro dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "jewellerpro dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B57CB4712EC2128200335FF4 /* jewellerpro local.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "jewellerpro local.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B57CB48E2EC2128D00335FF4 /* jewellerpro qa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "jewellerpro qa.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B88554FA2DF99A1E00920B14 /* jewellerpro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = jewellerpro.entitlements; path = jewellerpro/jewellerpro.entitlements; sourceTree = "<group>"; };
+		B88554FA2DF99A1E00920B14 /* JewellerProApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = JewellerProApp.entitlements; path = JewellerProApp/JewellerProApp.entitlements; sourceTree = "<group>"; };
 		BF8A9019CCA270A91CB4D210 /* Pods-ReactNativeBoilerplate_shared-jewellerpro.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerplate_shared-jewellerpro.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerplate_shared-jewellerpro/Pods-ReactNativeBoilerplate_shared-jewellerpro.debug.xcconfig"; sourceTree = "<group>"; };
 		D64F6CDF112E43FBB53F8E18 /* Inter_18pt-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Bold.ttf"; path = "../src/assets/fonts/Inter_18pt-Bold.ttf"; sourceTree = "<group>"; };
 		DC9A55B200F54B3D83B41312 /* Inter_18pt-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Black.ttf"; path = "../src/assets/fonts/Inter_18pt-Black.ttf"; sourceTree = "<group>"; };
@@ -128,7 +128,7 @@
 		13B07FAE1A68108700A75B9A /* jewellerpro */ = {
 			isa = PBXGroup;
 			children = (
-				B88554FA2DF99A1E00920B14 /* jewellerpro.entitlements */,
+				B88554FA2DF99A1E00920B14 /* JewellerProApp.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -566,7 +566,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -601,7 +601,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -812,7 +812,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -846,7 +846,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -878,7 +878,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -912,7 +912,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -944,7 +944,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -978,7 +978,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = jewellerpro/jewellerpro.entitlements;
+				CODE_SIGN_ENTITLEMENTS = JewellerProApp/JewellerProApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

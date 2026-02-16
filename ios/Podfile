@@ -19,6 +19,9 @@ prepare_react_native_project!
 
 abstract_target 'ReactNativeBoilerplate_shared' do
   config = use_native_modules!
+  
+  # Fallback if config is nil
+  react_native_path = config && config[:reactNativePath] ? config[:reactNativePath] : File.join(__dir__, '..', 'node_modules', 'react-native')
 
   # Setup permissions for react-native-permissions
   setup_permissions([
@@ -28,7 +31,7 @@ abstract_target 'ReactNativeBoilerplate_shared' do
   ])
 
   use_react_native!(
-    :path => config[:reactNativePath],
+    :path => react_native_path,
     :hermes_enabled => true,  # ✅ Hermes is recommended by React Native
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -39,7 +42,7 @@ abstract_target 'ReactNativeBoilerplate_shared' do
   post_install do |installer|
     react_native_post_install(
       installer,
-      config[:reactNativePath],
+      react_native_path,
       :mac_catalyst_enabled => false
     )
 
@@ -63,7 +66,7 @@ abstract_target 'ReactNativeBoilerplate_shared' do
     end
   end
 
-  target 'ReactNativeBoilerplate' do
+  target 'jewellerpro' do
     inherit! :complete
   end
 end
