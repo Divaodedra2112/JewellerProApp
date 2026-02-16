@@ -14,7 +14,11 @@ const TabIcon: React.FC<TabIconProps> = ({ source, selectedSource, focused, size
     <View style={[styles.container, { width: size, height: size }]}>
       <Image
         source={focused ? selectedSource : source}
-        style={[styles.icon, { width: size, height: size }]}
+        style={[
+          styles.icon, 
+          { width: size, height: size },
+          !focused && { tintColor: '#FFFFFF' } // White tint for unselected icons
+        ]}
         resizeMode="contain"
       />
     </View>

@@ -188,20 +188,18 @@ const TabButton: React.FC<TabButtonProps> = ({
   onLayout,
 }) => {
   const scale = useSharedValue(isFocused ? 1.1 : 1);
-  const opacity = useSharedValue(isFocused ? 1 : 0.7);
 
   useEffect(() => {
     scale.value = withSpring(isFocused ? 1.1 : 1, SPRING_CONFIG);
-    opacity.value = withSpring(isFocused ? 1 : 0.7, SPRING_CONFIG);
   }, [isFocused]);
 
   const iconStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
-    opacity: opacity.value,
+    opacity: 1, // Full opacity to ensure pure white color is visible
   }));
 
   const labelStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
+    opacity: 1, // Full opacity to ensure pure white color is visible
   }));
 
   return (
