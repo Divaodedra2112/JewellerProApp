@@ -53,6 +53,16 @@ api.interceptors.request.use(
         method: config.method?.toUpperCase() || 'UNKNOWN',
         url: fullUrl,
       });
+      
+      // Log to Reactotron
+      if (typeof console.tron !== 'undefined' && console.tron) {
+        console.tron.log('API Request', {
+          method: config.method?.toUpperCase() || 'UNKNOWN',
+          url: fullUrl,
+          data: config.data,
+          headers: config.headers,
+        });
+      }
     }
 
     const isOtpEndpoint =
@@ -105,6 +115,15 @@ api.interceptors.response.use(
         url: response.config.url,
         status: response.status,
       });
+      
+      // Log to Reactotron
+      if (typeof console.tron !== 'undefined' && console.tron) {
+        console.tron.log('API Response Success', {
+          url: response.config.url,
+          status: response.status,
+          data: response.data,
+        });
+      }
     }
     return response;
   },
@@ -121,6 +140,19 @@ api.interceptors.response.use(
       errorMessage: error.message,
       errorCode: (error as any)?.code,
     });
+    
+    // Log to Reactotron
+    if (__DEV__ && typeof console.tron !== 'undefined' && console.tron) {
+      console.tron.error('API Response Error', {
+        url: originalRequest?.url || 'Unknown',
+        method: originalRequest?.method?.toUpperCase() || 'UNKNOWN',
+        fullURL: fullUrl,
+        status: error.response?.status,
+        errorMessage: error.message,
+        errorCode: (error as any)?.code,
+        responseData: error.response?.data,
+      });
+    }
 
     // Check for Response construction errors first (before accessing error properties)
     const errorMsg = (error as any)?.message || String(error);

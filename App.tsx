@@ -1,6 +1,12 @@
 import 'react-native-reanimated';
 import 'react-native-gesture-handler';
 import './src/config/i18n'; // Initialize i18n
+
+// Import Reactotron only in development
+if (__DEV__) {
+  require('./ReactotronConfig').default;
+}
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';

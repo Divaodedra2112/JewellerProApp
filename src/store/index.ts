@@ -12,6 +12,16 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import rootReducer from './reducers';
 
+// Import Reactotron for Redux integration (only in dev)
+let Reactotron: any = null;
+if (__DEV__) {
+  try {
+    Reactotron = require('../../ReactotronConfig').default;
+  } catch (e) {
+    // Reactotron not available
+  }
+}
+
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
@@ -28,7 +38,18 @@ const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
+  enhancers: getDefaultEnhancers => {
+    if (__DEV__ && Reactotron && typeof Reactotron.createEnhancer === 'function') {
+      return getDefaultEnhancers().concat(Reactotron.createEnhancer());
+    }
+    return getDefaultEnhancers();
+  },
 });
+
+// Set up Reactotron store connection
+if (__DEV__ && Reactotron && typeof Reactotron.setReduxStore === 'function') {
+  Reactotron.setReduxStore(store);
+}
 
 export const persistor = persistStore(store);
 
