@@ -94,11 +94,6 @@ api.interceptors.request.use(
       bundleId: DeviceInfo.getBundleId(),
     });
     
-    // Add ngrok-skip-browser-warning header for ngrok URLs
-    if (typeof config.baseURL === 'string' && config.baseURL.includes('ngrok-free.app')) {
-      config.headers['ngrok-skip-browser-warning'] = 'true';
-    }
-    
     return config;
   },
   (error: AxiosError) => {

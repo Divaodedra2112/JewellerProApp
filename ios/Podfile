@@ -15,6 +15,9 @@ node_require('react-native-permissions/scripts/setup.rb')
 # ✅ Use React Native's internally injected minimum iOS version
 platform :ios, min_ios_version_supported
 
+# Specify the Xcode project
+project 'JewellerProApp.xcodeproj'
+
 prepare_react_native_project!
 
 abstract_target 'ReactNativeBoilerplate_shared' do

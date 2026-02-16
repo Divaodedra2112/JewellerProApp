@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -95,6 +95,7 @@ const SettingsScreen = () => {
       id: 'logout',
       title: t('settings.logout', 'Log Out'),
       icon: LogoutSVGIcon,
+      image: Images.LOGOUT_IMAGE,
       onPress: handleLogout,
       isLogout: true,
     },
@@ -113,11 +114,23 @@ const SettingsScreen = () => {
         activeOpacity={0.7}
       >
         <View style={styles.iconContainer}>
-          <IconComponent
-            width={scale(24)}
-            height={scale(24)}
-            color={iconColor}
-          />
+          {item.image ? (
+            <Image
+              source={item.image}
+              style={{
+                width: scale(24),
+                height: scale(24),
+                tintColor: item.isLogout ? colors.red : undefined,
+              }}
+              resizeMode="contain"
+            />
+          ) : (
+            <IconComponent
+              width={scale(24)}
+              height={scale(24)}
+              color={iconColor}
+            />
+          )}
         </View>
         <AppText
           variant={TEXT_VARIANTS.h4_medium}

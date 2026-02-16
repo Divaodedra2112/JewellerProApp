@@ -19,6 +19,8 @@ const Images = {
   CHAT_ICON_SELECTED: require('../assets/icons/selectedchat.png'),
   UPDATES_ICON_SELECTED: require('../assets/icons/selectednotifications.png'),
   SETTINGS_ICON_SELECTED: require('../assets/icons/selectedsettings.png'),
+  // Other images
+  LOGOUT_IMAGE: require('../assets/images/logout.png'),
 };
 
 export default Images;
