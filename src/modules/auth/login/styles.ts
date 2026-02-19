@@ -26,6 +26,9 @@ type Styles = {
   versionContainer: ViewStyle;
   versionText: TextStyle;
   titleText: TextStyle;
+  membershipLinkContainer: ViewStyle;
+  membershipLinkText: TextStyle;
+  membershipLink: TextStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -69,7 +72,7 @@ export const styles: Styles = StyleSheet.create({
 
   form: {
     width: '100%',
-    paddingHorizontal: scale(8),
+    paddingHorizontal: scale(10),
     gap: verticalScale(0),
   },
   inputLabel: {
@@ -182,5 +185,21 @@ export const styles: Styles = StyleSheet.create({
     marginTop: verticalScale(20),
     textAlign: 'center',
     letterSpacing: 0.5,
+  },
+  membershipLinkContainer: {
+    alignItems: 'center',
+    marginTop: verticalScale(16),
+  },
+  membershipLinkText: {
+    fontSize: scale(14),
+    color: colors.gray1000,
+    fontFamily: Fonts.regular,
+    textAlign: 'center',
+  },
+  membershipLink: {
+    fontSize: scale(14),
+    color: '#173051',
+    fontFamily: Fonts.medium,
+    fontWeight: '600',
   },
 });

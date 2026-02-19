@@ -10,6 +10,8 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  Linking,
+  Text,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAppAction } from './loginActions';
@@ -279,6 +281,21 @@ export const LoginScreen = () => {
         >
           Sign in
         </AppButton>
+
+        {/* Membership Link */}
+        <TouchableOpacity
+          onPress={() => {
+            Linking.openURL('https://jewellerpro.in/membership/').catch(err => {
+              logger.error('Login Screen - Failed to open membership URL', err as Error);
+            });
+          }}
+          style={styles.membershipLinkContainer}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.membershipLinkText}>
+            Not a member? <Text style={styles.membershipLink}>Join Now</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* App Version */}

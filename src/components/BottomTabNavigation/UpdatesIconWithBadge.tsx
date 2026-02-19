@@ -43,3 +43,5 @@ const UpdatesIconWithBadge: React.FC<UpdatesIconWithBadgeProps> = ({ focused }) 
 
 export default UpdatesIconWithBadge;
 
+
+
