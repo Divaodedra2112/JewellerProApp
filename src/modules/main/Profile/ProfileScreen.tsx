@@ -64,8 +64,8 @@ const ProfileScreen = () => {
                 ) : (
                   <View style={styles.profilePicturePlaceholder}>
                     <ProfilIcon
-                      width={scale(80)}
-                      height={scale(80)}
+                      width={scale(60)}
+                      height={scale(60)}
                       color={colors.Gray40}
                     />
                   </View>
@@ -76,8 +76,8 @@ const ProfileScreen = () => {
                   activeOpacity={0.7}
                 >
                   <EditProfileIcon
-                    width={scale(32)}
-                    height={scale(32)}
+                    width={scale(28)}
+                    height={scale(28)}
                   />
                 </TouchableOpacity>
               </View>
@@ -145,6 +145,7 @@ const ProfileScreen = () => {
               <AppButton
                 onPress={handleSaveChanges}
                 style={styles.saveButton}
+                
               >
                 {t('profile.saveChanges', 'Save Changes')}
               </AppButton>

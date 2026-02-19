@@ -70,13 +70,13 @@ const SettingsScreen = () => {
       onPress: handleProfilePress,
       isLogout: false,
     },
-    {
-      id: 'language',
-      title: t('settings.language', 'Language'),
-      icon: GlobeIcon,
-      onPress: handleLanguagePress,
-      isLogout: false,
-    },
+    // {
+    //   id: 'language',
+    //   title: t('settings.language', 'Language'),
+    //   icon: GlobeIcon,
+    //   onPress: handleLanguagePress,
+    //   isLogout: false,
+    // },
     {
       id: 'legal',
       title: t('settings.legal', 'Legal & Policies'),
@@ -139,11 +139,13 @@ const SettingsScreen = () => {
           {item.title}
         </AppText>
         <View style={styles.chevronContainer}>
+          {item.isLogout ? null : (
           <ChevronRightIcon
             width={scale(16)}
             height={scale(16)}
-            color={item.isLogout ? colors.red : colors.gray400}
-          />
+              color={item.isLogout ? colors.red : colors.gray400}
+            />
+          )}
         </View>
       </TouchableOpacity>
     );

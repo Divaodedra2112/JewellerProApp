@@ -37,7 +37,7 @@ export const styles: Styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: scale(20),
+    paddingHorizontal: scale(10),
     paddingTop: verticalScale(20),
   },
   profilePictureContainer: {
@@ -52,14 +52,14 @@ export const styles: Styles = StyleSheet.create({
     justifyContent: 'center',
   },
   profilePicture: {
-    width: scale(120),
-    height: scale(120),
+    width: scale(100),
+    height: scale(100),
     borderRadius: scale(60),
     backgroundColor: colors.gray100,
   },
   profilePicturePlaceholder: {
-    width: scale(120),
-    height: scale(120),
+    width: scale(100),
+    height: scale(100),
     borderRadius: scale(60),
     backgroundColor: colors.gray1100,
     alignItems: 'center',
@@ -74,7 +74,7 @@ export const styles: Styles = StyleSheet.create({
   },
   form: {
     width: '100%',
-    paddingHorizontal: scale(8),
+    paddingHorizontal: scale(0),
     gap: verticalScale(0),
   },
   inputLabel: {
@@ -93,7 +93,7 @@ export const styles: Styles = StyleSheet.create({
     borderRadius: moderateScale(50),
     borderWidth: 1,
     borderColor: colors.gray100,
-    borderTopWidth: 0,
+    borderTopWidth: 0.3,
     paddingHorizontal: scale(20),
     marginBottom: verticalScale(4),
     marginTop: verticalScale(8),
@@ -104,8 +104,8 @@ export const styles: Styles = StyleSheet.create({
       height: verticalScale(1),
     },
     shadowOpacity: 0.08,
-    shadowRadius: scale(2),
-    elevation: 2,
+    shadowRadius: scale(1),
+    elevation: 0.5,
   },
   input: {
     flex: 1,
