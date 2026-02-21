@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image, Platform, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '../../../../../components/AppText/AppText';
 import { TEXT_VARIANTS } from '../../../../../components/AppText/AppText';
 import { ProfilIcon } from '../../../../../assets/icons/svgIcons/appSVGIcons';
@@ -24,6 +25,11 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onPress,
 }) => {
   const navigation = useNavigation<NavigationProp>();
+  const insets = useSafeAreaInsets();
+  
+  // Calculate safe top padding (status bar height + extra padding)
+  const statusBarHeight = Platform.OS === 'ios' ? insets.top : (StatusBar.currentHeight || 0);
+  const topPadding = statusBarHeight + verticalScale(16);
 
   const handlePress = () => {
     if (onPress) {
@@ -38,7 +44,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, { paddingTop: topPadding }]}
       onPress={handlePress}
       activeOpacity={0.7}
     >

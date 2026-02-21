@@ -127,9 +127,10 @@ export const LoginScreen = () => {
           userName: payload?.user?.name,
           userEmail: payload?.user?.email,
         });
-        // Show success overlay
+        // Show success overlay first
         setShowSuccessOverlay(true);
-        // Navigation will be handled by the auth state change
+        // Delay navigation to allow overlay to be visible
+        // Navigation will be handled by the auth state change after delay
       } else if (loginAppAction.rejected.match(result)) {
         const errorPayload = result.payload as string;
         logger.error('Login Screen - Login failed', new Error(errorPayload || 'Unknown error'), {

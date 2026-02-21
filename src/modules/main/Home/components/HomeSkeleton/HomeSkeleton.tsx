@@ -1,10 +1,15 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SkeletonLoader } from '../../../../../components/SkeletonLoader/SkeletonLoader';
 import { scale, verticalScale, moderateScale } from '../../../../../utils/Responsive';
 import { colors } from '../../../../../utils/theme';
 
 export const HomeSkeleton: React.FC = () => {
+  const insets = useSafeAreaInsets();
+  const statusBarHeight = Platform.OS === 'ios' ? insets.top : (StatusBar.currentHeight || 0);
+  const topPadding = statusBarHeight + verticalScale(16);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -13,7 +18,7 @@ export const HomeSkeleton: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Profile Header Skeleton */}
-        <View style={styles.profileHeader}>
+        <View style={[styles.profileHeader, { paddingTop: topPadding }]}>
           <View style={styles.profileTextContainer}>
             <SkeletonLoader width={scale(150)} height={scale(16)} borderRadius={moderateScale(4)} />
             <View style={styles.profileTextSpacing} />

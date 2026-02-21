@@ -172,16 +172,13 @@ const SettingsScreen = () => {
       {/* Logout Confirmation Overlay */}
       <SuccessOverlay
         visible={showLogoutModal}
-        message={t('settings.logoutConfirm', 'Are you sure you want to log out?')}
+        message={t('settings.logoutConfirm', 'Are you sure you want to logout?')}
         isConfirmation={true}
         onPrimaryAction={handleConfirmLogout}
         onSecondaryAction={handleCancelLogout}
         primaryLabel={t('settings.logout', 'Log Out')}
         secondaryLabel={t('common.cancel', 'Cancel')}
         primaryButtonColor={colors.red}
-        iconComponent={LogoutSVGIcon}
-        iconBackgroundColor={colors.textPrimary}
-        iconColor={colors.white}
         autoCloseDelay={0}
       />
     </View>

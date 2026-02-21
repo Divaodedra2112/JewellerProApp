@@ -1,4 +1,4 @@
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import { scale, verticalScale, moderateScale } from '../../../../../utils/Responsive';
 import { colors } from '../../../../../utils/theme';
 
@@ -9,7 +9,7 @@ type Styles = {
   welcomeText: TextStyle;
   userName: TextStyle;
   avatarContainer: ViewStyle;
-  avatar: ViewStyle;
+  avatar: ImageStyle;
   avatarPlaceholder: ViewStyle;
 };
 
@@ -18,6 +18,7 @@ export const styles: Styles = StyleSheet.create({
     paddingHorizontal: scale(20),
     paddingTop: verticalScale(16),
     paddingBottom: verticalScale(20),
+    // Safe area padding will be added dynamically
   },
   content: {
     flexDirection: 'row',
@@ -48,7 +49,6 @@ export const styles: Styles = StyleSheet.create({
   avatar: {
     width: '100%',
     height: '100%',
-    borderRadius: scale(28),
   },
   avatarPlaceholder: {
     width: '100%',
