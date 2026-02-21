@@ -14,7 +14,7 @@ import { MainStackParamList } from '../../../types/navigation';
 import { TopicSkeleton } from './components/TopicSkeleton/TopicSkeleton';
 import { scale, verticalScale, moderateScale } from '../../../utils/Responsive';
 import { colors } from '../../../utils/theme';
-import { DownloadIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
+import { DownloadIcon, ShareIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 import { styles } from './styles';
 import { logger } from '../../../utils/logger';
 import { showToast, TOAST_TYPE } from '../../../utils/toast';
@@ -38,16 +38,17 @@ const TopicScreen = () => {
 
   // Handle PDF download
   const handleDownloadPDF = useCallback(async () => {
-    if (!topic?.pdfUrl) {
+    const topicToUse = topic;
+    if (!topicToUse?.pdfUrl) {
       showToast(TOAST_TYPE.ERROR, t('topic.noPdf', 'PDF not available'));
       return;
     }
 
     try {
-      const canOpen = await Linking.canOpenURL(topic.pdfUrl);
+      const canOpen = await Linking.canOpenURL(topicToUse.pdfUrl);
       if (canOpen) {
-        await Linking.openURL(topic.pdfUrl);
-        logger.info('Topic Screen - PDF opened', { pdfUrl: topic.pdfUrl });
+        await Linking.openURL(topicToUse.pdfUrl);
+        logger.info('Topic Screen - PDF opened', { pdfUrl: topicToUse.pdfUrl });
       } else {
         showToast(TOAST_TYPE.ERROR, t('topic.pdfError', 'Unable to open PDF'));
       }
@@ -59,30 +60,31 @@ const TopicScreen = () => {
 
   // Handle share
   const handleShare = useCallback(async () => {
-    if (!topic) {
+    const topicToUse = topic;
+    if (!topicToUse) {
       return;
     }
 
     try {
       const shareContent: { message: string; title?: string; url?: string } = {
-        message: `${topic.title}\n\n${topic.content.substring(0, 200)}...`,
-        title: topic.title,
+        message: `${topicToUse.title}\n\n${topicToUse.content.substring(0, 200)}...`,
+        title: topicToUse.title,
       };
 
-      if (topic.pdfUrl) {
-        shareContent.url = topic.pdfUrl;
+      if (topicToUse.pdfUrl) {
+        shareContent.url = topicToUse.pdfUrl;
       }
 
       if (Platform.OS === 'android') {
-        shareContent.title = topic.title;
+        shareContent.title = topicToUse.title;
       }
 
       const result = await Share.share(shareContent, {
         ...(Platform.OS === 'android' && {
-          dialogTitle: topic.title,
+          dialogTitle: topicToUse.title,
         }),
         ...(Platform.OS === 'ios' && {
-          subject: topic.title,
+          subject: topicToUse.title,
         }),
       });
 
@@ -104,6 +106,14 @@ const TopicScreen = () => {
       <CustomHeader
         title={displayTitle}
         showBackButton={true}
+        rightIcon={
+          <ShareIcon
+            width={scale(24)}
+            height={scale(24)}
+            color={colors.primary}
+          />
+        }
+        onRightIconPress={handleShare}
       />
 
       {(loading && !topic) || (error && !topic) ? (
