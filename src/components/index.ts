@@ -21,7 +21,6 @@ import { CategoryGrid } from './CategoryGrid/CategoryGrid';
 import { sharePin } from './SharePin/SharePin';
 import { EmptyState } from './EmptyState/EmptyState';
 import NotAuthorized from './NotAuthorized/NotAuthorized';
-import PermissionGate from './PermissionGate';
 import { SuccessOverlay } from './SuccessOverlay';
 import { SkeletonLoader } from './SkeletonLoader/SkeletonLoader';
 
@@ -55,7 +54,6 @@ export {
   sharePin,
   EmptyState,
   NotAuthorized,
-  PermissionGate,
   SuccessOverlay,
   SkeletonLoader,
   // Navigation

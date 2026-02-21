@@ -7,7 +7,6 @@ import forceUpdateReducer from '../slices/forceUpdateSlice';
 import languageReducer from '../slices/languageSlice';
 import subCategoryReducer from '../slices/subCategorySlice';
 import topicReducer from '../slices/topicSlice';
-import { permissionReducer } from '../../rbac';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -15,7 +14,6 @@ const rootReducer = combineReducers({
   notifications: notificationReducer,
   home: homeReducer,
   forceUpdate: forceUpdateReducer,
-  permission: permissionReducer,
   language: languageReducer,
   subCategory: subCategoryReducer,
   topic: topicReducer,
