@@ -2,6 +2,7 @@
 import { Button as AppButton } from './AppButton/Button';
 import AppImage from './AppImage/AppImage';
 import { Input as AppInput } from './AppInput/Input';
+import { AppInputField } from './AppInputField/AppInputField';
 import { Checkbox as AppCheckbox } from './AppCheckbox/Checkbox';
 import AppScrollView from './AppScrollView/AppScrollView';
 import AppContainer from './AppContainer/AppContainer';
@@ -38,6 +39,7 @@ export {
   AppButton,
   AppImage,
   AppInput,
+  AppInputField,
   AppCheckbox,
   AppScrollView,
   AppContainer,

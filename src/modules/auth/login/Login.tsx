@@ -8,7 +8,6 @@ import {
   Platform,
   StyleSheet,
   KeyboardAvoidingView,
-  TextInput,
   TouchableOpacity,
   Linking,
   Text,
@@ -17,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginAppAction } from './loginActions';
 import { RootState } from '../../../store';
 import { styles } from './styles';
-import { AppImage, SuccessOverlay, AppButton } from '../../../components';
+import { AppImage, SuccessOverlay, AppButton, AppInputField } from '../../../components';
 import { Images } from '../../../utils';
 import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
 import { logger } from '../../../utils/logger';
@@ -211,62 +210,38 @@ export const LoginScreen = () => {
 
       <View style={styles.form}>
         {/* Phone Number */}
-        <AppText variant={TEXT_VARIANTS.h4_large} style={styles.inputLabel}>
-          Phone Number
-        </AppText>
-        <View style={styles.phoneInputContainer}>
-          <TextInput
-            value={mobileNumber}
-            onChangeText={handleMobileNumberChange}
-            keyboardType="phone-pad"
-            maxLength={10}
-            placeholder="Enter your phone number"
-            placeholderTextColor={colors.inputLabel}
-            style={styles.phoneInput}
-            cursorColor={colors.black}
-            selectionColor={colors.black}
-          />
-        </View>
-        {errors.mobileNumber && (
-          <AppText style={styles.errorText} variant={TEXT_VARIANTS.h4_small}>
-            {errors.mobileNumber}
-          </AppText>
-        )}
+        <AppInputField
+          label="Phone Number"
+          value={mobileNumber}
+          onChangeText={handleMobileNumberChange}
+          keyboardType="phone-pad"
+          maxLength={10}
+          placeholder="Enter your phone number"
+          error={errors.mobileNumber}
+          labelStyle={styles.inputLabel}
+        />
 
         {/* Password */}
-        <AppText variant={TEXT_VARIANTS.h4_large} style={[styles.inputLabel, { marginTop: verticalScale(16) }]}>
-          Password
-        </AppText>
-        <View style={[styles.phoneInputContainer, { paddingRight: scale(10) }]}>
-          <TextInput
-            value={password}
-            onChangeText={handlePasswordChange}
-            secureTextEntry={!showPassword}
-            placeholder="Enter your password"
-            placeholderTextColor={colors.inputLabel}
-            style={[styles.phoneInput, { flex: 1 }]}
-            cursorColor={colors.black}
-            selectionColor={colors.black}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={{ padding: scale(8) }}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            {showPassword ? (
+        <AppInputField
+          label="Password"
+          value={password}
+          onChangeText={handlePasswordChange}
+          secureTextEntry={!showPassword}
+          placeholder="Enter your password"
+          autoCapitalize="none"
+          autoCorrect={false}
+          error={errors.password}
+          rightIcon={
+            showPassword ? (
               <EyeIcon width={scale(24)} height={scale(24)} color={colors.gray1000} />
             ) : (
               <EyeOffIcon width={scale(24)} height={scale(24)} color={colors.gray1000} />
-            )}
-          </TouchableOpacity>
-        </View>
-        {errors.password && (
-          <AppText style={styles.errorText} variant={TEXT_VARIANTS.h4_small}>
-            {errors.password}
-          </AppText>
-        )}
+            )
+          }
+          onRightIconPress={() => setShowPassword(!showPassword)}
+          labelStyle={[styles.inputLabel, { marginTop: verticalScale(16) }]}
+          containerStyle={{ paddingRight: scale(10) }}
+        />
 
         <AppButton
           onPress={handleLogin}

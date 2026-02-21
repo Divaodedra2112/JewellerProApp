@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   ScrollView,
-  TextInput,
   TouchableOpacity,
   Image,
   Platform,
@@ -11,12 +10,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { AppText } from '../../../components/AppText/AppText';
-import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
-import { CustomHeader, AppButton } from '../../../components';
+import { CustomHeader, AppButton, AppInputField } from '../../../components';
 import { styles } from './styles';
-import { scale, verticalScale, moderateScale } from '../../../utils/Responsive';
-import { colors, Fonts } from '../../../utils/theme';
+import { scale, verticalScale } from '../../../utils/Responsive';
+import { colors } from '../../../utils/theme';
 import { EditProfileIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 import { ProfilIcon } from '../../../assets/icons/svgIcons/appSVGIcons';
 
@@ -86,60 +83,33 @@ const ProfileScreen = () => {
             {/* Form Fields */}
             <View style={styles.form}>
               {/* First Name */}
-              <AppText variant={TEXT_VARIANTS.h4_large} style={styles.inputLabel}>
-                {t('profile.firstName', 'First Name')}
-              </AppText>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  value={firstName}
-                  onChangeText={setFirstName}
-                  placeholder={t('profile.firstNamePlaceholder', 'Enter your first name')}
-                  placeholderTextColor={colors.inputLabel}
-                  style={styles.input}
-                  cursorColor={colors.black}
-                  selectionColor={colors.black}
-                />
-              </View>
+              <AppInputField
+                label={t('profile.firstName', 'First Name')}
+                value={firstName}
+                onChangeText={setFirstName}
+                placeholder={t('profile.firstNamePlaceholder', 'Enter your first name')}
+                labelStyle={styles.inputLabel}
+              />
 
               {/* Last Name */}
-              <AppText
-                variant={TEXT_VARIANTS.h4_large}
-                style={[styles.inputLabel, { marginTop: verticalScale(16) }]}
-              >
-                {t('profile.lastName', 'Last Name')}
-              </AppText>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  value={lastName}
-                  onChangeText={setLastName}
-                  placeholder={t('profile.lastNamePlaceholder', 'Enter your last name')}
-                  placeholderTextColor={colors.inputLabel}
-                  style={styles.input}
-                  cursorColor={colors.black}
-                  selectionColor={colors.black}
-                />
-              </View>
+              <AppInputField
+                label={t('profile.lastName', 'Last Name')}
+                value={lastName}
+                onChangeText={setLastName}
+                placeholder={t('profile.lastNamePlaceholder', 'Enter your last name')}
+                labelStyle={[styles.inputLabel, { marginTop: verticalScale(16) }]}
+              />
 
               {/* Phone Number */}
-              <AppText
-                variant={TEXT_VARIANTS.h4_large}
-                style={[styles.inputLabel, { marginTop: verticalScale(16) }]}
-              >
-                {t('profile.phoneNumber', 'Phone Number')}
-              </AppText>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  keyboardType="phone-pad"
-                  placeholder={t('profile.phoneNumberPlaceholder', 'Enter your phone number')}
-                  placeholderTextColor={colors.inputLabel}
-                  style={styles.input}
-                  cursorColor={colors.black}
-                  selectionColor={colors.black}
-                  editable={false}
-                />
-              </View>
+              <AppInputField
+                label={t('profile.phoneNumber', 'Phone Number')}
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                keyboardType="phone-pad"
+                placeholder={t('profile.phoneNumberPlaceholder', 'Enter your phone number')}
+                editable={false}
+                labelStyle={[styles.inputLabel, { marginTop: verticalScale(16) }]}
+              />
 
               {/* Save Changes Button */}
               <AppButton
