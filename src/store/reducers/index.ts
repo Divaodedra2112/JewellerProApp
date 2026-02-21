@@ -5,6 +5,8 @@ import notificationReducer from '../slices/notificationSlice';
 import homeReducer from '../slices/homeSlice';
 import forceUpdateReducer from '../slices/forceUpdateSlice';
 import languageReducer from '../slices/languageSlice';
+import subCategoryReducer from '../slices/subCategorySlice';
+import topicReducer from '../slices/topicSlice';
 import { permissionReducer } from '../../rbac';
 
 const rootReducer = combineReducers({
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   forceUpdate: forceUpdateReducer,
   permission: permissionReducer,
   language: languageReducer,
+  subCategory: subCategoryReducer,
+  topic: topicReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

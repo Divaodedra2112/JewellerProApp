@@ -2,6 +2,8 @@ import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootState } from '../../../store';
 import { EmptyState } from '../../../components';
 import { ProfileHeader } from './components/ProfileHeader/ProfileHeader';
@@ -10,9 +12,13 @@ import { CategoryGrid } from '../../../components/CategoryGrid/CategoryGrid';
 import { HomeSkeleton } from './components/HomeSkeleton/HomeSkeleton';
 import { fetchHomeData } from './HomeActions';
 import { setRefreshing } from '../../../store/slices/homeSlice';
+import { MainStackParamList } from '../../../types/navigation';
+import { Category } from './HomeTypes';
 import { colors } from '../../../utils/theme';
 import { scale, verticalScale } from '../../../utils/Responsive';
 import { logger } from '../../../utils/logger';
+
+type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
 /**
  * Home Screen - Displays user profile, banners, and categories
@@ -20,6 +26,7 @@ import { logger } from '../../../utils/logger';
 const HomeScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const navigation = useNavigation<NavigationProp>();
   const { user } = useSelector((state: RootState) => state.auth);
   const { homeData, loading, error, refreshing } = useSelector(
     (state: RootState) => state.home
@@ -37,10 +44,31 @@ const HomeScreen = () => {
   }, [dispatch]);
 
   // Handle category press
-  const handleCategoryPress = useCallback((category: any) => {
-    logger.info('Home Screen - Category pressed', { categoryId: category.id, categoryTitle: category.title });
-    // TODO: Navigate to category detail screen
-  }, []);
+  const handleCategoryPress = useCallback(
+    (category: Category) => {
+      logger.info('Home Screen - Category pressed', {
+        categoryId: category.id,
+        categoryTitle: category.title,
+        hasSubCategory: category.hasSubCategory,
+      });
+
+      if (category.hasSubCategory) {
+        // Navigate to SubCategory screen
+        navigation.navigate('SubCategory', {
+          categoryId: category.id,
+          categoryTitle: category.title,
+        });
+      } else {
+        // Navigate directly to Topic screen
+        navigation.navigate('Topic', {
+          id: category.id,
+          title: category.title,
+          type: 'category',
+        });
+      }
+    },
+    [navigation]
+  );
 
   // Handle banner press
   const handleBannerPress = useCallback((banner: any) => {
