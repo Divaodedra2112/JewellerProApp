@@ -64,15 +64,6 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
           >
             {category.title}
           </AppText>
-          {category.description && (
-            <AppText
-              variant={TEXT_VARIANTS.h6_small}
-              style={styles.description}
-              numberOfLines={2}
-            >
-              {category.description}
-            </AppText>
-          )}
         </View>
       </View>
     </TouchableOpacity>

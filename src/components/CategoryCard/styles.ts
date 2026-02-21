@@ -10,7 +10,6 @@ type Styles = {
   iconText: TextStyle;
   textContainer: ViewStyle;
   title: TextStyle;
-  description: TextStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -56,12 +55,6 @@ export const styles: Styles = StyleSheet.create({
     fontSize: scale(16),
     color: colors.textPrimary,
     fontWeight: '600',
-    marginBottom: verticalScale(4),
-  },
-  description: {
-    fontSize: scale(12),
-    color: colors.textSecondary,
-    lineHeight: scale(16),
   },
 });
 

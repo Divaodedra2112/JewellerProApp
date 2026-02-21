@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Image, Linking, StyleSheet, ViewStyle } from 'react-native';
+import { View, TouchableOpacity, Image, Linking, StyleSheet, ViewStyle, ImageSourcePropType } from 'react-native';
 import { AppText } from '../AppText/AppText';
 import { TEXT_VARIANTS } from '../AppText/AppText';
 import { scale, verticalScale, moderateScale } from '../../utils/Responsive';
@@ -8,24 +8,39 @@ import { Banner } from '../../modules/main/Home/HomeTypes';
 import { styles } from './styles';
 
 interface BannerCardProps {
-  banner: Banner;
-  onPress?: (banner: Banner) => void;
+  banner?: Banner;
+  onPress?: (banner?: Banner) => void;
   style?: ViewStyle;
+  // Support for static/local images
+  localImage?: ImageSourcePropType;
+  title?: string;
+  description?: string;
+  linkUrl?: string;
 }
 
 export const BannerCard: React.FC<BannerCardProps> = ({
   banner,
   onPress,
   style,
+  localImage,
+  title,
+  description,
+  linkUrl,
 }) => {
+  // Use banner props if provided, otherwise use direct props
+  const displayTitle = banner?.title || title;
+  const displayDescription = banner?.description || description;
+  const displayLinkUrl = banner?.linkUrl || linkUrl;
+  const displayImageUrl = banner?.imageUrl;
+
   const handlePress = async () => {
     if (onPress) {
       onPress(banner);
-    } else if (banner.linkUrl) {
+    } else if (displayLinkUrl) {
       // Handle external URL
-      const canOpen = await Linking.canOpenURL(banner.linkUrl);
+      const canOpen = await Linking.canOpenURL(displayLinkUrl);
       if (canOpen) {
-        await Linking.openURL(banner.linkUrl);
+        await Linking.openURL(displayLinkUrl);
       }
     }
   };
@@ -36,29 +51,35 @@ export const BannerCard: React.FC<BannerCardProps> = ({
       onPress={handlePress}
       activeOpacity={0.8}
     >
-      {banner.imageUrl ? (
+      {localImage ? (
         <Image
-          source={{ uri: banner.imageUrl }}
+          source={localImage}
           style={styles.image}
-          resizeMode="cover"
+          resizeMode="contain"
+        />
+      ) : displayImageUrl ? (
+        <Image
+          source={{ uri: displayImageUrl }}
+          style={styles.image}
+          resizeMode="contain"
         />
       ) : (
         <View style={styles.placeholder}>
           <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.placeholderText}>
-            {banner.title || 'Banner'}
+            {displayTitle || 'Banner'}
           </AppText>
         </View>
       )}
-      {(banner.title || banner.description) && (
+      {(displayTitle || displayDescription) && (
         <View style={styles.overlay}>
-          {banner.title && (
+          {displayTitle && (
             <AppText variant={TEXT_VARIANTS.h2} style={styles.title}>
-              {banner.title}
+              {displayTitle}
             </AppText>
           )}
-          {banner.description && (
+          {displayDescription && (
             <AppText variant={TEXT_VARIANTS.h4_small} style={styles.description}>
-              {banner.description}
+              {displayDescription}
             </AppText>
           )}
         </View>

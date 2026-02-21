@@ -14,12 +14,12 @@ type Styles = {
 
 export const styles: Styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: '95%',
     height: verticalScale(180),
     borderRadius: moderateScale(16),
     overflow: 'hidden',
-    marginVertical: verticalScale(12),
     backgroundColor: colors.gray50,
+    marginHorizontal: scale(10),
     // Shadow properties
     shadowColor: '#000000',
     shadowOffset: {

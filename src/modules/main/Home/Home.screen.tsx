@@ -17,6 +17,7 @@ import { Category } from './HomeTypes';
 import { colors } from '../../../utils/theme';
 import { scale, verticalScale } from '../../../utils/Responsive';
 import { logger } from '../../../utils/logger';
+import { Images } from '../../../utils';
 
 type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
@@ -107,10 +108,16 @@ const HomeScreen = () => {
           userPhoto={user?.photo}
         />
 
-        {/* First Banner */}
-        {firstBanner && (
+        {/* First Banner - Show static banner if API doesn't provide one */}
+        {firstBanner ? (
           <BannerCard
             banner={firstBanner}
+            onPress={handleBannerPress}
+            style={styles.banner}
+          />
+        ) : (
+          <BannerCard
+            localImage={Images.HOME_BANNER}
             onPress={handleBannerPress}
             style={styles.banner}
           />
@@ -147,7 +154,8 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(20),
   },
   banner: {
-    marginHorizontal: scale(10),
+    marginTop: verticalScale(8),
+    marginBottom: verticalScale(16),
   },
 });
 
