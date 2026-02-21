@@ -72,6 +72,10 @@ export const loginAppAction = createAsyncThunk(
       }
 
       logger.info('Login Action - Tokens stored successfully');
+      
+      // Add delay to allow success overlay to show before navigation
+      // Wait 2.1 seconds (overlay auto-closes at 2 seconds, add 100ms buffer)
+      await new Promise(resolve => setTimeout(resolve, 2100));
 
       // Transform user data to match expected format
       if (userData) {

@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native';
 import { styles } from './styles';
 import { colors } from '../../utils/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { PermissionGate } from '../../rbac';
 import menu from '../../config/menuConfig.json';
 import { MainStackParamList } from '../../types/navigation';
 import { defaultIconSizes } from '../../utils/CommonStyles';
@@ -225,22 +224,14 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
               AddSampleRequestScreen: 'sampleRequest',
               AddGradeScreen: 'grade',
             };
-            const jsonModule =
-              (menu as any[]).find(i => i.id === onPlusPressNavigateTo)?.moduleKey ?? null;
-            const moduleKey = addRouteModuleMap[onPlusPressNavigateTo] ?? jsonModule;
             return (
-              <PermissionGate moduleKey={moduleKey} action="add">
-                {(() => {
-                  return null;
-                })()}
-                <TouchableOpacity
-                  onPress={handleNavigation}
-                  style={styles.headerIconTouchable}
-                  activeOpacity={0.7}
-                >
-                  <PlusIcon width={xmedium} height={xmedium} fill={colors.primary} />
-                </TouchableOpacity>
-              </PermissionGate>
+              <TouchableOpacity
+                onPress={handleNavigation}
+                style={styles.headerIconTouchable}
+                activeOpacity={0.7}
+              >
+                <PlusIcon width={xmedium} height={xmedium} fill={colors.primary} />
+              </TouchableOpacity>
             );
           })()}
       </View>

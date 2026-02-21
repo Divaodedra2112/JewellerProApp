@@ -1,10 +1,5 @@
 // src/modules/auth/otp/otpActions.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  fetchPermissionCatalog,
-  setEffectivePermissions,
-  buildEffectivePermissions,
-} from '../../../rbac';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { verifyOtp, resendOtp } from './otpService';
 
@@ -81,15 +76,6 @@ export const submitOtp = createAsyncThunk(
           permissions: userData.roles[0]?.permissions || {},
         },
       };
-      
-      // Fetch permission catalog and compute effective permissions
-      try {
-        const catalog = await dispatch(fetchPermissionCatalog()).unwrap();
-        const effective = buildEffectivePermissions(payload.user.permissions || {}, catalog);
-        dispatch(setEffectivePermissions(effective));
-      } catch (e) {
-        // Permission setup failed, but continue with login
-      }
       
       return payload;
 

@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchDashboardData } from '../../modules/main/Home/HomeActions';
-import { HomeState } from '../../modules/main/Home/HomeTypes';
+import { fetchHomeData } from '../../modules/main/Home/HomeActions';
+import { HomeState, HomeData } from '../../modules/main/Home/HomeTypes';
 
 const initialState: HomeState = {
-  dashboardData: null,
+  homeData: null,
   loading: false,
   error: null,
   refreshing: false,
@@ -22,17 +22,17 @@ const homeSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchDashboardData.pending, state => {
+      .addCase(fetchHomeData.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchDashboardData.fulfilled, (state, action) => {
+      .addCase(fetchHomeData.fulfilled, (state, action: PayloadAction<HomeData>) => {
         state.loading = false;
-        state.dashboardData = action.payload;
+        state.homeData = action.payload;
         state.error = null;
         state.refreshing = false;
       })
-      .addCase(fetchDashboardData.rejected, (state, action) => {
+      .addCase(fetchHomeData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.refreshing = false;
