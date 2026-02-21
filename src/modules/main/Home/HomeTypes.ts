@@ -1,19 +1,45 @@
 /**
- * Dashboard/Home data structure
- * TODO: Customize this interface for your app's dashboard data
+ * Category data structure from API
  */
-export interface DashboardData {
-  // Example fields - customize as needed
-  totalItems?: number;
-  // Add more dashboard fields as needed
+export interface Category {
+  id: string;
+  title: string;
+  description: string;
+  icon: string | null;
+  hasSubCategory: boolean;
+  order: number;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Banner data structure from API
+ */
+export interface Banner {
+  id: string;
+  title: string;
+  description?: string;
+  imageUrl: string;
+  linkUrl?: string;
+  order: number;
+  status: 'ACTIVE' | 'INACTIVE';
+}
+
+/**
+ * Home data structure containing categories and optional banners
+ */
+export interface HomeData {
+  categories: Category[];
+  banners?: Banner[]; // Optional - may not always be present
 }
 
 /**
  * Home API response structure
  */
 export interface HomeResponse {
-  data: DashboardData;
   success: boolean;
+  data: HomeData;
   message?: string;
 }
 
@@ -21,7 +47,7 @@ export interface HomeResponse {
  * Home state interface for Redux
  */
 export interface HomeState {
-  dashboardData: DashboardData | null;
+  homeData: HomeData | null;
   loading: boolean;
   error: string | null;
   refreshing: boolean;
