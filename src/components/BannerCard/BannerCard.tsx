@@ -5,6 +5,7 @@ import { TEXT_VARIANTS } from '../AppText/AppText';
 import { scale, verticalScale, moderateScale } from '../../utils/Responsive';
 import { colors } from '../../utils/theme';
 import { Banner } from '../../modules/main/Home/HomeTypes';
+import { ArrowRightIcon } from '../../assets/icons/svgIcons/appSVGIcons';
 import { styles } from './styles';
 
 interface BannerCardProps {
@@ -45,6 +46,16 @@ export const BannerCard: React.FC<BannerCardProps> = ({
     }
   };
 
+  const handleViewButtonPress = async (e: any) => {
+    e.stopPropagation(); // Prevent triggering the parent TouchableOpacity
+    if (displayLinkUrl) {
+      const canOpen = await Linking.canOpenURL(displayLinkUrl);
+      if (canOpen) {
+        await Linking.openURL(displayLinkUrl);
+      }
+    }
+  };
+
   return (
     <TouchableOpacity
       style={[styles.container, style]}
@@ -55,13 +66,13 @@ export const BannerCard: React.FC<BannerCardProps> = ({
         <Image
           source={localImage}
           style={styles.image}
-          resizeMode="contain"
+          resizeMode="cover"
         />
       ) : displayImageUrl ? (
         <Image
           source={{ uri: displayImageUrl }}
           style={styles.image}
-          resizeMode="contain"
+          resizeMode="cover"
         />
       ) : (
         <View style={styles.placeholder}>
@@ -70,7 +81,7 @@ export const BannerCard: React.FC<BannerCardProps> = ({
           </AppText>
         </View>
       )}
-      {(displayTitle || displayDescription) && (
+      {(displayTitle || displayDescription || displayLinkUrl) && (
         <View style={styles.overlay}>
           {displayTitle && (
             <AppText variant={TEXT_VARIANTS.h2} style={styles.title}>
@@ -81,6 +92,19 @@ export const BannerCard: React.FC<BannerCardProps> = ({
             <AppText variant={TEXT_VARIANTS.h4_small} style={styles.description}>
               {displayDescription}
             </AppText>
+          )}
+          {/* View Button - Only show if linkUrl is available */}
+          {displayLinkUrl && (
+            <TouchableOpacity
+              style={styles.viewButton}
+              onPress={handleViewButtonPress}
+              activeOpacity={0.8}
+            >
+              <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.viewButtonText}>
+                View
+              </AppText>
+              <ArrowRightIcon width={scale(16)} height={scale(16)} color={colors.primary} />
+            </TouchableOpacity>
           )}
         </View>
       )}

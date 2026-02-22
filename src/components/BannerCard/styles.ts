@@ -10,6 +10,8 @@ type Styles = {
   overlay: ViewStyle;
   title: TextStyle;
   description: TextStyle;
+  viewButton: ViewStyle;
+  viewButtonText: TextStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -18,7 +20,7 @@ export const styles: Styles = StyleSheet.create({
     height: verticalScale(180),
     borderRadius: moderateScale(16),
     overflow: 'hidden',
-    backgroundColor: colors.gray50,
+    backgroundColor: 'transparent',
     marginHorizontal: scale(10),
     // Shadow properties
     shadowColor: '#000000',
@@ -33,6 +35,9 @@ export const styles: Styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
   placeholder: {
     width: '100%',
@@ -51,7 +56,7 @@ export const styles: Styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: scale(16),
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'transparent',
   },
   title: {
     color: colors.white,
@@ -62,7 +67,25 @@ export const styles: Styles = StyleSheet.create({
   description: {
     color: colors.white,
     fontSize: scale(14),
-    opacity: 0.9,
+    opacity: 0.95,
+    marginBottom: verticalScale(8),
+    lineHeight: scale(20),
+  },
+  viewButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: colors.white,
+    paddingHorizontal: scale(16),
+    paddingVertical: verticalScale(10),
+    borderRadius: moderateScale(20),
+    gap: scale(6),
+    marginTop: verticalScale(8),
+  },
+  viewButtonText: {
+    color: colors.primary,
+    fontSize: scale(14),
+    fontWeight: '600',
   },
 });
 

@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootState } from '../../../store';
 import { EmptyState } from '../../../components';
 import { ProfileHeader } from './components/ProfileHeader/ProfileHeader';
+import { BannerCarousel } from '../../../components/BannerCarousel/BannerCarousel';
 import { BannerCard } from '../../../components/BannerCard/BannerCard';
 import { CategoryGrid } from '../../../components/CategoryGrid/CategoryGrid';
 import { HomeSkeleton } from './components/HomeSkeleton/HomeSkeleton';
@@ -79,12 +80,12 @@ const HomeScreen = () => {
 
   // Get banners from homeData
   const banners = homeData?.banners || [];
-  const firstBanner = banners.length > 0 ? banners[0] : null;
   const secondBanner = banners.length > 1 ? banners[1] : null;
   const categories = homeData?.categories || [];
 
-  // Loading state or error state - show skeleton instead of empty page
-  if ((loading && !homeData) || (error && !homeData)) {
+  // Loading state - show skeleton during initial load
+  // Show skeleton when loading and not refreshing (pull-to-refresh uses RefreshControl)
+  if (loading && !refreshing) {
     return <HomeSkeleton />;
   }
 
@@ -108,20 +109,13 @@ const HomeScreen = () => {
           userPhoto={user?.photo}
         />
 
-        {/* First Banner - Show static banner if API doesn't provide one */}
-        {firstBanner ? (
-          <BannerCard
-            banner={firstBanner}
-            onPress={handleBannerPress}
-            style={styles.banner}
-          />
-        ) : (
-          <BannerCard
-            localImage={Images.HOME_BANNER}
-            onPress={handleBannerPress}
-            style={styles.banner}
-          />
-        )}
+        {/* Top Banner Carousel - Shows multiple banners from API or static images */}
+        <BannerCarousel
+          banners={banners}
+          localImage={Images.HOME_BANNER}
+          localImages={[Images.HOME_BANNER_1, Images.HOME_BANNER_2, Images.HOME_BANNER_3]}
+          onBannerPress={handleBannerPress}
+        />
 
         {/* Category Grid */}
         <CategoryGrid
@@ -129,7 +123,7 @@ const HomeScreen = () => {
           onCategoryPress={handleCategoryPress}
         />
 
-        {/* Second Banner (optional) */}
+        {/* Second Banner (optional) - Keep as is for bottom banner */}
         {secondBanner && (
           <BannerCard
             banner={secondBanner}

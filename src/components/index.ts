@@ -14,6 +14,7 @@ import { AppLoader } from './AppLoader';
 // Layout Components
 import AppListViewCard from './AppListViewCard/AppListViewCard';
 import { BannerCard } from './BannerCard/BannerCard';
+import { BannerCarousel } from './BannerCarousel/BannerCarousel';
 import { CategoryCard } from './CategoryCard/CategoryCard';
 import { CategoryGrid } from './CategoryGrid/CategoryGrid';
 
@@ -48,6 +49,7 @@ export {
   // Layout
   AppListViewCard,
   BannerCard,
+  BannerCarousel,
   CategoryCard,
   CategoryGrid,
   // Utility
