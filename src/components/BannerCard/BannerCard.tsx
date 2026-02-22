@@ -58,55 +58,33 @@ export const BannerCard: React.FC<BannerCardProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.container, style]}
+      style={style}
       onPress={handlePress}
       activeOpacity={0.8}
     >
       {localImage ? (
         <Image
           source={localImage}
-          style={styles.image}
           resizeMode="cover"
         />
       ) : displayImageUrl ? (
         <Image
           source={{ uri: displayImageUrl }}
-          style={styles.image}
           resizeMode="cover"
         />
-      ) : (
-        <View style={styles.placeholder}>
-          <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.placeholderText}>
-            {displayTitle || 'Banner'}
+      ) : null}
+      {/* View Button - Only show if linkUrl is available */}
+      {displayLinkUrl && (
+        <TouchableOpacity
+          style={styles.viewButton}
+          onPress={handleViewButtonPress}
+          activeOpacity={0.8}
+        >
+          <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.viewButtonText}>
+            View
           </AppText>
-        </View>
-      )}
-      {(displayTitle || displayDescription || displayLinkUrl) && (
-        <View style={styles.overlay}>
-          {displayTitle && (
-            <AppText variant={TEXT_VARIANTS.h2} style={styles.title}>
-              {displayTitle}
-            </AppText>
-          )}
-          {displayDescription && (
-            <AppText variant={TEXT_VARIANTS.h4_small} style={styles.description}>
-              {displayDescription}
-            </AppText>
-          )}
-          {/* View Button - Only show if linkUrl is available */}
-          {displayLinkUrl && (
-            <TouchableOpacity
-              style={styles.viewButton}
-              onPress={handleViewButtonPress}
-              activeOpacity={0.8}
-            >
-              <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.viewButtonText}>
-                View
-              </AppText>
-              <ArrowRightIcon width={scale(16)} height={scale(16)} color={colors.primary} />
-            </TouchableOpacity>
-          )}
-        </View>
+          <ArrowRightIcon width={scale(16)} height={scale(16)} color={colors.primary} />
+        </TouchableOpacity>
       )}
     </TouchableOpacity>
   );

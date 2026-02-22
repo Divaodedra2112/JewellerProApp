@@ -69,7 +69,13 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
         snapToAlignment="start"
       >
         {displayBanners.map((banner, index) => (
-          <View key={banners.length === 0 ? `banner-static-${index}` : `banner-${banner.id}-${index}`} style={styles.bannerWrapper}>
+          <View 
+            key={banners.length === 0 ? `banner-static-${index}` : `banner-${banner.id}-${index}`} 
+            style={[
+              styles.bannerWrapper,
+              index === displayBanners.length - 1 && styles.lastBannerWrapper
+            ]}
+          >
             {/* Use static images if no banners from API */}
             {banners.length === 0 && staticImages.length > 0 ? (
               <BannerCard
@@ -114,10 +120,15 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingLeft: SCREEN_WIDTH * 0.025, // Left padding to center first card
+    paddingRight: SCREEN_WIDTH * 0.025, // Right padding for last card
   },
   bannerWrapper: {
     width: SCREEN_WIDTH, // Each wrapper takes full screen width for proper paging
     alignItems: 'center', // Center the banner card within the wrapper
+    marginRight: scale(10), // Add right margin after each banner
+  },
+  lastBannerWrapper: {
+    marginRight: 0, // Remove margin from last banner as it has paddingRight from scrollContent
   },
   pagination: {
     flexDirection: 'row',
