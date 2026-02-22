@@ -17,7 +17,7 @@ export const styles: Styles = StyleSheet.create({
   container: {
     paddingHorizontal: scale(20),
     paddingTop: verticalScale(16),
-    paddingBottom: verticalScale(20),
+    paddingBottom: verticalScale(10),
     // Safe area padding will be added dynamically
   },
   content: {
@@ -32,7 +32,6 @@ export const styles: Styles = StyleSheet.create({
   welcomeText: {
     fontSize: scale(16),
     color: colors.gray1000,
-    marginBottom: verticalScale(4),
   },
   userName: {
     fontSize: scale(20),

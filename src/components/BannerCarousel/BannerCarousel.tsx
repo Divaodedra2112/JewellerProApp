@@ -115,7 +115,6 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: verticalScale(8),
     marginBottom: verticalScale(16),
   },
   scrollContent: {

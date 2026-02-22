@@ -50,10 +50,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     >
       <View style={styles.content}>
         <View style={styles.textContainer}>
-          <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.welcomeText}>
+          <AppText variant={TEXT_VARIANTS.h5_small} style={styles.welcomeText}>
             {welcomeText}
           </AppText>
-          <AppText variant={TEXT_VARIANTS.h3_medium} style={styles.userName}>
+          <AppText variant={TEXT_VARIANTS.h5_medium} style={styles.userName}>
             {displayName}
           </AppText>
         </View>
