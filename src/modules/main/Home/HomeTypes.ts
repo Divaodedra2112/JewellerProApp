@@ -27,11 +27,24 @@ export interface Banner {
 }
 
 /**
+ * Zoom Meeting data structure from API
+ */
+export interface ZoomMeeting {
+  id: string;
+  title: string;
+  linkUrl: string;
+  meetingTime?: string;
+  order?: number;
+  status?: 'ACTIVE' | 'INACTIVE';
+}
+
+/**
  * Home data structure containing categories and optional banners
  */
 export interface HomeData {
   categories: Category[];
   banners?: Banner[]; // Optional - may not always be present
+  zoomMeeting?: ZoomMeeting; // Optional zoom meeting
 }
 
 /**

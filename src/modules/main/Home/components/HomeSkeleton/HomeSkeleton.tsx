@@ -40,37 +40,64 @@ export const HomeSkeleton: React.FC = () => {
           />
         </View>
 
-        {/* Category Grid Skeleton */}
-        <View style={styles.categoryGrid}>
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <View key={item} style={styles.categoryCard}>
-              <View style={styles.categoryCardInner}>
+        {/* Category Section Skeleton */}
+        <View style={styles.categorySectionContainer}>
+          {/* Header */}
+          <View style={styles.categorySectionHeader}>
+            <SkeletonLoader
+              width={scale(100)}
+              height={scale(20)}
+              borderRadius={moderateScale(4)}
+            />
+            <SkeletonLoader
+              width={scale(60)}
+              height={scale(16)}
+              borderRadius={moderateScale(4)}
+            />
+          </View>
+          {/* Scrollable Category Cards */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoryScrollContent}
+          >
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <View key={item} style={styles.categorySectionCard}>
                 <SkeletonLoader
-                  width={scale(40)}
-                  height={scale(40)}
-                  borderRadius={scale(20)}
-                />
-                <View style={styles.categoryTextSpacing} />
-                <SkeletonLoader
-                  width="100%"
-                  height={scale(16)}
-                  borderRadius={moderateScale(4)}
-                />
-                <View style={styles.categoryTextSpacing} />
-                <SkeletonLoader
-                  width="80%"
-                  height={scale(12)}
-                  borderRadius={moderateScale(4)}
-                />
-                <View style={styles.categoryTextSpacing} />
-                <SkeletonLoader
-                  width="60%"
-                  height={scale(12)}
-                  borderRadius={moderateScale(4)}
+                  width={scale(100)}
+                  height={scale(100)}
+                  borderRadius={moderateScale(16)}
                 />
               </View>
-            </View>
-          ))}
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Updates Button Skeleton */}
+        <View style={styles.updatesButtonContainer}>
+          <SkeletonLoader
+            width="100%"
+            height={verticalScale(56)}
+            borderRadius={moderateScale(12)}
+          />
+        </View>
+
+        {/* Action Cards Skeleton */}
+        <View style={styles.actionCardsContainer}>
+          <View style={styles.actionCard}>
+            <SkeletonLoader
+              width="100%"
+              height={verticalScale(100)}
+              borderRadius={moderateScale(16)}
+            />
+          </View>
+          <View style={styles.actionCard}>
+            <SkeletonLoader
+              width="100%"
+              height={verticalScale(100)}
+              borderRadius={moderateScale(16)}
+            />
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -107,34 +134,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     marginVertical: verticalScale(12),
   },
-  categoryGrid: {
+  categorySectionContainer: {
+    marginTop: verticalScale(16),
+    marginBottom: verticalScale(16),
+  },
+  categorySectionHeader: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: scale(20),
+    marginBottom: verticalScale(12),
+  },
+  categoryScrollContent: {
     paddingHorizontal: scale(10),
-    paddingVertical: verticalScale(8),
+    paddingRight: scale(20),
   },
-  categoryCard: {
-    width: '50%',
-    paddingHorizontal: scale(6),
-    paddingVertical: verticalScale(6),
+  categorySectionCard: {
+    marginRight: scale(12),
   },
-  categoryCardInner: {
-    padding: scale(16),
-    borderRadius: moderateScale(16),
-    backgroundColor: colors.white,
-    minHeight: verticalScale(120),
-    // Shadow properties to match actual CategoryCard
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: verticalScale(1),
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: scale(2),
-    elevation: 2, // For Android
+  updatesButtonContainer: {
+    paddingHorizontal: scale(20),
+    marginVertical: verticalScale(12),
   },
-  categoryTextSpacing: {
-    height: verticalScale(6),
+  actionCardsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: scale(20),
+    marginVertical: verticalScale(12),
+    gap: scale(12),
+  },
+  actionCard: {
+    flex: 1,
   },
 });
 

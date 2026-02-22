@@ -2613,3 +2613,18 @@ export function ChevronRightIcon({ color, width, height }: commonProps) {
     </Svg>
   );
 }
+
+export function ArrowRightCircleIcon({ color, width, height }: commonProps) {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <Rect width="24" height="24" rx="12" fill={color || '#173051'} />
+      <Path
+        d="M7.14589 15.5268L16.8541 8.47338M16.8541 8.47338L10.5685 7.47784M16.8541 8.47338L15.8585 14.759"
+        stroke="white"
+        strokeWidth="1.33"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}

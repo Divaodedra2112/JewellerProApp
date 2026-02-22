@@ -9,7 +9,9 @@ import { EmptyState } from '../../../components';
 import { ProfileHeader } from './components/ProfileHeader/ProfileHeader';
 import { BannerCarousel } from '../../../components/BannerCarousel/BannerCarousel';
 import { BannerCard } from '../../../components/BannerCard/BannerCard';
-import { CategoryGrid } from '../../../components/CategoryGrid/CategoryGrid';
+import { CategorySection } from './components/CategorySection/CategorySection';
+import { UpdatesButton } from './components/UpdatesButton/UpdatesButton';
+import { ActionCards } from './components/ActionCards/ActionCards';
 import { HomeSkeleton } from './components/HomeSkeleton/HomeSkeleton';
 import { fetchHomeData } from './HomeActions';
 import { setRefreshing } from '../../../store/slices/homeSlice';
@@ -78,10 +80,11 @@ const HomeScreen = () => {
     // BannerCard handles URL opening internally
   }, []);
 
-  // Get banners from homeData
+  // Get data from homeData
   const banners = homeData?.banners || [];
-  const secondBanner = banners.length > 1 ? banners[1] : null;
+  const bottomBanner = banners.length > 0 ? banners[banners.length - 1] : null; // Last banner for bottom
   const categories = homeData?.categories || [];
+  const zoomMeeting = homeData?.zoomMeeting;
 
   // Loading state - show skeleton during initial load
   // Show skeleton when loading and not refreshing (pull-to-refresh uses RefreshControl)
@@ -117,16 +120,25 @@ const HomeScreen = () => {
           onBannerPress={handleBannerPress}
         />
 
-        {/* Category Grid */}
-        <CategoryGrid
+        {/* Category Section - 3 per row, scrollable */}
+        <CategorySection
           categories={categories}
           onCategoryPress={handleCategoryPress}
         />
 
-        {/* Second Banner (optional) - Keep as is for bottom banner */}
-        {secondBanner && (
+        {/* Updates Button */}
+        <UpdatesButton />
+
+        {/* Action Cards - Pan Card (static) + Zoom Meeting (from API) */}
+        <ActionCards
+          zoomMeeting={zoomMeeting}
+          panCardLinkUrl="https://jewellerpro.in/verify-pan-card" // TODO: Update with actual URL
+        />
+
+        {/* Bottom Banner (if available) */}
+        {bottomBanner && (
           <BannerCard
-            banner={secondBanner}
+            banner={bottomBanner}
             onPress={handleBannerPress}
             style={styles.banner}
           />
