@@ -17,7 +17,7 @@ export const UpdatesButton: React.FC = () => {
 
   return (
     <GradientView
-      colors={['rgba(23, 48, 81, 0.8)', 'rgba(23, 48, 81, 1)']}
+      colors={['rgba(23, 48, 81, 1)', 'rgba(23, 48, 81, 0.8)']}
       locations={[0, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
