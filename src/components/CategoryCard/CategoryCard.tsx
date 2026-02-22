@@ -43,9 +43,9 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
       activeOpacity={0.7}
     >
       <View style={styles.content}>
-        {category.icon ? (
+        {category.icon?.url ? (
           <Image
-            source={{ uri: category.icon }}
+            source={{ uri: category.icon.url }}
             style={styles.icon}
             resizeMode="contain"
           />

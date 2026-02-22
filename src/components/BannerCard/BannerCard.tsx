@@ -29,10 +29,10 @@ export const BannerCard: React.FC<BannerCardProps> = ({
   linkUrl,
 }) => {
   // Use banner props if provided, otherwise use direct props
-  const displayTitle = banner?.title || title;
-  const displayDescription = banner?.description || description;
-  const displayLinkUrl = banner?.linkUrl || linkUrl;
-  const displayImageUrl = banner?.imageUrl;
+  const displayTitle = title; // Banner from API doesn't have title
+  const displayDescription = description; // Banner from API doesn't have description
+  const displayLinkUrl = banner?.navigateUrl || linkUrl;
+  const displayImageUrl = banner?.image?.url;
 
   const handlePress = async () => {
     if (onPress) {

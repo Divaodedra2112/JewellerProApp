@@ -1,11 +1,19 @@
 /**
+ * Image/Icon object structure from API
+ */
+export interface ImageObject {
+  url: string;
+  objectName: string;
+}
+
+/**
  * Category data structure from API
  */
 export interface Category {
   id: string;
   title: string;
   description: string;
-  icon: string | null;
+  icon: ImageObject;
   hasSubCategory: boolean;
   order: number;
   status: 'ACTIVE' | 'INACTIVE';
@@ -18,12 +26,12 @@ export interface Category {
  */
 export interface Banner {
   id: string;
-  title: string;
-  description?: string;
-  imageUrl: string;
-  linkUrl?: string;
+  image: ImageObject;
+  navigateUrl: string;
   order: number;
   status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**

@@ -76,7 +76,7 @@ const HomeScreen = () => {
 
   // Handle banner press
   const handleBannerPress = useCallback((banner: any) => {
-    logger.info('Home Screen - Banner pressed', { bannerId: banner.id, bannerTitle: banner.title });
+    logger.info('Home Screen - Banner pressed', { bannerId: banner?.id });
     // BannerCard handles URL opening internally
   }, []);
 

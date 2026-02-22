@@ -38,12 +38,15 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
   // Create mock banners from static images if no API banners
   const mockBanners: Banner[] = staticImages.map((_, index) => ({
     id: `static-banner-${index}`,
-    title: '',
-    description: '',
-    imageUrl: '',
-    linkUrl: `https://jewellerpro.in/banner-${index + 1}`,
+    image: {
+      url: '',
+      objectName: `static-banner-${index}.png`,
+    },
+    navigateUrl: `https://jewellerpro.in/banner-${index + 1}`,
     order: index + 1,
     status: 'ACTIVE' as const,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }));
 
   const displayBanners = banners.length > 0 ? banners : mockBanners;
@@ -80,9 +83,7 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
             {banners.length === 0 && staticImages.length > 0 ? (
               <BannerCard
                 localImage={staticImages[index % staticImages.length]}
-                title={banner.title}
-                description={banner.description}
-                linkUrl={banner.linkUrl}
+                linkUrl={banner.navigateUrl}
                 onPress={onBannerPress}
               />
             ) : (
