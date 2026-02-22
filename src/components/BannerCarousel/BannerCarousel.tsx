@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(16),
   },
   scrollContent: {
-    paddingLeft: SCREEN_WIDTH * 0.025, // Left padding to center first card
-    paddingRight: SCREEN_WIDTH * 0.025, // Right padding for last card
+    // paddingLeft: SCREEN_WIDTH * 0.025, // Left padding to center first card
+    // paddingRight: SCREEN_WIDTH * 0.025, // Right padding for last card
   },
   bannerWrapper: {
     width: SCREEN_WIDTH, // Each wrapper takes full screen width for proper paging
     alignItems: 'center', // Center the banner card within the wrapper
-    marginRight: scale(10), // Add right margin after each banner
+    // marginRight: scale(10), // Add right margin after each banner
   },
   lastBannerWrapper: {
     marginRight: 0, // Remove margin from last banner as it has paddingRight from scrollContent
