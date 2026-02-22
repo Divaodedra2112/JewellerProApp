@@ -23,6 +23,7 @@ export const styles: Styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: scale(4),
     elevation: 3, // For Android
+    backgroundColor: colors.white,
   },
   touchable: {
     flexDirection: 'row',
@@ -30,6 +31,7 @@ export const styles: Styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: scale(20),
     paddingVertical: verticalScale(16),
+    // backgroundColor: colors.transparent,
   },
   text: {
     color: colors.white,
