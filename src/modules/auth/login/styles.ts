@@ -29,6 +29,10 @@ type Styles = {
   membershipLinkContainer: ViewStyle;
   membershipLinkText: TextStyle;
   membershipLink: TextStyle;
+  authHeader: ViewStyle;
+  authHeaderTitle: TextStyle;
+  backButton: ViewStyle;
+  subtitleText: TextStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -201,5 +205,30 @@ export const styles: Styles = StyleSheet.create({
     color: '#173051',
     fontFamily: Fonts.medium,
     fontWeight: '600',
+  },
+  authHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: scale(16),
+    paddingTop: verticalScale(56),
+    paddingBottom: verticalScale(8),
+  },
+  authHeaderTitle: {
+    fontSize: scale(18),
+    fontFamily: Fonts.semi_bold,
+    color: colors.textPrimary,
+  },
+  backButton: {
+    width: scale(44),
+    alignItems: 'flex-start',
+  },
+  subtitleText: {
+    fontSize: scale(14),
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: verticalScale(8),
+    paddingHorizontal: scale(48),
+    fontFamily: Fonts.regular,
   },
 });

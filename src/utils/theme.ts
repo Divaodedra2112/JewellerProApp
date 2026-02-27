@@ -52,7 +52,7 @@ export const colors = {
   grayColor: '#E7E5E4',
 
   // Primary Colors
-  primary: '#000000',
+  primary: '#083879',
   primaryLight: '#333333',
 
   // Status Colors

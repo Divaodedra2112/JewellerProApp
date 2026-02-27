@@ -12,7 +12,6 @@ import { colors, Fonts } from '../../utils/theme';
 import { moderateScale, verticalScale } from '../../utils/Responsive';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppImage from '../AppImage/AppImage';
-import { Images } from '../../utils';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -168,82 +167,93 @@ export const SuccessOverlay: React.FC<SuccessOverlayProps> = ({
           ]}
         >
           <View style={styles.card}>
-            {/* Icon */}
-            <Animated.View
-              style={[
-                styles.iconContainer,
-                {
-                  transform: [{ scale: checkmarkScale }],
-                },
-              ]}
-            >
-              <View
+            {/* Icon - Only show if not in confirmation mode or if explicitly provided */}
+            {!isConfirmation && (
+              <Animated.View
                 style={[
-                  styles.iconCircle,
+                  styles.iconContainer,
                   {
-                    width: calculatedIconSize,
-                    height: calculatedIconSize,
-                    backgroundColor: iconBackgroundColor || colors.success,
+                    transform: [{ scale: checkmarkScale }],
                   },
                 ]}
               >
-                {iconComponent ? (
-                  (() => {
-                    const IconComponent = iconComponent;
-                    return (
-                      <IconComponent
-                        color={iconColor || colors.white}
-                        width={calculatedIconSize * 0.6}
-                        height={calculatedIconSize * 0.6}
-                      />
-                    );
-                  })()
-                ) : customIcon ? (
-                  <AppImage
-                    image={customIcon}
-                    mainStyle={{
-                      width: calculatedIconSize * 0.6,
-                      height: calculatedIconSize * 0.6,
-                    }}
-                  />
-                ) : (
-                  <Icon
-                    name={iconName || "check"}
-                    size={calculatedIconSize * 0.6}
-                    color={iconColor || colors.white}
-                  />
-                )}
-              </View>
-            </Animated.View>
+                <View
+                  style={[
+                    styles.iconCircle,
+                    {
+                      width: calculatedIconSize,
+                      height: calculatedIconSize,
+                      backgroundColor: iconBackgroundColor || colors.success,
+                    },
+                  ]}
+                >
+                  {iconComponent ? (
+                    (() => {
+                      const IconComponent = iconComponent;
+                      return (
+                        <IconComponent
+                          color={iconColor || colors.white}
+                          width={calculatedIconSize * 0.6}
+                          height={calculatedIconSize * 0.6}
+                        />
+                      );
+                    })()
+                  ) : customIcon ? (
+                    <AppImage
+                      image={customIcon}
+                      mainStyle={{
+                        width: calculatedIconSize * 0.6,
+                        height: calculatedIconSize * 0.6,
+                      }}
+                      from="SuccessOverlay"
+                    />
+                  ) : (
+                    <Icon
+                      name={iconName || "check"}
+                      size={calculatedIconSize * 0.6}
+                      color={iconColor || colors.white}
+                    />
+                  )}
+                </View>
+              </Animated.View>
+            )}
 
             {/* Message */}
             <AppText
-              variant={TEXT_VARIANTS.h2}
-              style={styles.messageText}
+              variant={TEXT_VARIANTS.h1}
+              style={[styles.messageText, isConfirmation && styles.confirmationMessageText]}
             >
               {message}
             </AppText>
 
             {/* Action Buttons (for confirmation mode) */}
             {isConfirmation && (
-              <View style={styles.buttonRow}>
+              <View style={styles.buttonColumn}>
                 <TouchableOpacity
-                  style={styles.button}
+                  style={[styles.button, styles.cancelButton]}
                   onPress={onSecondaryAction || handleClose}
+                  activeOpacity={0.8}
                 >
-                  <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.secondaryButtonText}>
+                  <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.cancelButtonText}>
                     {secondaryLabel}
                   </AppText>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
                     styles.button,
-                    styles.primaryButton,
-                    primaryButtonColor && { backgroundColor: primaryButtonColor },
+                    styles.logoutButton,
+                    primaryButtonColor && { borderColor: primaryButtonColor },
                   ]}
                   onPress={onPrimaryAction}
+                  activeOpacity={0.8}
                 >
-                  <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.primaryButtonText}>
+                  <AppText 
+                    variant={TEXT_VARIANTS.h4_medium} 
+                    style={[
+                      styles.logoutButtonText,
+                      primaryButtonColor && { color: primaryButtonColor },
+                    ]}
+                  >
                     {primaryLabel}
                   </AppText>
                 </TouchableOpacity>
@@ -286,26 +296,26 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '85%',
-    maxWidth: moderateScale(400),
+    maxWidth: moderateScale(320),
     alignItems: 'center',
     justifyContent: 'center',
   },
   card: {
     backgroundColor: colors.white,
-    borderRadius: moderateScale(24),
-    paddingHorizontal: moderateScale(32),
-    paddingVertical: verticalScale(40),
+    borderRadius: moderateScale(16),
+    paddingHorizontal: moderateScale(24),
+    paddingVertical: verticalScale(24),
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: colors.commonShadowColor,
     shadowOffset: {
       width: 0,
-      height: moderateScale(8),
+      height: moderateScale(4),
     },
-    shadowOpacity: 0.3,
-    shadowRadius: moderateScale(16),
-    elevation: 10,
-    minWidth: moderateScale(280),
+    shadowOpacity: 0.15,
+    shadowRadius: moderateScale(12),
+    elevation: 8,
+    width: '100%',
   },
   iconContainer: {
     marginBottom: verticalScale(24),
@@ -331,8 +341,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Fonts.semi_bold,
     fontSize: moderateScale(18),
-    lineHeight: moderateScale(26),
+    lineHeight: moderateScale(24),
     paddingHorizontal: moderateScale(8),
+  },
+  confirmationMessageText: {
+    marginBottom: verticalScale(20),
+    fontSize: moderateScale(18),
+    fontFamily: Fonts.semi_bold,
   },
   closeButton: {
     position: 'absolute',
@@ -348,17 +363,41 @@ const styles = StyleSheet.create({
     gap: moderateScale(12),
     width: '100%',
   },
+  buttonColumn: {
+    flexDirection: 'column',
+    marginTop: verticalScale(4),
+    gap: moderateScale(12),
+    width: '100%',
+  },
   button: {
-    flex: 1,
-    paddingVertical: verticalScale(14),
+    width: '100%',
+    paddingVertical: verticalScale(16),
     paddingHorizontal: moderateScale(20),
-    borderRadius: moderateScale(12),
-    backgroundColor: colors.gray100,
+    borderRadius: moderateScale(50),
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: verticalScale(48),
+  },
+  cancelButton: {
+    backgroundColor: colors.primary,
+  },
+  logoutButton: {
+    backgroundColor: colors.white,
+    borderWidth: moderateScale(1),
+    borderColor: colors.gray100,
   },
   primaryButton: {
     backgroundColor: colors.primary,
+  },
+  cancelButtonText: {
+    color: colors.white,
+    fontFamily: Fonts.semi_bold,
+    fontSize: moderateScale(16),
+  },
+  logoutButtonText: {
+    color: colors.red,
+    fontFamily: Fonts.semi_bold,
+    fontSize: moderateScale(16),
   },
   secondaryButtonText: {
     color: colors.textPrimary,

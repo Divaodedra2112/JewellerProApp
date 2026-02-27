@@ -21,6 +21,11 @@ const Images = {
   SETTINGS_ICON_SELECTED: require('../assets/icons/selectedsettings.png'),
   // Other images
   LOGOUT_IMAGE: require('../assets/images/logout.png'),
+  HOME_BANNER: require('../assets/images/home-banner.png'), // Static home banner
+  // Multiple static banners for testing carousel
+  HOME_BANNER_1: require('../assets/images/home-banner.png'),
+  HOME_BANNER_2: require('../assets/images/home-banner.png'),
+  HOME_BANNER_3: require('../assets/images/home-banner.png'),
 };
 
 export default Images;

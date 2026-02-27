@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text as UIKittenText, TextProps } from '@ui-kitten/components';
+import { Text as RNText, TextProps as RNTextProps } from 'react-native';
 import { moderateScale } from '../../utils/Responsive';
 import { colors, Fonts } from '../../utils/theme';
 
 export const TEXT_VARIANTS = {
   h1: 'h1',
   h2: 'h2',
+  h3: 'h3',
   h3_medium: 'h3_medium',
   h3_large: 'h3_large',
   h4_small: 'h4_small',
@@ -19,7 +20,7 @@ export const TEXT_VARIANTS = {
 
 export type TextVariantsTypes = typeof TEXT_VARIANTS;
 
-interface AppTextProps extends TextProps {
+interface AppTextProps extends RNTextProps {
   variant?: keyof TextVariantsTypes;
   style?: any;
 }
@@ -38,6 +39,7 @@ const getTextStyle = (variant: keyof TextVariantsTypes) => {
         fontSize: moderateScale(18),
         color: colors.ascent,
       };
+    case 'h3':
     case 'h3_medium':
       return {
         fontFamily: Fonts.medium,
@@ -104,5 +106,5 @@ const getTextStyle = (variant: keyof TextVariantsTypes) => {
 export const AppText: React.FC<AppTextProps> = ({ variant = 'h4_medium', style, ...props }) => {
   const textStyle = getTextStyle(variant);
 
-  return <UIKittenText style={[textStyle, style]} {...props} />;
+  return <RNText style={[textStyle, style]} {...props} />;
 };

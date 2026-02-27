@@ -96,10 +96,10 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(requestOtp.fulfilled, (state, action: PayloadAction<string>) => {
+      .addCase(requestOtp.fulfilled, (state, action: PayloadAction<{ phoneNumber: string; otp?: string | null }>) => {
         state.loading = false;
         state.otpSent = true;
-        state.phoneNumber = action.payload;
+        state.phoneNumber = action.payload?.phoneNumber ?? '';
       })
       .addCase(requestOtp.rejected, (state, action) => {
         state.loading = false;

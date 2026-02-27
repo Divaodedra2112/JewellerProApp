@@ -27,4 +27,8 @@ export const styles = StyleSheet.create({
     borderColor: colors.gray100,
     backgroundColor: colors.white,
   },
+  inputError: {
+    borderColor: colors.error,
+    borderWidth: verticalScale(2),
+  },
 });

@@ -14,7 +14,8 @@ export type AuthStackParamList = {
 export type MainStackParamList = {
   Drawer: NavigatorScreenParams<GenericParamList>;
   Profile: undefined;
-  // Add your custom screens here
+  SubCategory: { categoryId: string; categoryTitle: string };
+  Topic: { id: string; title: string; type: 'category' | 'subcategory' };
 };
 
 export type GenericParamList = {

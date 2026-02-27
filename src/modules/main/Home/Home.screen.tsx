@@ -1,70 +1,148 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { AppText, CustomHeader, AppButton } from '../../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootState } from '../../../store';
+import { EmptyState } from '../../../components';
+import { ProfileHeader } from './components/ProfileHeader/ProfileHeader';
+import { BannerCarousel } from '../../../components/BannerCarousel/BannerCarousel';
+import { BannerCard } from '../../../components/BannerCard/BannerCard';
+import { CategorySection } from './components/CategorySection/CategorySection';
+import { UpdatesButton } from './components/UpdatesButton/UpdatesButton';
+import { ActionCards } from './components/ActionCards/ActionCards';
+import { HomeSkeleton } from './components/HomeSkeleton/HomeSkeleton';
+import { fetchHomeData } from './HomeActions';
+import { setRefreshing } from '../../../store/slices/homeSlice';
+import { MainStackParamList } from '../../../types/navigation';
+import { Category } from './HomeTypes';
 import { colors } from '../../../utils/theme';
+import { scale, verticalScale } from '../../../utils/Responsive';
+import { logger } from '../../../utils/logger';
+import { Images } from '../../../utils';
+
+type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
 /**
- * Home Screen - Generic boilerplate home screen
- * TODO: Customize this screen for your app
+ * Home Screen - Displays user profile, banners, and categories
  */
 const HomeScreen = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const navigation = useNavigation<NavigationProp>();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { homeData, loading, error, refreshing } = useSelector(
+    (state: RootState) => state.home
+  );
+
+  // Fetch home data on mount
+  useEffect(() => {
+    dispatch(fetchHomeData());
+  }, [dispatch]);
+
+  // Handle pull to refresh
+  const handleRefresh = useCallback(() => {
+    dispatch(setRefreshing(true));
+    dispatch(fetchHomeData());
+  }, [dispatch]);
+
+  // Handle category press
+  const handleCategoryPress = useCallback(
+    (category: Category) => {
+      logger.info('Home Screen - Category pressed', {
+        categoryId: category.id,
+        categoryTitle: category.title,
+        hasSubCategory: category.hasSubCategory,
+      });
+
+      if (category.hasSubCategory) {
+        // Navigate to SubCategory screen
+        navigation.navigate('SubCategory', {
+          categoryId: category.id,
+          categoryTitle: category.title,
+        });
+      } else {
+        // Navigate directly to Topic screen
+        navigation.navigate('Topic', {
+          id: category.id,
+          title: category.title,
+          type: 'category',
+        });
+      }
+    },
+    [navigation]
+  );
+
+  // Handle banner press
+  const handleBannerPress = useCallback((banner: any) => {
+    logger.info('Home Screen - Banner pressed', { bannerId: banner?.id });
+    // BannerCard handles URL opening internally
+  }, []);
+
+  // Get data from homeData
+  const banners = homeData?.banners || [];
+  const bottomBanner = banners.length > 0 ? banners[banners.length - 1] : null; // Last banner for bottom
+  const categories = homeData?.categories || [];
+  const zoomMeeting = homeData?.zoomMeeting;
+
+  // Loading state - show skeleton during initial load
+  // Show skeleton when loading and not refreshing (pull-to-refresh uses RefreshControl)
+  if (loading && !refreshing) {
+    return <HomeSkeleton />;
+  }
 
   return (
     <View style={styles.container}>
-      <CustomHeader
-        title={t('app.name') || 'Home'}
-        showBackButton={false}
-      />
       <ScrollView
         style={styles.content}
         contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.welcomeSection}>
-          <AppText style={styles.welcomeTitle}>
-            {t('home.welcome') || 'Welcome to React Native Boilerplate'}
-          </AppText>
-          <AppText style={styles.welcomeSubtitle}>
-            {t('home.subtitle') ||
-              'This is a production-ready boilerplate with authentication, navigation, and best practices built-in.'}
-          </AppText>
-        </View>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.primary}
+          />
+        }
+      >
+        {/* Profile Header */}
+        <ProfileHeader
+          userName={user?.name}
+          userPhoto={user?.photo}
+        />
 
-        <View style={styles.featuresSection}>
-          <AppText style={styles.sectionTitle}>
-            {t('home.features') || 'Features Included'}
-          </AppText>
-          <View style={styles.featureList}>
-            <AppText style={styles.featureItem}>✓ TypeScript with strict mode</AppText>
-            <AppText style={styles.featureItem}>✓ Redux Toolkit + Persist</AppText>
-            <AppText style={styles.featureItem}>✓ React Navigation</AppText>
-            <AppText style={styles.featureItem}>✓ i18next (Multi-language)</AppText>
-            <AppText style={styles.featureItem}>✓ RBAC System</AppText>
-            <AppText style={styles.featureItem}>✓ Authentication Flow</AppText>
-            <AppText style={styles.featureItem}>✓ Permission Handling</AppText>
-            <AppText style={styles.featureItem}>✓ UI Kitten Components</AppText>
-            <AppText style={styles.featureItem}>✓ TypeScript with strict mode</AppText>
-            <AppText style={styles.featureItem}>✓ Redux Toolkit + Persist</AppText>
-            <AppText style={styles.featureItem}>✓ React Navigation</AppText>
-            <AppText style={styles.featureItem}>✓ i18next (Multi-language)</AppText>
-            <AppText style={styles.featureItem}>✓ RBAC System</AppText>
-            <AppText style={styles.featureItem}>✓ Authentication Flow</AppText>
-            <AppText style={styles.featureItem}>✓ Permission Handling</AppText>
-            <AppText style={styles.featureItem}>✓ UI Kitten Components</AppText>
-          </View>
+        {/* Top Banner Carousel - Shows multiple banners from API or static images */}
+        <BannerCarousel
+          banners={banners}
+          localImage={Images.HOME_BANNER}
+          localImages={[Images.HOME_BANNER_1, Images.HOME_BANNER_2, Images.HOME_BANNER_3]}
+          onBannerPress={handleBannerPress}
+        />
 
-        </View>
+        {/* Category Section - 3 per row, scrollable */}
+        <CategorySection
+          categories={categories}
+          onCategoryPress={handleCategoryPress}
+        />
 
-        <View style={styles.actionsSection}>
-          <AppButton
-            onPress={() => {
-              // TODO: Add your action
-            }}
-            style={styles.actionButton}>
-            {t('home.getStarted') || 'Get Started'}
-          </AppButton>
-        </View>
+        {/* Updates Button */}
+        <UpdatesButton />
+
+        {/* Action Cards - Pan Card (static) + Zoom Meeting (from API) */}
+        <ActionCards
+          zoomMeeting={zoomMeeting}
+          panCardLinkUrl="https://jewellerpro.in/verify-pan-card" // TODO: Update with actual URL
+        />
+
+        {/* Bottom Banner (if available) */}
+        {bottomBanner && (
+          <BannerCard
+            banner={bottomBanner}
+            onPress={handleBannerPress}
+            style={styles.banner}
+          />
+        )}
       </ScrollView>
     </View>
   );
@@ -79,44 +157,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 20,
+    paddingBottom: verticalScale(20),
   },
-  welcomeSection: {
-    marginBottom: 30,
-  },
-  welcomeTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 10,
-  },
-  welcomeSubtitle: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    lineHeight: 24,
-  },
-  featuresSection: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: colors.text,
-    marginBottom: 15,
-  },
-  featureList: {
-    gap: 10,
-  },
-  featureItem: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    lineHeight: 24,
-  },
-  actionsSection: {
-    marginTop: 20,
-  },
-  actionButton: {
-    marginTop: 10,
+  banner: {
+    marginTop: verticalScale(8),
+    marginBottom: verticalScale(16),
   },
 });
 
