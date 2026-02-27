@@ -21,11 +21,16 @@ export type MainStackParamList = {
 export type GenericParamList = {
   MainTabs: undefined;
   Home: undefined;
-  Chatbot: undefined;
+  Questions: undefined;
   Updates: undefined;
   Settings: undefined;
   Profile: undefined;
   Dashboard: undefined; // Alias for Home
   Notification: undefined; // Alias for Updates
   // Add your drawer screens here
+};
+
+export type QuestionsStackParamList = {
+  QuestionsList: undefined;
+  QuestionDetail: { questionId: string; questionTitle: string };
 };
