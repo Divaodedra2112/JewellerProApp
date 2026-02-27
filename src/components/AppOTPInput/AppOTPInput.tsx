@@ -8,6 +8,7 @@ interface AppOTPInputProps {
   value: string;
   onChange: (value: string) => void;
   autoFocusOnClear?: boolean;
+  hasError?: boolean;
 }
 
 export const AppOTPInput: React.FC<AppOTPInputProps> = ({
@@ -15,6 +16,7 @@ export const AppOTPInput: React.FC<AppOTPInputProps> = ({
   value,
   onChange,
   autoFocusOnClear = true,
+  hasError = false,
 }) => {
   const inputRefs = useRef<TextInput[]>([]);
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
@@ -82,7 +84,11 @@ export const AppOTPInput: React.FC<AppOTPInputProps> = ({
                 inputRefs.current[index] = ref;
               }
             }}
-            style={[styles.input, focusedIndex === index && styles.focusedInput]}
+            style={[
+              styles.input,
+              focusedIndex === index && styles.focusedInput,
+              hasError && styles.inputError,
+            ]}
             maxLength={1}
             keyboardType="number-pad"
             value={value[index] || ''}

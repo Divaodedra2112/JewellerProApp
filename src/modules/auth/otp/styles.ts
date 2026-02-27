@@ -27,6 +27,14 @@ type Styles = {
   errorText: TextStyle;
   loaderContainer: ViewStyle;
   headerView: ViewStyle;
+  authHeader: ViewStyle;
+  authHeaderTitle: TextStyle;
+  backButton: ViewStyle;
+  logo: ImageStyle;
+  resendTimerText: TextStyle;
+  resendLink: TextStyle;
+  resendTouch: ViewStyle;
+  errorRow: ViewStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -136,6 +144,49 @@ export const styles: Styles = StyleSheet.create({
   errorText: {
     color: '#B91C1C',
     textAlign: 'center',
+  },
+  authHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(16),
+    paddingTop: verticalScale(56),
+    paddingBottom: verticalScale(8),
+  },
+  authHeaderTitle: {
+    fontSize: scale(18),
+    fontFamily: Fonts.semi_bold,
+    color: colors.textPrimary,
+  },
+  backButton: {
+    width: scale(44),
+    alignItems: 'flex-start',
+  },
+  logo: {
+    width: scale(64),
+    height: verticalScale(64),
+    resizeMode: 'contain' as const,
+  },
+  resendTimerText: {
+    color: colors.gray1000,
+    marginBottom: verticalScale(4),
+  },
+  resendLink: {
+    color: '#173051',
+    fontFamily: Fonts.medium,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+  },
+  resendTouch: {
+    padding: scale(4),
+  },
+  errorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: scale(24),
+    marginTop: verticalScale(8),
+    marginBottom: verticalScale(4),
   },
   loaderContainer: {
     position: 'absolute',
