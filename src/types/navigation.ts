@@ -8,7 +8,7 @@ export type RootStackParamList = {
 
 export type AuthStackParamList = {
   Login: undefined;
-  OTP: { phoneNumber: string };
+  OTP: { phoneNumber: string; countryCode?: string };
 };
 
 export type MainStackParamList = {

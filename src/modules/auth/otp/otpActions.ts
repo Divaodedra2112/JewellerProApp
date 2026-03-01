@@ -1,104 +1,71 @@
-// src/modules/auth/otp/otpActions.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { verifyOtp, resendOtp } from './otpService';
+import { verifyLoginOtp, sendLoginOtp } from '../authApi';
 
-interface OTPResponse {
-  code: string;
-  isSuccess: boolean;
-  message: string;
-  data: {
-    user: {
-      id: number;
-      firstName: string;
-      lastName: string;
-      email: string;
-      mobileNo: string;
-      profileImage: string;
-      roles: Array<{
-        id: number;
-        name: string;
-        permissions: Record<string, string[]>;
-      }>;
-    };
-    tokens: {
-      access: {
-        token: string;
-        expires: string;
-      };
-      refresh: {
-        token: string;
-        expires: string;
-      };
-    };
-  };
-}
-
-// Submit PIN (API parameter name is still 'otp')
+/** Verify OTP – OTP (Sign in). POST /auth/verify-login-otp */
 export const submitOtp = createAsyncThunk(
   'auth/submitOtp',
   async (
-    { phoneNumber, otp }: { phoneNumber: string; otp: string },
-    { rejectWithValue, dispatch, getState }
+    payload: { countryCode: string; mobileNumber: string; otp: string },
+    { rejectWithValue }
   ) => {
     try {
-      const response = await verifyOtp(phoneNumber, otp);
-      
-      if (!response.data?.user || !response.data?.tokens) {
-        throw new Error('Invalid response structure');
+      const response = await verifyLoginOtp({
+        countryCode: payload.countryCode,
+        mobileNumber: payload.mobileNumber,
+        otp: payload.otp,
+      });
+      const { access_token, refresh_token, user } = response;
+      await AsyncStorage.setItem('access_token', access_token);
+      if (refresh_token) {
+        await AsyncStorage.setItem('refresh_token', refresh_token);
       }
-      
-      const { access, refresh } = response.data.tokens;
-      const userData = response.data.user;
-      
-      if (!access?.token || !refresh?.token) {
-        throw new Error('No tokens received from API');
-      }
-      
-      // Store tokens
-      await AsyncStorage.setItem('access_token', access.token);
-      await AsyncStorage.setItem('refresh_token', refresh.token);
-      
-      // Return user data
-      const payload = {
-        userId: userData.id,
-        accessToken: access.token,
-        refreshToken: refresh.token,
-        user: {
-          id: userData.id,
-          name: `${userData.firstName} ${userData.lastName}`,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          mobile: userData.mobileNo,
-          email: userData.email,
-          photo: userData.profileImage,
-          roles: userData.roles,
-          permissions: userData.roles[0]?.permissions || {},
-        },
+      const u = user;
+      const appUser = {
+        id: parseInt(u.id, 10) || 0,
+        name: [u.firstName, u.lastName].filter(Boolean).join(' ') || u.email || '',
+        firstName: u.firstName || '',
+        lastName: u.lastName || '',
+        mobile: u.mobileNumber || '',
+        email: u.email || '',
+        photo: undefined,
+        roles: u.role ? [{ id: 0, name: u.role.name || '', permissions: {} }] : [],
+        permissions: {},
       };
-      
-      return payload;
-
+      return {
+        userId: appUser.id,
+        accessToken: access_token,
+        refreshToken: refresh_token || '',
+        user: appUser,
+      };
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.code || error?.message || 'Failed to verify PIN';
-      return rejectWithValue(errorMessage);
+      const code = error?.response?.data?.code || error?.message || 'VERIFY_FAILED';
+      const message = error?.response?.data?.message;
+      return rejectWithValue({ code, message });
     }
   }
 );
 
-// Resend PIN (API endpoint still uses 'otp' key)
+/** Resend OTP – same as send. POST /auth/send-login-otp */
 export const resendOTP = createAsyncThunk(
   'auth/resendOtp',
-  async (phoneNumber: string, { rejectWithValue }) => {
+  async (
+    payload: { countryCode: string; mobileNumber: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await resendOtp(phoneNumber);
+      await sendLoginOtp({
+        countryCode: payload.countryCode,
+        mobileNumber: payload.mobileNumber,
+      });
       return {
-        phoneNumber,
-        otp: response?.data?.otp || null,
+        phoneNumber: payload.mobileNumber,
+        countryCode: payload.countryCode,
       };
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.code || error?.message || 'Failed to resend PIN';
-      return rejectWithValue(errorMessage);
+      const code = error?.response?.data?.code || error?.message || 'RESEND_FAILED';
+      const message = error?.response?.data?.message;
+      return rejectWithValue({ code, message });
     }
   }
 );

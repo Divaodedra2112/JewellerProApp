@@ -15,10 +15,10 @@ import { logout } from '../store/slices/authSlice';
 import { logger } from '../utils/logger';
 
 interface TokenResponse {
-  access: {
-    token: string;
-    expires: string;
-  };
+  access?: { token: string; expires?: string };
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
 }
 
 interface ErrorResponse {
@@ -65,26 +65,19 @@ api.interceptors.request.use(
       }
     }
 
-    const isOtpEndpoint =
+    const isAuthPublicEndpoint =
       typeof config.url === 'string' &&
-      (config.url.includes('/auth/verify-pin') || config.url.includes('/auth/resend-otp'));
+      (config.url.includes('/auth/send-login-otp') ||
+        config.url.includes('/auth/verify-login-otp'));
 
     const token = await AsyncStorage.getItem('access_token');
-    if (!isOtpEndpoint && token && config.headers) {
+    if (!isAuthPublicEndpoint && token && config.headers) {
       config.headers.access_token = token;
     }
     // Add dynamic device id and platform headers
     const deviceId = await DeviceInfo.getUniqueId();
     config.headers['x-current-device-id'] = deviceId;
     
-    // Add x-login-type header for login-app and logout-app endpoints
-    const isLoginAppEndpoint =
-      typeof config.url === 'string' && config.url.includes('/auth/login-app');
-    const isLogoutAppEndpoint =
-      typeof config.url === 'string' && config.url.includes('/auth/logout-app');
-    if ((isLoginAppEndpoint || isLogoutAppEndpoint) && config.headers) {
-      config.headers['x-login-type'] = 'C1';
-    }
     
     // Get app version from package.json
     const packageJson = require('../../package.json');
@@ -212,7 +205,9 @@ api.interceptors.response.use(
       (error.response?.data &&
         typeof error.response.data === 'object' &&
         'code' in (error.response.data as ErrorResponse) &&
-        (error.response.data as ErrorResponse).code === 'TOKEN_EXPIRED');
+        ['TOKEN_EXPIRED', 'INVALID_OR_EXPIRED_TOKEN'].includes(
+          (error.response.data as ErrorResponse).code || ''
+        ));
 
     if (isTokenExpired) {
       if (!isRefreshing) {
@@ -235,17 +230,20 @@ api.interceptors.response.use(
             refreshToken: refreshToken,
           });
 
-          const newAccessToken = response.data.access?.token;
+          const data = response.data;
+          const newAccessToken = data.access_token ?? data.access?.token;
           if (!newAccessToken) {
             throw new Error('Token refresh failed: No access token returned');
           }
 
-          // Validate token format (basic check)
           if (typeof newAccessToken !== 'string' || newAccessToken.length < 10) {
             throw new Error('Token refresh failed: Invalid token format');
           }
 
           await AsyncStorage.setItem('access_token', newAccessToken);
+          if (data.refresh_token) {
+            await AsyncStorage.setItem('refresh_token', data.refresh_token);
+          }
 
           if (originalRequest.headers) {
             originalRequest.headers.access_token = newAccessToken;

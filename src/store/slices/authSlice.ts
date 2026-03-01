@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { requestOtp, loginAppAction, logoutAppAction } from '../../modules/auth/login/loginActions';
+import { requestOtp, logoutAppAction } from '../../modules/auth/login/loginActions';
 import { submitOtp } from '../../modules/auth/otp/otpActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -96,14 +96,15 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(requestOtp.fulfilled, (state, action: PayloadAction<{ phoneNumber: string; otp?: string | null }>) => {
+      .addCase(requestOtp.fulfilled, (state, action: PayloadAction<{ phoneNumber: string; countryCode?: string }>) => {
         state.loading = false;
         state.otpSent = true;
         state.phoneNumber = action.payload?.phoneNumber ?? '';
       })
       .addCase(requestOtp.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        const p = action.payload as { code?: string; message?: string } | string;
+        state.error = typeof p === 'object' && p?.code ? p.code : (p as string) || null;
       })
       .addCase(submitOtp.pending, state => {
         state.loading = true;
@@ -124,7 +125,7 @@ const authSlice = createSlice({
               lastName: string;
               mobile: string;
               email: string;
-              photo: string;
+              photo?: string;
               roles: Array<{
                 id: number;
                 name: string;
@@ -144,49 +145,8 @@ const authSlice = createSlice({
       )
       .addCase(submitOtp.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(loginAppAction.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        loginAppAction.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            userId: number;
-            accessToken: string;
-            refreshToken: string;
-            user: {
-              id: number;
-              name: string;
-              firstName: string;
-              lastName: string;
-              mobile: string;
-              email: string;
-              photo?: string;
-              roles?: Array<{
-                id: number;
-                name: string;
-                permissions: Record<string, string[]>;
-              }>;
-              permissions?: Record<string, string[]>;
-            } | null;
-          }>
-        ) => {
-          state.loading = false;
-          state.token = action.payload.accessToken;
-          state.user = action.payload.user;
-          state.phoneNumber = action.payload.user?.mobile || '';
-          if (!action.payload.accessToken) {
-            state.error = 'No token received from server';
-          }
-        }
-      )
-      .addCase(loginAppAction.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
+        const p = action.payload as { code?: string; message?: string } | string;
+        state.error = typeof p === 'object' && p?.code ? p.code : (p as string) || null;
       })
       .addCase(logoutAppAction.pending, state => {
         state.loading = true;
