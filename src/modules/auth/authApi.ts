@@ -3,7 +3,7 @@
  * Endpoints: POST /auth/send-login-otp, POST /auth/verify-login-otp, POST /auth/logout-app, POST /auth/refresh-token.
  */
 
-import { post } from '../../../services/api';
+import { post } from '../../services/api';
 import { logger } from '../../../utils/logger';
 
 const AUTH_SEND_OTP = '/auth/send-login-otp';

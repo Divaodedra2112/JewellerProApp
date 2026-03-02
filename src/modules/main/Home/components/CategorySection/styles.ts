@@ -7,12 +7,13 @@ type Styles = {
   header: ViewStyle;
   headerTitle: TextStyle;
   seeAllText: TextStyle;
-  scrollContent: ViewStyle;
+  grid: ViewStyle;
+  gridItem: ViewStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
   container: {
-    marginTop: verticalScale(16),
+    marginTop: verticalScale(8),
     marginBottom: verticalScale(16),
   },
   header: {
@@ -32,9 +33,15 @@ export const styles: Styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: '600',
   },
-  scrollContent: {
-    paddingHorizontal: scale(10),
-    paddingRight: scale(20),
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: scale(14),
+    justifyContent: 'space-between',
+  },
+  gridItem: {
+    width: '31%',
+    marginBottom: verticalScale(12),
   },
 });
 

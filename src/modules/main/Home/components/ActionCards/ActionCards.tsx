@@ -10,12 +10,14 @@ import { styles } from './styles';
 
 interface ActionCardsProps {
   zoomMeeting?: ZoomMeeting;
-  panCardLinkUrl?: string; // Static Pan Card link URL
+  zoomMeetingUrl?: string; // From API data.links.zoomMeetingUrl
+  panCardLinkUrl?: string; // From API data.links.panCardVerifyUrl
 }
 
 export const ActionCards: React.FC<ActionCardsProps> = ({
   zoomMeeting,
-  panCardLinkUrl = 'https://jewellerpro.in/verify-pan-card', // Default placeholder
+  zoomMeetingUrl,
+  panCardLinkUrl = 'https://jewellerpro.in/verify-pan-card',
 }) => {
   const handleCardPress = async (linkUrl: string) => {
     if (linkUrl) {
@@ -26,11 +28,12 @@ export const ActionCards: React.FC<ActionCardsProps> = ({
     }
   };
 
-  const hasZoomMeeting = zoomMeeting && zoomMeeting.status === 'ACTIVE';
+  const meetingUrl = zoomMeeting?.linkUrl || zoomMeetingUrl;
+  const showTwoCards = Boolean(panCardLinkUrl && meetingUrl);
 
   return (
     <View style={styles.container}>
-      {hasZoomMeeting ? (
+      {showTwoCards ? (
         // Two cards side by side
         <>
           <TouchableOpacity
@@ -53,7 +56,7 @@ export const ActionCards: React.FC<ActionCardsProps> = ({
 
           <TouchableOpacity
             style={[styles.card, styles.halfWidthCard]}
-            onPress={() => handleCardPress(zoomMeeting.linkUrl)}
+            onPress={() => handleCardPress(meetingUrl!)}
             activeOpacity={0.8}
           >
             <View style={styles.cardHeader}>
@@ -64,7 +67,7 @@ export const ActionCards: React.FC<ActionCardsProps> = ({
                 Join the Meeting
               </AppText>
               <AppText variant={TEXT_VARIANTS.h6_small} style={styles.cardSubtitle}>
-                {zoomMeeting.meetingTime ? `At ${zoomMeeting.meetingTime}` : 'Join Now'}
+                {zoomMeeting?.meetingTime ? `At ${zoomMeeting.meetingTime}` : 'Join Now'}
               </AppText>
             </View>
           </TouchableOpacity>

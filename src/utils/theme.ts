@@ -91,6 +91,7 @@ export const colors = {
   commonShadowColor: '#1C1917',
   lightBlackColor: '#282524',
   commentIcon: '#1C274C',
+  themeColor: '#173051',
 };
 
 // Define fonts once (no need for duplicate font declarations)

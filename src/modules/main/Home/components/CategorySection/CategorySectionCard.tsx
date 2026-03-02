@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 import { AppText } from '../../../../../components/AppText/AppText';
 import { TEXT_VARIANTS } from '../../../../../components/AppText/AppText';
 import { Category } from '../../../HomeTypes';
-import { scale, verticalScale, moderateScale } from '../../../../../utils/Responsive';
-import { colors } from '../../../../../utils/theme';
+import { scale } from '../../../../../utils/Responsive';
 import { styles } from './CategorySectionCardStyles';
 
 interface CategorySectionCardProps {
@@ -13,11 +13,32 @@ interface CategorySectionCardProps {
   index?: number;
 }
 
+const isSvgUrl = (url: string) => url?.toLowerCase().includes('.svg') || url?.includes('svg');
+
 export const CategorySectionCard: React.FC<CategorySectionCardProps> = ({
   category,
   onPress,
-  index = 0,
 }) => {
+  const [svgXml, setSvgXml] = useState<string | null>(null);
+  const iconUrl = category.icon?.url;
+
+  useEffect(() => {
+    if (!iconUrl || !isSvgUrl(iconUrl)) return;
+    let cancelled = false;
+    fetch(iconUrl)
+      .then((r) => r.text())
+      .then((text) => {
+        if (!cancelled) setSvgXml(text);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [iconUrl]);
+
+  const showSvg = isSvgUrl(iconUrl ?? '') && svgXml;
+  const showImage = iconUrl && !isSvgUrl(iconUrl);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -25,24 +46,24 @@ export const CategorySectionCard: React.FC<CategorySectionCardProps> = ({
       activeOpacity={0.7}
     >
       <View style={styles.content}>
-        {category.icon?.url ? (
-          <Image
-            source={{ uri: category.icon.url }}
-            style={styles.icon}
-            resizeMode="contain"
-          />
-        ) : (
-          <View style={styles.iconPlaceholder}>
-            <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.iconText}>
-              {category.title.charAt(0).toUpperCase()}
-            </AppText>
-          </View>
-        )}
-        <AppText
-          variant={TEXT_VARIANTS.h6_small}
-          style={styles.title}
-          numberOfLines={2}
-        >
+        <View style={styles.iconCircle}>
+          {showSvg ? (
+            <SvgXml xml={svgXml!} width={scale(24)} height={scale(24)} />
+          ) : showImage ? (
+            <Image
+              source={{ uri: iconUrl }}
+              style={styles.icon}
+              resizeMode="contain"
+            />
+          ) : (
+            <View style={styles.iconPlaceholder}>
+              <AppText variant={TEXT_VARIANTS.h6_small} style={styles.iconText}>
+                {category.title.charAt(0).toUpperCase()}
+              </AppText>
+            </View>
+          )}
+        </View>
+        <AppText variant={TEXT_VARIANTS.h6_small} style={styles.title} numberOfLines={2}>
           {category.title}
         </AppText>
       </View>

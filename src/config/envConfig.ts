@@ -2,7 +2,7 @@
 import { logger } from '../utils/logger';
 
 // API Configuration
-export const API_BASE_URL = 'http://3.87.123.138:8080';
+export const API_BASE_URL = 'http://3.87.123.138:7878';
 
 export const API_TIMEOUT = 30000; // 30 seconds
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { AppText } from '../../../../../components/AppText/AppText';
 import { TEXT_VARIANTS } from '../../../../../components/AppText/AppText';
 import { Category } from '../../../HomeTypes';
@@ -14,12 +14,13 @@ interface CategorySectionProps {
   onSeeAllPress?: () => void;
 }
 
+const CATEGORIES_PER_ROW = 3;
+
 export const CategorySection: React.FC<CategorySectionProps> = ({
   categories,
   onCategoryPress,
   onSeeAllPress,
 }) => {
-  // Filter only ACTIVE categories and sort by order
   const activeCategories = categories
     .filter(category => category.status === 'ACTIVE')
     .sort((a, b) => a.order - b.order);
@@ -30,35 +31,28 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <AppText variant={TEXT_VARIANTS.h3} style={styles.headerTitle}>
           Categories
         </AppText>
-        {onSeeAllPress && (
-          <TouchableOpacity onPress={onSeeAllPress} activeOpacity={0.7}>
-            <AppText variant={TEXT_VARIANTS.h4_small} style={styles.seeAllText}>
-              See All
-            </AppText>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity onPress={onSeeAllPress} activeOpacity={0.7} disabled={!onSeeAllPress}>
+          <AppText variant={TEXT_VARIANTS.h4_small} style={styles.seeAllText}>
+            See All
+          </AppText>
+        </TouchableOpacity>
       </View>
 
-      {/* Scrollable Category Grid */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <View style={styles.grid}>
         {activeCategories.map((category, index) => (
-          <CategorySectionCard
-            key={category.id}
-            category={category}
-            onPress={onCategoryPress}
-            index={index}
-          />
+          <View key={category.id} style={styles.gridItem}>
+            <CategorySectionCard
+              category={category}
+              onPress={onCategoryPress}
+              index={index}
+            />
+          </View>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };

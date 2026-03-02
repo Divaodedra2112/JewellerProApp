@@ -7,8 +7,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootState } from '../../../store';
 import { EmptyState } from '../../../components';
 import { ProfileHeader } from './components/ProfileHeader/ProfileHeader';
+import { JewellerProAppCard } from './components/JewellerProAppCard/JewellerProAppCard';
 import { BannerCarousel } from '../../../components/BannerCarousel/BannerCarousel';
-import { BannerCard } from '../../../components/BannerCard/BannerCard';
 import { CategorySection } from './components/CategorySection/CategorySection';
 import { UpdatesButton } from './components/UpdatesButton/UpdatesButton';
 import { ActionCards } from './components/ActionCards/ActionCards';
@@ -80,17 +80,16 @@ const HomeScreen = () => {
     // BannerCard handles URL opening internally
   }, []);
 
-  // Get data from homeData (matches home API: data.categories, data.banners, data.links)
   const banners = homeData?.banners || [];
-  const bottomBanner = banners.length > 0 ? banners[banners.length - 1] : null;
   const categories = homeData?.categories || [];
   const links = homeData?.links;
-  // Zoom: prefer links.zoomMeetingUrl from API, fallback to legacy zoomMeeting object
   const zoomMeeting =
     homeData?.zoomMeeting ||
-    (links?.zoomMeetingUrl
-      ? { linkUrl: links.zoomMeetingUrl, status: 'ACTIVE' as const }
-      : undefined);
+    (links?.zoomMeetingUrl ? { linkUrl: links.zoomMeetingUrl } : undefined);
+
+  const handleSeeAllCategories = useCallback(() => {
+    navigation.navigate('Questions');
+  }, [navigation]);
 
   // Loading state - show skeleton during initial load
   // Show skeleton when loading and not refreshing (pull-to-refresh uses RefreshControl)
@@ -112,43 +111,39 @@ const HomeScreen = () => {
           />
         }
       >
-        {/* Profile Header */}
+        {/* Profile Header - Hi Welcome + user name + avatar */}
         <ProfileHeader
           userName={user?.name}
           userPhoto={user?.photo}
         />
 
-        {/* Top Banner Carousel - Shows multiple banners from API or static images */}
+        {/* Jeweller Pro App info card (Figma) */}
+        <JewellerProAppCard />
+
+        {/* Categories - grid 3 columns, See All */}
+        <CategorySection
+          categories={categories}
+          onCategoryPress={handleCategoryPress}
+          onSeeAllPress={handleSeeAllCategories}
+        />
+
+        {/* Get the Latest Updates */}
+        <UpdatesButton />
+
+        {/* Action Cards - Verify Pan Card + Join the Meeting (from API data.links) */}
+        <ActionCards
+          zoomMeeting={zoomMeeting}
+          zoomMeetingUrl={links?.zoomMeetingUrl}
+          panCardLinkUrl={links?.panCardVerifyUrl}
+        />
+
+        {/* Banners from API (image.url, navigateUrl) */}
         <BannerCarousel
           banners={banners}
           localImage={Images.HOME_BANNER}
           localImages={[Images.HOME_BANNER_1, Images.HOME_BANNER_2, Images.HOME_BANNER_3]}
           onBannerPress={handleBannerPress}
         />
-
-        {/* Category Section - 3 per row, scrollable */}
-        <CategorySection
-          categories={categories}
-          onCategoryPress={handleCategoryPress}
-        />
-
-        {/* Updates Button */}
-        <UpdatesButton />
-
-        {/* Action Cards - Pan Card + Zoom Meeting (from home API data.links) */}
-        <ActionCards
-          zoomMeeting={zoomMeeting}
-          panCardLinkUrl={links?.panCardVerifyUrl || 'https://jewellerpro.in/verify-pan-card'}
-        />
-
-        {/* Bottom Banner (if available) */}
-        {bottomBanner && (
-          <BannerCard
-            banner={bottomBanner}
-            onPress={handleBannerPress}
-            style={styles.banner}
-          />
-        )}
       </ScrollView>
     </View>
   );
@@ -164,10 +159,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: verticalScale(20),
-  },
-  banner: {
-    marginTop: verticalScale(8),
-    marginBottom: verticalScale(16),
   },
 });
 
