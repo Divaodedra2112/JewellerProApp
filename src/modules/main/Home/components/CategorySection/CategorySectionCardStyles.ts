@@ -42,8 +42,8 @@ export const styles: Styles = StyleSheet.create({
     marginBottom: verticalScale(8),
   },
   icon: {
-    width: scale(24),
-    height: scale(24),
+    width: scale(34),
+    height: scale(34),
   },
   iconPlaceholder: {
     width: scale(24),

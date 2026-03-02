@@ -9,6 +9,7 @@ type Styles = {
   seeAllText: TextStyle;
   grid: ViewStyle;
   gridItem: ViewStyle;
+  gridItemLastInRow: ViewStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -37,11 +38,15 @@ export const styles: Styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: scale(14),
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   gridItem: {
-    width: '31%',
+    width: '30%',
+    marginRight: scale(12),
     marginBottom: verticalScale(12),
+  },
+  gridItemLastInRow: {
+    marginRight: 0,
   },
 });
 

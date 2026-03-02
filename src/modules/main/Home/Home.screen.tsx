@@ -87,10 +87,6 @@ const HomeScreen = () => {
     homeData?.zoomMeeting ||
     (links?.zoomMeetingUrl ? { linkUrl: links.zoomMeetingUrl } : undefined);
 
-  const handleSeeAllCategories = useCallback(() => {
-    navigation.navigate('Questions');
-  }, [navigation]);
-
   // Loading state - show skeleton during initial load
   // Show skeleton when loading and not refreshing (pull-to-refresh uses RefreshControl)
   if (loading && !refreshing) {
@@ -124,7 +120,6 @@ const HomeScreen = () => {
         <CategorySection
           categories={categories}
           onCategoryPress={handleCategoryPress}
-          onSeeAllPress={handleSeeAllCategories}
         />
 
         {/* Get the Latest Updates */}

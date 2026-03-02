@@ -48,7 +48,7 @@ export const CategorySectionCard: React.FC<CategorySectionCardProps> = ({
       <View style={styles.content}>
         <View style={styles.iconCircle}>
           {showSvg ? (
-            <SvgXml xml={svgXml!} width={scale(24)} height={scale(24)} />
+            <SvgXml xml={svgXml!} width={scale(34)} height={scale(34)} />
           ) : showImage ? (
             <Image
               source={{ uri: iconUrl }}
@@ -57,13 +57,13 @@ export const CategorySectionCard: React.FC<CategorySectionCardProps> = ({
             />
           ) : (
             <View style={styles.iconPlaceholder}>
-              <AppText variant={TEXT_VARIANTS.h6_small} style={styles.iconText}>
+              <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.iconText}>
                 {category.title.charAt(0).toUpperCase()}
               </AppText>
             </View>
           )}
         </View>
-        <AppText variant={TEXT_VARIANTS.h6_small} style={styles.title} numberOfLines={2}>
+        <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.title} numberOfLines={2}>
           {category.title}
         </AppText>
       </View>
