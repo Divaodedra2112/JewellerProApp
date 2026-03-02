@@ -15,13 +15,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { requestOtp } from './loginActions';
+import { requestOtp, DEFAULT_COUNTRY_CODE } from './loginActions';
 import { RootState } from '../../../store';
 import { AuthStackParamList } from '../../../types/navigation';
 import { styles } from './styles';
 import { AppImage, AppButton, AppInputField } from '../../../components';
 import { Images } from '../../../utils';
-import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
+import { showToast, TOAST_TYPE, TOAST_MESSAGES, getAuthErrorMessage } from '../../../utils/toast';
 import { logger } from '../../../utils/logger';
 const LOGIN_LOGO = require('../../../assets/images/JP-Logo.png');
 import { verticalScale, isTab, scale } from '../../../utils/Responsive';
@@ -74,17 +74,22 @@ export const LoginScreen = () => {
     }
 
     try {
-      const result = await dispatch(requestOtp(mobileNumber.trim()));
+      const result = await dispatch(
+        requestOtp({ countryCode: DEFAULT_COUNTRY_CODE, mobileNumber: mobileNumber.trim() })
+      );
       if (requestOtp.fulfilled.match(result)) {
-        navigation.navigate('OTP', { phoneNumber: mobileNumber.trim() });
+        navigation.navigate('OTP', {
+          phoneNumber: mobileNumber.trim(),
+          countryCode: DEFAULT_COUNTRY_CODE,
+        });
       } else if (requestOtp.rejected.match(result)) {
-        const payload = result.payload as string;
+        const payload = result.payload as { code?: string; message?: string } | string;
+        const code = typeof payload === 'object' && payload?.code ? payload.code : (payload as string);
+        const serverMessage = typeof payload === 'object' ? payload?.message : undefined;
         const message =
-          payload === 'MOBILE_NOT_FOUND' || payload === 'MOBILE_NOT_REGISTERED'
-            ? TOAST_MESSAGES.AUTH.MOBILE_NOT_REGISTERED
-            : payload === 'NETWORK_ERROR' || payload === 'Network Error'
-              ? TOAST_MESSAGES.GENERIC.NETWORK_ERROR
-              : payload || 'Failed to send code';
+          code === 'NETWORK_ERROR' || code === 'Network Error'
+            ? TOAST_MESSAGES.GENERIC.NETWORK_ERROR
+            : getAuthErrorMessage(code, serverMessage);
         showToast(TOAST_TYPE.ERROR, message);
       }
     } catch (error: any) {

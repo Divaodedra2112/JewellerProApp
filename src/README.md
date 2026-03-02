@@ -14,7 +14,7 @@ src/
 │   ├── login/             # Login feature
 │   │   ├── Login.tsx
 │   │   ├── LoginStyle.ts
-│   │   ├── loginService.ts
+│   │   ├── authApi.ts (auth APIs)
 │   │   ├── loginActions.ts
 │   │   └── (any other necessary files for login)
 │   ├── router/            # Routing for auth module

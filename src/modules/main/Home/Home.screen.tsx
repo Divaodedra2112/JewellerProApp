@@ -80,11 +80,17 @@ const HomeScreen = () => {
     // BannerCard handles URL opening internally
   }, []);
 
-  // Get data from homeData
+  // Get data from homeData (matches home API: data.categories, data.banners, data.links)
   const banners = homeData?.banners || [];
-  const bottomBanner = banners.length > 0 ? banners[banners.length - 1] : null; // Last banner for bottom
+  const bottomBanner = banners.length > 0 ? banners[banners.length - 1] : null;
   const categories = homeData?.categories || [];
-  const zoomMeeting = homeData?.zoomMeeting;
+  const links = homeData?.links;
+  // Zoom: prefer links.zoomMeetingUrl from API, fallback to legacy zoomMeeting object
+  const zoomMeeting =
+    homeData?.zoomMeeting ||
+    (links?.zoomMeetingUrl
+      ? { linkUrl: links.zoomMeetingUrl, status: 'ACTIVE' as const }
+      : undefined);
 
   // Loading state - show skeleton during initial load
   // Show skeleton when loading and not refreshing (pull-to-refresh uses RefreshControl)
@@ -129,10 +135,10 @@ const HomeScreen = () => {
         {/* Updates Button */}
         <UpdatesButton />
 
-        {/* Action Cards - Pan Card (static) + Zoom Meeting (from API) */}
+        {/* Action Cards - Pan Card + Zoom Meeting (from home API data.links) */}
         <ActionCards
           zoomMeeting={zoomMeeting}
-          panCardLinkUrl="https://jewellerpro.in/verify-pan-card" // TODO: Update with actual URL
+          panCardLinkUrl={links?.panCardVerifyUrl || 'https://jewellerpro.in/verify-pan-card'}
         />
 
         {/* Bottom Banner (if available) */}

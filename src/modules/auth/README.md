@@ -8,7 +8,7 @@ This module handles all **authentication-related** functionality in a fully self
   Handles user login functionality. Includes:
   - `Login.tsx`: Login screen component.
   - `LoginStyle.ts`: Style definitions for the login UI.
-  - `loginService.ts`: API call/service for login.
+  - `authApi.ts`: Auth API (send OTP, verify OTP, logout, refresh token).
   - `loginActions.ts`: Any business logic or state handling related to login.
 - **router/**  
   Manages all routes specific to authentication (e.g., login, register, forgot password).

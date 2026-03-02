@@ -20,7 +20,7 @@ import { styles } from './styles';
 import { AppOTPInput } from '../../../components/AppOTPInput/AppOTPInput';
 import { AppButton, AppImage } from '../../../components';
 import { Images } from '../../../utils';
-import { showToast, TOAST_TYPE, TOAST_MESSAGES } from '../../../utils/toast';
+import { showToast, TOAST_TYPE, TOAST_MESSAGES, getAuthErrorMessage } from '../../../utils/toast';
 import { RootState } from '../../../store';
 import { AppText, TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { checkNotificationPermissionStatus, showPermissionDeniedAlert, openAppSettings, requestNotificationPermission } from '../../../utils/permissionModule';
@@ -39,10 +39,13 @@ type OTPScreenRouteProp = RouteProp<AuthStackParamList, 'OTP'>;
 const OTP_ERROR_MESSAGE = 'Incorrect Code! Please try again!';
 const RESEND_COOLDOWN_SECONDS = 30;
 
+const DEFAULT_COUNTRY_CODE = '91';
+
 const OTP = () => {
   const navigation = useNavigation<OTPScreenNavigationProp>();
   const route = useRoute<OTPScreenRouteProp>();
-  const { phoneNumber } = route.params;
+  const { phoneNumber, countryCode: paramCountryCode } = route.params;
+  const countryCode = paramCountryCode || DEFAULT_COUNTRY_CODE;
 
   const [otp, setOTP] = useState('');
   const [error, setError] = useState('');
@@ -69,7 +72,7 @@ const OTP = () => {
 
     setVerifying(true);
     try {
-      const result = await dispatch(submitOtp({ phoneNumber, otp }));
+      const result = await dispatch(submitOtp({ countryCode, mobileNumber: phoneNumber, otp }));
 
       if (submitOtp.fulfilled.match(result)) {
         setFailedAttempts(0);
@@ -101,27 +104,14 @@ const OTP = () => {
           dispatch(setUnreadCount(notificationResult.unreadCount));
         } catch (_) {}
       } else if (submitOtp.rejected.match(result)) {
-        const payload = result.payload as string;
-        const errorMessage =
-          payload === 'PIN_INVALID' || payload === 'INVALID_OTP' || payload === 'INCORRECT_OTP'
-            ? OTP_ERROR_MESSAGE
-            : payload === 'OTP_EXPIRED'
-              ? TOAST_MESSAGES.AUTH.OTP_EXPIRED
-              : payload === 'TOO_MANY_ATTEMPTS' || payload === 'PIN_THROTTLED'
-                ? TOAST_MESSAGES.AUTH.TOO_MANY_ATTEMPTS
-                : payload === 'PIN_NOT_SET'
-                  ? TOAST_MESSAGES.AUTH.PIN_NOT_SET
-                  : payload === 'OTP_TOKEN_REQUIRED'
-                    ? TOAST_MESSAGES.AUTH.OTP_TOKEN_REQUIRED
-                    : payload === 'INVALID_OTP_TOKEN'
-                      ? TOAST_MESSAGES.AUTH.INVALID_OTP_TOKEN
-                      : payload === 'UNAUTHORIZED_DEVICE'
-                        ? TOAST_MESSAGES.AUTH.UNAUTHORIZED_DEVICE
-                        : OTP_ERROR_MESSAGE;
+        const payload = result.payload as { code?: string; message?: string } | string;
+        const code = typeof payload === 'object' && payload?.code ? payload.code : (payload as string);
+        const serverMessage = typeof payload === 'object' ? payload?.message : undefined;
+        const errorMessage = getAuthErrorMessage(code, serverMessage);
 
         setError(errorMessage);
         setFailedAttempts(prev => prev + 1);
-        if (failedAttempts + 1 >= 3) {
+        if (code === 'OTP_MAX_ATTEMPTS' || failedAttempts + 1 >= 3) {
           setResendTimer(RESEND_COOLDOWN_SECONDS);
         }
         setAutoFocusOnClear(false);
@@ -133,7 +123,7 @@ const OTP = () => {
     } finally {
       setVerifying(false);
     }
-  }, [verifying, loading, otp, phoneNumber, dispatch, failedAttempts]);
+  }, [verifying, loading, otp, phoneNumber, countryCode, dispatch, failedAttempts]);
 
   useEffect(() => {
     if (otp.length === 4) {
@@ -154,26 +144,18 @@ const OTP = () => {
     setOTP('');
 
     try {
-      const result = await dispatch(resendOTP(phoneNumber));
+      const result = await dispatch(resendOTP({ countryCode, mobileNumber: phoneNumber }));
       if (resendOTP.fulfilled.match(result)) {
         setTimeout(() => setAutoFocusOnClear(true), 200);
       } else if (resendOTP.rejected.match(result)) {
-        const payload = result.payload as string;
-        const errorMessage =
-          payload === 'WAIT_OTP_ONE_MIN'
-            ? TOAST_MESSAGES.AUTH.WAIT_OTP_ONE_MIN
-            : payload === 'WAIT_OTP_ONE_HOUR'
-              ? TOAST_MESSAGES.AUTH.WAIT_OTP_ONE_HOUR
-              : payload === 'WAIT_BEFORE_RESEND_OTP'
-                ? TOAST_MESSAGES.AUTH.WAIT_BEFORE_RESEND_OTP
-                : payload === 'MULTIPLE_SMS_TO_SAME_NUMBER_NOT_ALLOWED'
-                  ? TOAST_MESSAGES.AUTH.MULTIPLE_SMS_TO_SAME_NUMBER_NOT_ALLOWED
-                  : payload === 'MOBILE_NOT_FOUND' || payload === 'MOBILE_NOT_REGISTERED'
-                    ? TOAST_MESSAGES.AUTH.MOBILE_NOT_REGISTERED
-                    : payload === 'UNAUTHORIZED_DEVICE'
-                      ? TOAST_MESSAGES.AUTH.UNAUTHORIZED_DEVICE
-                      : TOAST_MESSAGES.AUTH.OTP_RESEND_FAILED;
+        const payload = result.payload as { code?: string; message?: string } | string;
+        const code = typeof payload === 'object' && payload?.code ? payload.code : (payload as string);
+        const serverMessage = typeof payload === 'object' ? payload?.message : undefined;
+        const errorMessage = getAuthErrorMessage(code, serverMessage);
         showToast(TOAST_TYPE.ERROR, errorMessage);
+        if (code === 'OTP_RATE_LIMIT' || code === 'OTP_MAX_REQUESTS_TRY_AFTER') {
+          setResendTimer(RESEND_COOLDOWN_SECONDS);
+        }
       }
     } catch (_) {
       showToast(TOAST_TYPE.ERROR, TOAST_MESSAGES.AUTH.OTP_RESEND_FAILED);

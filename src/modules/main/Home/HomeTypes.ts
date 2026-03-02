@@ -35,11 +35,11 @@ export interface Banner {
 }
 
 /**
- * Zoom Meeting data structure from API
+ * Zoom Meeting data structure (used for ActionCards when link from API)
  */
 export interface ZoomMeeting {
-  id: string;
-  title: string;
+  id?: string;
+  title?: string;
   linkUrl: string;
   meetingTime?: string;
   order?: number;
@@ -47,12 +47,23 @@ export interface ZoomMeeting {
 }
 
 /**
- * Home data structure containing categories and optional banners
+ * Links from home API (data.links)
+ */
+export interface HomeLinks {
+  panCardVerifyUrl?: string;
+  zoomMeetingUrl?: string;
+  latestUpdatesUrl?: string;
+}
+
+/**
+ * Home data structure from API (data.categories, data.banners, data.links)
  */
 export interface HomeData {
   categories: Category[];
-  banners?: Banner[]; // Optional - may not always be present
-  zoomMeeting?: ZoomMeeting; // Optional zoom meeting
+  banners?: Banner[];
+  links?: HomeLinks;
+  /** @deprecated Use links.zoomMeetingUrl and build ZoomMeeting in UI */
+  zoomMeeting?: ZoomMeeting;
 }
 
 /**

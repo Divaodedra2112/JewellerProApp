@@ -1,7 +1,7 @@
 import React from 'react';
 import HomeScreen from '../modules/main/Home/Home.screen';
 import SettingsScreen from '../modules/main/Settings/SettingsScreen';
-import ChatbotScreen from '../modules/main/Chatbot/ChatbotScreen';
+import QuestionsNavigator from '../navigation/QuestionsNavigator';
 import UpdatesScreen from '../modules/main/Updates/UpdatesScreen';
 import TabIcon from '../components/BottomTabNavigation/TabIcon';
 import UpdatesIconWithBadge from '../components/BottomTabNavigation/UpdatesIconWithBadge';
@@ -11,7 +11,7 @@ export interface NavigationItem {
   id: string;
   name: string;
   component: React.ComponentType<any>;
-  icon?: (props: { color: string; focused?: boolean }) => React.ReactNode;
+  icon?: (props: { color: string; focused?: boolean; size?: number }) => React.ReactNode;
   type: 'drawer' | 'bottomTab';
   options?: any;
   permissionKey?: 'list';
@@ -36,15 +36,15 @@ export const navigationModulesConfig: NavigationItem[] = [
     permissionKey: 'list',
   },
   {
-    id: 'Chatbot',
-    name: 'Chatbot',
-    component: ChatbotScreen,
-    icon: ({ color, focused }) => (
+    id: 'Questions',
+    name: 'Questions',
+    component: QuestionsNavigator,
+    icon: ({ color, focused, size: iconSize }) => (
       <TabIcon 
         source={Images.CHAT_ICON} 
         selectedSource={Images.CHAT_ICON_SELECTED}
         focused={focused} 
-        size={focused ? 24 : 20} 
+        size={iconSize ?? (focused ? 28 : 24)} 
       />
     ),
     type: 'bottomTab',
