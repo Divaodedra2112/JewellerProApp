@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -26,7 +27,11 @@ type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 /**
  * Home Screen - Displays user profile, banners, and categories
  */
+// Bottom tab bar height (GlassTabBar: ~70) + bottom offset (8) + extra spacing
+const BOTTOM_TAB_BAR_HEIGHT = 90;
+
 const HomeScreen = () => {
+  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp>();
@@ -34,6 +39,12 @@ const HomeScreen = () => {
   const { homeData, loading, error, refreshing } = useSelector(
     (state: RootState) => state.home
   );
+
+  // Top inset: applied to wrapper so content never scrolls under status bar
+  const topSafeArea = { paddingTop: insets.top };
+  const bottomScrollPadding = {
+    paddingBottom: insets.bottom + verticalScale(BOTTOM_TAB_BAR_HEIGHT),
+  };
 
   // Fetch home data on mount
   useEffect(() => {
@@ -94,10 +105,10 @@ const HomeScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, topSafeArea]}>
       <ScrollView
         style={styles.content}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[styles.contentContainer, bottomScrollPadding]}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
