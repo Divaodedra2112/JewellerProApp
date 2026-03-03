@@ -2,15 +2,12 @@ import React, { useRef, useState } from 'react';
 import { View, ScrollView, StyleSheet, Dimensions, NativeScrollEvent, NativeSyntheticEvent, Platform } from 'react-native';
 import { BannerCard } from '../BannerCard/BannerCard';
 import { Banner } from '../../modules/main/Home/HomeTypes';
-import { ImageSourcePropType } from 'react-native';
 import { scale, verticalScale } from '../../utils/Responsive';
 import { colors } from '../../utils/theme';
 import { SCREEN_PADDING_HORIZONTAL } from '../../utils/layoutConstants';
 
 interface BannerCarouselProps {
-  banners?: Banner[];
-  localImage?: ImageSourcePropType; // Fallback when API returns no banners
-  localImages?: ImageSourcePropType[]; // Multiple fallback images when no API banners
+  banners: Banner[];
   onBannerPress?: (banner?: Banner) => void;
 }
 
@@ -19,37 +16,13 @@ const BANNER_WIDTH = SCREEN_WIDTH - 2 * SCREEN_PADDING_HORIZONTAL;
 const BANNER_HEIGHT = verticalScale(180);
 
 export const BannerCarousel: React.FC<BannerCarouselProps> = ({
-  banners = [],
-  localImage,
-  localImages,
+  banners,
   onBannerPress,
 }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // If no banners from API, use static images for testing
-  // Priority: localImages array > localImage single > empty array
-  const staticImages = localImages && localImages.length > 0 
-    ? localImages 
-    : localImage 
-    ? [localImage] 
-    : [];
-
-  // Create mock banners from static images if no API banners
-  const mockBanners: Banner[] = staticImages.map((_, index) => ({
-    id: `static-banner-${index}`,
-    image: {
-      url: '',
-      objectName: `static-banner-${index}.png`,
-    },
-    navigateUrl: `https://jewellerpro.in/banner-${index + 1}`,
-    order: index + 1,
-    status: 'ACTIVE' as const,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  }));
-
-  const displayBanners = banners.length > 0 ? banners : mockBanners;
+  const displayBanners = banners;
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
@@ -75,24 +48,12 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
         nestedScrollEnabled={Platform.OS === 'android'}
       >
         {displayBanners.map((banner, index) => (
-          <View 
-            key={banners.length === 0 ? `banner-static-${index}` : `banner-${banner.id}-${index}`} 
-            style={styles.bannerWrapper}
-          >
-            {banners.length === 0 && staticImages.length > 0 ? (
-              <BannerCard
-                style={cardStyle}
-                localImage={staticImages[index % staticImages.length]}
-                linkUrl={banner.navigateUrl}
-                onPress={onBannerPress}
-              />
-            ) : (
-              <BannerCard
-                style={cardStyle}
-                banner={banner}
-                onPress={onBannerPress}
-              />
-            )}
+          <View key={`banner-${banner.id}-${index}`} style={styles.bannerWrapper}>
+            <BannerCard
+              style={cardStyle}
+              banner={banner}
+              onPress={onBannerPress}
+            />
           </View>
         ))}
       </ScrollView>

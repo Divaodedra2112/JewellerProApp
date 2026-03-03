@@ -20,7 +20,6 @@ import { Category } from './HomeTypes';
 import { colors } from '../../../utils/theme';
 import { scale, verticalScale } from '../../../utils/Responsive';
 import { logger } from '../../../utils/logger';
-import { Images } from '../../../utils';
 
 type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
@@ -124,13 +123,13 @@ const HomeScreen = () => {
           />
         }
       >
-        {/* Banners from API – carousel (no static card) */}
-        <BannerCarousel
-          banners={banners}
-          localImage={Images.HOME_BANNER}
-          localImages={[Images.HOME_BANNER_1, Images.HOME_BANNER_2, Images.HOME_BANNER_3]}
-          onBannerPress={handleBannerPress}
-        />
+        {/* Banners from API only – no static fallback */}
+        {banners.length > 0 && (
+          <BannerCarousel
+            banners={banners}
+            onBannerPress={handleBannerPress}
+          />
+        )}
 
         {/* Categories - grid 3 columns, See All */}
         <CategorySection
