@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, ScrollView, StyleSheet, Dimensions, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { View, ScrollView, StyleSheet, Dimensions, NativeScrollEvent, NativeSyntheticEvent, Platform } from 'react-native';
 import { BannerCard } from '../BannerCard/BannerCard';
 import { Banner } from '../../modules/main/Home/HomeTypes';
 import { ImageSourcePropType } from 'react-native';
@@ -8,15 +8,15 @@ import { colors } from '../../utils/theme';
 
 interface BannerCarouselProps {
   banners?: Banner[];
-  localImage?: ImageSourcePropType; // Fallback static image (single)
-  localImages?: ImageSourcePropType[]; // Multiple fallback static images for testing
+  localImage?: ImageSourcePropType; // Fallback when API returns no banners
+  localImages?: ImageSourcePropType[]; // Multiple fallback images when no API banners
   onBannerPress?: (banner?: Banner) => void;
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-// For paging, we use screen width as the snap interval
-// BannerCard is 95% width with 10px margin on each side
-const BANNER_WIDTH = SCREEN_WIDTH;
+const HORIZONTAL_MARGIN = scale(10);
+const BANNER_WIDTH = SCREEN_WIDTH - 2 * HORIZONTAL_MARGIN;
+const BANNER_HEIGHT = verticalScale(180);
 
 export const BannerCarousel: React.FC<BannerCarouselProps> = ({
   banners = [],
@@ -57,6 +57,8 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
     setActiveIndex(index);
   };
 
+  const cardStyle = { width: BANNER_WIDTH, height: BANNER_HEIGHT };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -70,24 +72,23 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
         decelerationRate="fast"
         contentContainerStyle={styles.scrollContent}
         snapToAlignment="start"
+        nestedScrollEnabled={Platform.OS === 'android'}
       >
         {displayBanners.map((banner, index) => (
           <View 
             key={banners.length === 0 ? `banner-static-${index}` : `banner-${banner.id}-${index}`} 
-            style={[
-              styles.bannerWrapper,
-              index === displayBanners.length - 1 && styles.lastBannerWrapper
-            ]}
+            style={styles.bannerWrapper}
           >
-            {/* Use static images if no banners from API */}
             {banners.length === 0 && staticImages.length > 0 ? (
               <BannerCard
+                style={cardStyle}
                 localImage={staticImages[index % staticImages.length]}
                 linkUrl={banner.navigateUrl}
                 onPress={onBannerPress}
               />
             ) : (
               <BannerCard
+                style={cardStyle}
                 banner={banner}
                 onPress={onBannerPress}
               />
@@ -116,19 +117,15 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: verticalScale(16),
+    marginHorizontal: HORIZONTAL_MARGIN,
   },
   scrollContent: {
     // paddingLeft: SCREEN_WIDTH * 0.025, // Left padding to center first card
     // paddingRight: SCREEN_WIDTH * 0.025, // Right padding for last card
   },
   bannerWrapper: {
-    width: SCREEN_WIDTH, // Each wrapper takes full screen width for proper paging
-    alignItems: 'center', // Center the banner card within the wrapper
-    // marginRight: scale(10), // Add right margin after each banner
-  },
-  lastBannerWrapper: {
-    marginRight: 0, // Remove margin from last banner as it has paddingRight from scrollContent
+    width: BANNER_WIDTH,
+    height: BANNER_HEIGHT,
   },
   pagination: {
     flexDirection: 'row',

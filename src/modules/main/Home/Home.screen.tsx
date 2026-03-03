@@ -7,7 +7,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootState } from '../../../store';
 import { EmptyState } from '../../../components';
 import { ProfileHeader } from './components/ProfileHeader/ProfileHeader';
-import { JewellerProAppCard } from './components/JewellerProAppCard/JewellerProAppCard';
 import { BannerCarousel } from '../../../components/BannerCarousel/BannerCarousel';
 import { CategorySection } from './components/CategorySection/CategorySection';
 import { UpdatesButton } from './components/UpdatesButton/UpdatesButton';
@@ -81,6 +80,7 @@ const HomeScreen = () => {
   }, []);
 
   const banners = homeData?.banners || [];
+  const promotionalBanners = homeData?.promotionalBanners || [];
   const categories = homeData?.categories || [];
   const links = homeData?.links;
   const zoomMeeting =
@@ -113,8 +113,13 @@ const HomeScreen = () => {
           userPhoto={user?.photo}
         />
 
-        {/* Jeweller Pro App info card (Figma) */}
-        <JewellerProAppCard />
+        {/* Banners from API – carousel (no static card) */}
+        <BannerCarousel
+          banners={banners}
+          localImage={Images.HOME_BANNER}
+          localImages={[Images.HOME_BANNER_1, Images.HOME_BANNER_2, Images.HOME_BANNER_3]}
+          onBannerPress={handleBannerPress}
+        />
 
         {/* Categories - grid 3 columns, See All */}
         <CategorySection
@@ -132,13 +137,13 @@ const HomeScreen = () => {
           panCardLinkUrl={links?.panCardVerifyUrl}
         />
 
-        {/* Banners from API (image.url, navigateUrl) */}
-        <BannerCarousel
-          banners={banners}
-          localImage={Images.HOME_BANNER}
-          localImages={[Images.HOME_BANNER_1, Images.HOME_BANNER_2, Images.HOME_BANNER_3]}
-          onBannerPress={handleBannerPress}
-        />
+        {/* Optional promotional banners at bottom – only when API provides data.promotionalBanners */}
+        {promotionalBanners.length > 0 && (
+          <BannerCarousel
+            banners={promotionalBanners}
+            onBannerPress={handleBannerPress}
+          />
+        )}
       </ScrollView>
     </View>
   );

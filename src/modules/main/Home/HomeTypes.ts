@@ -56,11 +56,13 @@ export interface HomeLinks {
 }
 
 /**
- * Home data structure from API (data.categories, data.banners, data.links)
+ * Home data structure from API (data.categories, data.banners, data.links, data.promotionalBanners)
  */
 export interface HomeData {
   categories: Category[];
   banners?: Banner[];
+  /** Optional promotional banners shown at the bottom of Home when provided by API */
+  promotionalBanners?: Banner[];
   links?: HomeLinks;
   /** @deprecated Use links.zoomMeetingUrl and build ZoomMeeting in UI */
   zoomMeeting?: ZoomMeeting;

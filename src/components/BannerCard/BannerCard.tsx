@@ -58,19 +58,21 @@ export const BannerCard: React.FC<BannerCardProps> = ({
 
   return (
     <TouchableOpacity
-      style={style}
+      style={[styles.card, style]}
       onPress={handlePress}
       activeOpacity={0.8}
     >
       {localImage ? (
         <Image
           source={localImage}
-          resizeMode="cover"
+          style={styles.cardImage}
+          resizeMode="contain"
         />
       ) : displayImageUrl ? (
         <Image
           source={{ uri: displayImageUrl }}
-          resizeMode="cover"
+          style={styles.cardImage}
+          resizeMode="contain"
         />
       ) : null}
       {/* View Button - Only show if linkUrl is available */}
