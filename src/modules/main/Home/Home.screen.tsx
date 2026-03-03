@@ -106,6 +106,12 @@ const HomeScreen = () => {
 
   return (
     <View style={[styles.container, topSafeArea]}>
+      {/* Sticky header – stays fixed while content scrolls */}
+      <ProfileHeader
+        userName={user?.name}
+        userPhoto={user?.photo}
+      />
+
       <ScrollView
         style={styles.content}
         contentContainerStyle={[styles.contentContainer, bottomScrollPadding]}
@@ -118,12 +124,6 @@ const HomeScreen = () => {
           />
         }
       >
-        {/* Profile Header - Hi Welcome + user name + avatar */}
-        <ProfileHeader
-          userName={user?.name}
-          userPhoto={user?.photo}
-        />
-
         {/* Banners from API – carousel (no static card) */}
         <BannerCarousel
           banners={banners}

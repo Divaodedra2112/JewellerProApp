@@ -17,7 +17,8 @@ type Styles = {
 export const styles: Styles = StyleSheet.create({
   container: {
     paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
-    paddingTop: verticalScale(16),
+    paddingTop: verticalScale(15),
+    paddingBottom: verticalScale(6),
     // Safe area padding will be added dynamically
   },
   content: {
@@ -30,11 +31,11 @@ export const styles: Styles = StyleSheet.create({
     marginRight: scale(12),
   },
   welcomeText: {
-    fontSize: scale(16),
+    fontSize: scale(14),
     color: colors.gray1000,
   },
   userName: {
-    fontSize: scale(20),
+    fontSize: scale(18),
     color: colors.textPrimary,
     fontWeight: '600',
   },
