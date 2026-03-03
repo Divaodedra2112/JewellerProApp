@@ -23,6 +23,7 @@ const gradientStyles = StyleSheet.create({
   content: {
     position: 'relative',
     zIndex: 1,
+    backgroundColor: 'transparent',
   },
 });
 

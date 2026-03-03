@@ -4,16 +4,22 @@ import { colors, Fonts } from '../../../../../utils/theme';
 
 type Styles = {
   container: ViewStyle;
+  gradient: ViewStyle;
   touchable: ViewStyle;
   text: TextStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
   container: {
-    marginHorizontal: scale(20),
+    marginHorizontal: scale(10),
     marginVertical: verticalScale(12),
     borderRadius: moderateScale(12),
-    backgroundColor: colors.white,
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+  },
+  gradient: {
+    borderRadius: moderateScale(12),
+    overflow: 'hidden',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -25,10 +31,13 @@ export const styles: Styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: scale(20),
-    paddingVertical: verticalScale(16),
+    paddingVertical: verticalScale(8),
+    backgroundColor: 'transparent',
+    gap: scale(12),
+    width: '100%',
   },
   text: {
-    color: '#333333',
+    color: colors.white,
     fontSize: scale(16),
     fontWeight: '600',
     fontFamily: Fonts.semi_bold,
