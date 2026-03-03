@@ -3,7 +3,7 @@ import { scale, verticalScale, moderateScale } from '../../../../../utils/Respon
 import { colors } from '../../../../../utils/theme';
 
 // Figma: white card, light gray icon circle with thin black border, dark text
-const ICON_CIRCLE_SIZE = scale(60);
+const ICON_CIRCLE_SIZE = scale(56);
 const CARD_RADIUS = 12;
 const ICON_CIRCLE_BG = '#E5E7EB';
 const TEXT_DARK = '#333333';
@@ -28,7 +28,6 @@ export const styles: Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: scale(10),
   },
   iconCircle: {
     width: ICON_CIRCLE_SIZE,
@@ -39,7 +38,7 @@ export const styles: Styles = StyleSheet.create({
     borderColor: colors.black,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: verticalScale(8),
+    marginBottom: verticalScale(6),
   },
   icon: {
     width: scale(34),

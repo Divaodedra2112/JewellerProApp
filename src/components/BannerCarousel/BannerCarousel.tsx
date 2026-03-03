@@ -79,6 +79,7 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: SCREEN_PADDING_HORIZONTAL,
+    marginTop: 0,
     marginBottom: verticalScale(10),
   },
   scrollContent: {
@@ -93,7 +94,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: verticalScale(12),
   },
   dot: {
     width: scale(8),

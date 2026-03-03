@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import React, { useEffect, useCallback, useState } from 'react';
+import { View, StyleSheet, ScrollView, RefreshControl, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,11 +39,16 @@ const HomeScreen = () => {
     (state: RootState) => state.home
   );
 
-  // Top inset: applied to wrapper so content never scrolls under status bar
+  const [scrollY, setScrollY] = useState(0);
+
   const topSafeArea = { paddingTop: insets.top };
-  const bottomScrollPadding = {
+  const scrollContentPadding = {
     paddingBottom: insets.bottom + verticalScale(BOTTOM_TAB_BAR_HEIGHT),
   };
+
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setScrollY(e.nativeEvent.contentOffset.y);
+  }, []);
 
   // Fetch home data on mount
   useEffect(() => {
@@ -113,7 +118,9 @@ const HomeScreen = () => {
 
       <ScrollView
         style={styles.content}
-        contentContainerStyle={[styles.contentContainer, bottomScrollPadding]}
+        contentContainerStyle={[styles.contentContainer, scrollContentPadding]}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -123,7 +130,8 @@ const HomeScreen = () => {
           />
         }
       >
-        {/* Banners from API only – no static fallback */}
+        {/* Spacer: no gap when at top, space when scrolled (below sticky header) */}
+        <View style={{ height: scrollY > 0 ? verticalScale(12) : 0 }} />
         {banners.length > 0 && (
           <BannerCarousel
             banners={banners}
