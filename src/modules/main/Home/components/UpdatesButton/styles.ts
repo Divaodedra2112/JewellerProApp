@@ -13,7 +13,7 @@ type Styles = {
 export const styles: Styles = StyleSheet.create({
   container: {
     marginHorizontal: moderateScale(5.5),
-    marginVertical: verticalScale(12),
+    marginVertical: verticalScale(6),
     borderRadius: moderateScale(12),
     backgroundColor: 'transparent',
     overflow: 'hidden',

@@ -15,8 +15,8 @@ type Styles = {
 
 export const styles: Styles = StyleSheet.create({
   container: {
-    marginTop: verticalScale(8),
-    marginBottom: verticalScale(16),
+    // marginTop: verticalScale(8),
+    // marginBottom: verticalScale(16),
   },
   header: {
     flexDirection: 'row',

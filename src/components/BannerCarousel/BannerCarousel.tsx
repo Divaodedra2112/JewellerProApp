@@ -118,7 +118,7 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: SCREEN_PADDING_HORIZONTAL,
-    marginBottom: verticalScale(16),
+    marginBottom: verticalScale(10),
   },
   scrollContent: {
     // paddingLeft: SCREEN_WIDTH * 0.025, // Left padding to center first card

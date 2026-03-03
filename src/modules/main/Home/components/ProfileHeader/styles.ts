@@ -18,7 +18,6 @@ export const styles: Styles = StyleSheet.create({
   container: {
     paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     paddingTop: verticalScale(16),
-    paddingBottom: verticalScale(10),
     // Safe area padding will be added dynamically
   },
   content: {

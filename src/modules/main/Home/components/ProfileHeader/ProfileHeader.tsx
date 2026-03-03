@@ -29,7 +29,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   
   // Calculate safe top padding (status bar height + extra padding)
   const statusBarHeight = Platform.OS === 'ios' ? insets.top : (StatusBar.currentHeight || 0);
-  const topPadding = statusBarHeight + verticalScale(16);
+  const topPadding = statusBarHeight + verticalScale(2);
 
   const handlePress = () => {
     if (onPress) {
@@ -44,7 +44,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.container, { paddingTop: topPadding }]}
+      style={[styles.container, ]}
       onPress={handlePress}
       activeOpacity={0.7}
     >
