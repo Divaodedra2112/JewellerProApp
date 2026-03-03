@@ -1,6 +1,7 @@
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { scale, verticalScale, moderateScale } from '../../../../../utils/Responsive';
 import { colors, Fonts } from '../../../../../utils/theme';
+import { SCREEN_PADDING_HORIZONTAL } from '../../../../../utils/layoutConstants';
 
 type Styles = {
   container: ViewStyle;
@@ -11,7 +12,7 @@ type Styles = {
 
 export const styles: Styles = StyleSheet.create({
   container: {
-    marginHorizontal: scale(10),
+    marginHorizontal: moderateScale(5.5),
     marginVertical: verticalScale(12),
     borderRadius: moderateScale(12),
     backgroundColor: 'transparent',
@@ -25,6 +26,8 @@ export const styles: Styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: scale(4),
     elevation: 3,
+    width: '100%',
+    alignSelf: 'stretch',
   },
   touchable: {
     flexDirection: 'row',

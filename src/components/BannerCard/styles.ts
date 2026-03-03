@@ -26,7 +26,7 @@ export const styles: Styles = StyleSheet.create({
   },
   viewButton: {
     position: 'absolute',
-    bottom: verticalScale(22),
+    bottom: verticalScale(26),
     left: scale(16),
     flexDirection: 'row',
     alignItems: 'center',

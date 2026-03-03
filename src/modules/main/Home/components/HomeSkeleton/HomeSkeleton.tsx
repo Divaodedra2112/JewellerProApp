@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SkeletonLoader } from '../../../../../components/SkeletonLoader/SkeletonLoader';
 import { scale, verticalScale, moderateScale } from '../../../../../utils/Responsive';
 import { colors } from '../../../../../utils/theme';
+import { SCREEN_PADDING_HORIZONTAL } from '../../../../../utils/layoutConstants';
 
 export const HomeSkeleton: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: scale(20),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     paddingTop: verticalScale(50), // Added top margin for status bar
     paddingBottom: verticalScale(20),
   },
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     height: verticalScale(8),
   },
   bannerContainer: {
-    paddingHorizontal: scale(10),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     marginVertical: verticalScale(12),
   },
   categorySectionContainer: {
@@ -142,23 +143,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: scale(20),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     marginBottom: verticalScale(12),
   },
   categoryScrollContent: {
-    paddingHorizontal: scale(10),
-    paddingRight: scale(20),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
+    paddingRight: SCREEN_PADDING_HORIZONTAL,
   },
   categorySectionCard: {
     marginRight: scale(12),
   },
   updatesButtonContainer: {
-    paddingHorizontal: scale(20),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     marginVertical: verticalScale(12),
   },
   actionCardsContainer: {
     flexDirection: 'row',
-    paddingHorizontal: scale(20),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     marginVertical: verticalScale(12),
     gap: scale(12),
   },

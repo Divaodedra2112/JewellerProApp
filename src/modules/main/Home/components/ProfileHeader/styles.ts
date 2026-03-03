@@ -1,6 +1,7 @@
 import { StyleSheet, ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import { scale, verticalScale, moderateScale } from '../../../../../utils/Responsive';
 import { colors } from '../../../../../utils/theme';
+import { SCREEN_PADDING_HORIZONTAL } from '../../../../../utils/layoutConstants';
 
 type Styles = {
   container: ViewStyle;
@@ -15,7 +16,7 @@ type Styles = {
 
 export const styles: Styles = StyleSheet.create({
   container: {
-    paddingHorizontal: scale(20),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     paddingTop: verticalScale(16),
     paddingBottom: verticalScale(10),
     // Safe area padding will be added dynamically

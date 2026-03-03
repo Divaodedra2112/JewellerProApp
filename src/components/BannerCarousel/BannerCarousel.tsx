@@ -5,6 +5,7 @@ import { Banner } from '../../modules/main/Home/HomeTypes';
 import { ImageSourcePropType } from 'react-native';
 import { scale, verticalScale } from '../../utils/Responsive';
 import { colors } from '../../utils/theme';
+import { SCREEN_PADDING_HORIZONTAL } from '../../utils/layoutConstants';
 
 interface BannerCarouselProps {
   banners?: Banner[];
@@ -14,8 +15,7 @@ interface BannerCarouselProps {
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const HORIZONTAL_MARGIN = scale(10);
-const BANNER_WIDTH = SCREEN_WIDTH - 2 * HORIZONTAL_MARGIN;
+const BANNER_WIDTH = SCREEN_WIDTH - 2 * SCREEN_PADDING_HORIZONTAL;
 const BANNER_HEIGHT = verticalScale(180);
 
 export const BannerCarousel: React.FC<BannerCarouselProps> = ({
@@ -117,7 +117,8 @@ export const BannerCarousel: React.FC<BannerCarouselProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: HORIZONTAL_MARGIN,
+    marginHorizontal: SCREEN_PADDING_HORIZONTAL,
+    marginBottom: verticalScale(16),
   },
   scrollContent: {
     // paddingLeft: SCREEN_WIDTH * 0.025, // Left padding to center first card

@@ -1,6 +1,7 @@
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { scale, verticalScale } from '../../../../../utils/Responsive';
 import { colors } from '../../../../../utils/theme';
+import { SCREEN_PADDING_HORIZONTAL } from '../../../../../utils/layoutConstants';
 
 type Styles = {
   container: ViewStyle;
@@ -21,7 +22,7 @@ export const styles: Styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: scale(20),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     marginBottom: verticalScale(12),
   },
   headerTitle: {
@@ -37,7 +38,7 @@ export const styles: Styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: scale(14),
+    paddingHorizontal: SCREEN_PADDING_HORIZONTAL,
     justifyContent: 'flex-start',
   },
   gridItem: {
