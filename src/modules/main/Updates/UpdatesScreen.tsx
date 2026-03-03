@@ -134,11 +134,11 @@ const UpdatesScreen = () => {
                     >
                       {text}
                     </AppText>
-                    {item.linkUrl ? (
+                    {item.link ? (
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          onLearnMore(item.linkUrl!);
+                          onLearnMore(item.link!);
                         }}
                         style={styles.learnMoreWrap}
                         activeOpacity={0.7}

@@ -9,8 +9,8 @@ export interface Update {
   title: string;
   description: string | null;
   content: string | null;
-  /** Optional URL for "Learn More" – when present, show link and open on press */
-  linkUrl?: string | null;
+  /** Optional URL for "Learn More" – when present, show link and open on press (API field: link) */
+  link?: string | null;
   status: string;
   createdAt: string;
   updatedAt: string;
