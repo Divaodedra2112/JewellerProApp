@@ -33,7 +33,9 @@ type Styles = {
   logo: ImageStyle;
   resendTimerText: TextStyle;
   resendLink: TextStyle;
+  resendLinkDisabled: TextStyle;
   resendTouch: ViewStyle;
+  resendQuestionText: TextStyle;
   errorRow: ViewStyle;
 };
 
@@ -88,8 +90,7 @@ export const styles: Styles = StyleSheet.create({
     fontFamily: Fonts.medium,
   },
   resendContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: verticalScale(12),
   },
   resendText: {
@@ -171,11 +172,18 @@ export const styles: Styles = StyleSheet.create({
     color: colors.gray1000,
     marginBottom: verticalScale(4),
   },
+  resendQuestionText: {
+    color: colors.gray1000,
+    marginBottom: verticalScale(4),
+    textAlign: 'center',
+  },
   resendLink: {
     color: '#173051',
     fontFamily: Fonts.medium,
     fontWeight: '600',
-    textDecorationLine: 'underline',
+  },
+  resendLinkDisabled: {
+    color: colors.gray400,
   },
   resendTouch: {
     padding: scale(4),

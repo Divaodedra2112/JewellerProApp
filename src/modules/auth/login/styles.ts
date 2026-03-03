@@ -78,6 +78,7 @@ export const styles: Styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: scale(10),
     gap: verticalScale(0),
+    marginTop: verticalScale(6),
   },
   inputLabel: {
     fontSize: scale(14),
@@ -182,7 +183,7 @@ export const styles: Styles = StyleSheet.create({
     color: colors.gray1000,
   },
   titleText: {
-    fontSize: scale(24),
+    fontSize: scale(26),
     fontWeight: '700',
     color: '#173051',
     fontFamily: Fonts.bold,
@@ -224,7 +225,7 @@ export const styles: Styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   subtitleText: {
-    fontSize: scale(14),
+    fontSize: scale(16),
     color: colors.textSecondary,
     textAlign: 'center',
     marginTop: verticalScale(8),

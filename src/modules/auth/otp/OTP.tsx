@@ -254,24 +254,22 @@ const OTP = () => {
             </View>
 
             <View style={styles.resendContainer}>
-              {resendTimer > 0 ? (
-                <>
-                  <AppText variant={TEXT_VARIANTS.h3_medium} style={styles.resendTimerText}>
-                    Resend code in {formatTime(resendTimer)}
-                  </AppText>
-                  <TouchableOpacity onPress={handleResend} disabled={resendTimer > 0} style={styles.resendTouch}>
-                    <AppText variant={TEXT_VARIANTS.h3_medium} style={styles.resendLink}>
-                      Resend Now
-                    </AppText>
-                  </TouchableOpacity>
-                </>
-              ) : (
-                <TouchableOpacity onPress={handleResend} style={styles.resendTouch}>
-                  <AppText variant={TEXT_VARIANTS.h3_medium} style={styles.resendLink}>
-                    Didn't receive a code? Resend Now
-                  </AppText>
-                </TouchableOpacity>
-              )}
+              <AppText variant={TEXT_VARIANTS.h3_medium} style={styles.resendQuestionText}>
+                {resendTimer > 0 ? `Resend code in ${formatTime(resendTimer)}` : "Didn't receive a code?"}
+              </AppText>
+              <TouchableOpacity
+                onPress={handleResend}
+                disabled={resendTimer > 0}
+                style={styles.resendTouch}
+                activeOpacity={0.7}
+              >
+                <AppText
+                  variant={TEXT_VARIANTS.h3_medium}
+                  style={[styles.resendLink, resendTimer > 0 && styles.resendLinkDisabled]}
+                >
+                  Resend Now
+                </AppText>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </ImageBackground>

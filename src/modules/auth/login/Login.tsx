@@ -122,7 +122,7 @@ export const LoginScreen = () => {
         <AppText variant={TEXT_VARIANTS.h1} style={styles.titleText}>
           Secure Member Access
         </AppText>
-        <AppText variant={TEXT_VARIANTS.h3_medium} style={styles.subtitleText}>
+        <AppText variant={TEXT_VARIANTS.h2} style={styles.subtitleText}>
           Enter your registered mobile number to continue
         </AppText>
       </View>
