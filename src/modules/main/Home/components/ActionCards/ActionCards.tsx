@@ -41,17 +41,19 @@ export const ActionCards: React.FC<ActionCardsProps> = ({
             onPress={() => handleCardPress(panCardLinkUrl)}
             activeOpacity={0.8}
           >
-            <View style={styles.cardHeader}>
-              <ArrowRightCircleIcon width={scale(24)} height={scale(24)} />
+            <View style={styles.cardTopRow}>
+              <View style={styles.cardTitleWrap}>
+                <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.cardTitle}>
+                  Verify Pan Card
+                </AppText>
+              </View>
+              <View style={styles.cardHeader}>
+                <ArrowRightCircleIcon width={scale(24)} height={scale(24)} />
+              </View>
             </View>
-            <View style={styles.cardContent}>
-              <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.cardTitle}>
-                Verify Pan Card
-              </AppText>
-              <AppText variant={TEXT_VARIANTS.h6_small} style={styles.cardSubtitle}>
-                Built on Trust
-              </AppText>
-            </View>
+            <AppText variant={TEXT_VARIANTS.h6_small} style={styles.cardSubtitle}>
+              Built on Trust
+            </AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -59,17 +61,19 @@ export const ActionCards: React.FC<ActionCardsProps> = ({
             onPress={() => handleCardPress(meetingUrl!)}
             activeOpacity={0.8}
           >
-            <View style={styles.cardHeader}>
-              <ArrowRightCircleIcon width={scale(24)} height={scale(24)} />
+            <View style={styles.cardTopRow}>
+              <View style={styles.cardTitleWrap}>
+                <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.cardTitle}>
+                  Join the Meeting
+                </AppText>
+              </View>
+              <View style={styles.cardHeader}>
+                <ArrowRightCircleIcon width={scale(24)} height={scale(24)} />
+              </View>
             </View>
-            <View style={styles.cardContent}>
-              <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.cardTitle}>
-                Join the Meeting
-              </AppText>
-              <AppText variant={TEXT_VARIANTS.h6_small} style={styles.cardSubtitle}>
-                {zoomMeeting?.meetingTime ? `At ${zoomMeeting.meetingTime}` : 'Join Now'}
-              </AppText>
-            </View>
+            <AppText variant={TEXT_VARIANTS.h6_small} style={styles.cardSubtitle}>
+              {zoomMeeting?.meetingTime ? `At ${zoomMeeting.meetingTime}` : 'Join Now'}
+            </AppText>
           </TouchableOpacity>
         </>
       ) : (
@@ -79,17 +83,19 @@ export const ActionCards: React.FC<ActionCardsProps> = ({
           onPress={() => handleCardPress(panCardLinkUrl)}
           activeOpacity={0.8}
         >
-          <View style={styles.cardHeader}>
-            <ArrowRightCircleIcon width={scale(24)} height={scale(24)} />
+          <View style={styles.cardTopRow}>
+            <View style={styles.cardTitleWrap}>
+              <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.cardTitle}>
+                Verify Pan Card
+              </AppText>
+            </View>
+            <View style={styles.cardHeader}>
+              <ArrowRightCircleIcon width={scale(24)} height={scale(24)} />
+            </View>
           </View>
-          <View style={styles.cardContent}>
-            <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.cardTitle}>
-              Verify Pan Card
-            </AppText>
-            <AppText variant={TEXT_VARIANTS.h6_small} style={styles.cardSubtitle}>
-              Built on Trust
-            </AppText>
-          </View>
+          <AppText variant={TEXT_VARIANTS.h6_small} style={styles.cardSubtitle}>
+            Built on Trust
+          </AppText>
         </TouchableOpacity>
       )}
     </View>

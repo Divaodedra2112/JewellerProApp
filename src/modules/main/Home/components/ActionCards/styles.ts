@@ -8,8 +8,9 @@ type Styles = {
   card: ViewStyle;
   halfWidthCard: ViewStyle;
   fullWidthCard: ViewStyle;
+  cardTopRow: ViewStyle;
+  cardTitleWrap: ViewStyle;
   cardHeader: ViewStyle;
-  cardContent: ViewStyle;
   cardTitle: TextStyle;
   cardSubtitle: TextStyle;
 };
@@ -22,10 +23,10 @@ export const styles: Styles = StyleSheet.create({
     gap: scale(12),
   },
   card: {
+    flexDirection: 'column',
     backgroundColor: colors.white,
     borderRadius: moderateScale(16),
     padding: scale(16),
-    // Shadow properties
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
@@ -33,7 +34,7 @@ export const styles: Styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: scale(4),
-    elevation: 3, // For Android
+    elevation: 3,
   },
   halfWidthCard: {
     flex: 1,
@@ -43,24 +44,30 @@ export const styles: Styles = StyleSheet.create({
     width: '100%',
     minHeight: verticalScale(100),
   },
-  cardHeader: {
-    alignItems: 'flex-end',
-    marginBottom: verticalScale(8),
-  },
-  cardContent: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  cardTitle: {
-    fontSize: scale(16),
-    fontWeight: '700',
-    color: colors.textPrimary,
+  cardTopRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     marginBottom: verticalScale(4),
   },
-  cardSubtitle: {
-    fontSize: scale(12),
-    color: colors.textSecondary,
+  cardTitleWrap: {
+    flex: 1,
+    marginRight: scale(12),
+  },
+  cardHeader: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardTitle: {
+    fontSize: scale(15),
     fontWeight: '500',
+    color: colors.textPrimary,
+  },
+  cardSubtitle: {
+    fontSize: scale(13),
+    color: colors.textSecondary,
+    fontWeight: '400',
+    marginTop: verticalScale(2),
   },
 });
 
