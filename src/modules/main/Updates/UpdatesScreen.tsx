@@ -107,8 +107,12 @@ const UpdatesScreen = () => {
         ) : (
           updates.map((item) => {
             const isExpanded = expandedId === item.id;
+            const description = item.description || '';
+            const content = (item.content || '').trim();
+            const hasMoreContent =
+              content.length > 0 && content.length > description.length;
             const text =
-              isExpanded && item.content ? item.content : item.description || item.content || '';
+              isExpanded && hasMoreContent ? item.content! : (item.description || item.content || '');
             return (
               <View key={item.id} style={styles.card}>
                 <TouchableOpacity
