@@ -77,8 +77,8 @@ api.interceptors.request.use(
     // Add dynamic device id and platform headers
     const deviceId = await DeviceInfo.getUniqueId();
     config.headers['x-current-device-id'] = deviceId;
-    
-    
+    config.headers['x-login-type'] = 'C1';
+
     // Get app version from package.json
     const packageJson = require('../../package.json');
     config.headers['x-client-info'] = JSON.stringify({
@@ -208,6 +208,18 @@ api.interceptors.response.use(
         ['TOKEN_EXPIRED', 'INVALID_OR_EXPIRED_TOKEN'].includes(
           (error.response.data as ErrorResponse).code || ''
         ));
+
+    // Logout endpoint: do not try to refresh; clear session and let logout complete locally
+    const isLogoutRequest =
+      typeof originalRequest?.url === 'string' &&
+      originalRequest.url.includes('/auth/logout-app');
+    if (isTokenExpired && isLogoutRequest) {
+      await AsyncStorage.removeItem('access_token');
+      await AsyncStorage.removeItem('refresh_token');
+      store.dispatch(logout());
+      processQueue(error as Error, null);
+      return Promise.reject(error);
+    }
 
     if (isTokenExpired) {
       if (!isRefreshing) {

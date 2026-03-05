@@ -53,6 +53,7 @@ refreshApi.interceptors.request.use(async config => {
     platform,
   });
   config.headers['x-current-device-id'] = deviceId;
+  config.headers['x-login-type'] = 'C1';
   return config;
 });
 

@@ -2,9 +2,12 @@ import { get } from '../../../services/api';
 import { TopicResponse, Topic } from './TopicTypes';
 import { logger } from '../../../utils/logger';
 
+/** App topics endpoint: GET /api/v1/app/topics/:id */
+const TOPICS_PATH = '/app/topics';
+
 export const getTopic = async (id: string): Promise<Topic> => {
   try {
-    const response = await get<TopicResponse>(`/topic?id=${id}`);
+    const response = await get<TopicResponse>(`${TOPICS_PATH}/${id}`);
 
     if (!response) {
       throw new Error('No response received from server');
@@ -17,7 +20,7 @@ export const getTopic = async (id: string): Promise<Topic> => {
     return response.data;
   } catch (error: any) {
     logger.error('Topic Service - Error fetching topic', error as Error, {
-      endpoint: '/topic',
+      endpoint: `${TOPICS_PATH}/${id}`,
       id,
       method: 'GET',
     });

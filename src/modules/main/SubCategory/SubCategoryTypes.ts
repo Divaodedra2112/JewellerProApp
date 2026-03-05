@@ -12,12 +12,15 @@ export interface SubCategory {
 
 /**
  * SubCategory API response structure
+ * Supports both shapes: { data: { subCategories: [] } } and { data: [] }
  */
 export interface SubCategoryResponse {
   success: boolean;
-  data: {
-    subCategories: SubCategory[];
-  };
+  data:
+    | {
+        subCategories: SubCategory[];
+      }
+    | SubCategory[];
   message?: string;
 }
 
