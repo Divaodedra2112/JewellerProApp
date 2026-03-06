@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getSubCategories } from './SubCategoryService';
 import { logger } from '../../../utils/logger';
+import { getApiErrorMessage, TOAST_MESSAGES } from '../../../utils/toast';
 
 export const fetchSubCategories = createAsyncThunk(
   'subCategory/fetchSubCategories',
@@ -10,10 +11,8 @@ export const fetchSubCategories = createAsyncThunk(
       return { subCategories, categoryId };
     } catch (error: any) {
       logger.error('SubCategory Actions - Fetch Error', error as Error);
-
-      return rejectWithValue(
-        error?.response?.data?.message || error?.message || 'Failed to fetch subcategories'
-      );
+      const message = getApiErrorMessage(error, TOAST_MESSAGES.SUBCATEGORY.FETCH_FAILED);
+      return rejectWithValue(message);
     }
   }
 );

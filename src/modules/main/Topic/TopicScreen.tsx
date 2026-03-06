@@ -36,6 +36,17 @@ const TopicScreen = () => {
     dispatch(fetchTopic(id));
   }, [dispatch, id]);
 
+  // Error toast when fetch fails
+  useEffect(() => {
+    if (error && !topic) {
+      showToast(TOAST_TYPE.ERROR, error);
+    }
+  }, [error, topic]);
+
+  const handleRetry = useCallback(() => {
+    dispatch(fetchTopic(id));
+  }, [dispatch, id]);
+
   // Handle PDF download
   const handleDownloadPDF = useCallback(async () => {
     const topicToUse = topic;
@@ -116,8 +127,20 @@ const TopicScreen = () => {
         onRightIconPress={handleShare}
       />
 
-      {(loading && !topic) || (error && !topic) ? (
+      {loading && !topic ? (
         <TopicSkeleton />
+      ) : error && !topic ? (
+        <View style={styles.errorContainer}>
+          <EmptyState
+            title={t('common.error', 'Error')}
+            description={error}
+          />
+          <View style={styles.retryContainer}>
+            <AppButton onPress={handleRetry}>
+              {t('common.retry', 'Retry')}
+            </AppButton>
+          </View>
+        </View>
       ) : (
         <ScrollView
           style={styles.content}

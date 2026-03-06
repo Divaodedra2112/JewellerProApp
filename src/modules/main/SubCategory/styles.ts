@@ -9,6 +9,7 @@ type Styles = {
   loadingContainer: ViewStyle;
   errorContainer: ViewStyle;
   emptyContainer: ViewStyle;
+  retryContainer: ViewStyle;
   card: ViewStyle;
   cardContent: ViewStyle;
   textContainer: ViewStyle;
@@ -43,6 +44,11 @@ export const styles: Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  retryContainer: {
+    marginTop: verticalScale(16),
+    paddingHorizontal: scale(24),
+    alignSelf: 'center',
   },
   card: {
     backgroundColor: colors.white,

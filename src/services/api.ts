@@ -94,23 +94,24 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// Response interceptor – log direct API response for all requests
 api.interceptors.response.use(
   (response: AxiosResponse) => {
-    // Log successful responses
+    const fullUrl = response.config.baseURL && response.config.url
+      ? `${response.config.baseURL}${response.config.url}`
+      : response.config.url;
+    // Log direct API response for every request
     if (__DEV__) {
-      logger.debug('API Response Success', {
-        url: response.config.url,
+      logger.debug('API Response', {
+        method: response.config.method?.toUpperCase(),
+        url: fullUrl,
         status: response.status,
+        response: response.data,
       });
-      
-      // Log to Reactotron
+      // Also log raw response body so it's easy to see in console
+      console.log('[API Response]', response.config.method?.toUpperCase(), fullUrl, '→', response.data);
       if (typeof console.tron !== 'undefined' && console.tron) {
-        console.tron.log('API Response Success', {
-          url: response.config.url,
-          status: response.status,
-          data: response.data,
-        });
+        console.tron.log('API Response', { url: fullUrl, status: response.status, data: response.data });
       }
     }
     return response;
@@ -120,25 +121,28 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     const fullUrl = originalRequest ? `${originalRequest.baseURL}${originalRequest.url}` : 'Unknown URL';
     
+    const errorResponseData = error.response?.data;
     logger.error('API Response Error', error as Error, {
       url: originalRequest?.url || 'Unknown',
       method: originalRequest?.method?.toUpperCase() || 'UNKNOWN',
       fullURL: fullUrl,
       status: error.response?.status,
+      response: errorResponseData,
       errorMessage: error.message,
       errorCode: (error as any)?.code,
     });
-    
-    // Log to Reactotron
+    if (__DEV__) {
+      console.log('[API Response Error]', originalRequest?.method?.toUpperCase(), fullUrl, '→', errorResponseData ?? error.message);
+    }
     if (__DEV__ && typeof console.tron !== 'undefined' && console.tron) {
       console.tron.error('API Response Error', {
         url: originalRequest?.url || 'Unknown',
         method: originalRequest?.method?.toUpperCase() || 'UNKNOWN',
         fullURL: fullUrl,
         status: error.response?.status,
+        response: errorResponseData,
         errorMessage: error.message,
         errorCode: (error as any)?.code,
-        responseData: error.response?.data,
       });
     }
 

@@ -41,7 +41,37 @@ export const TOAST_MESSAGES = {
     SOMETHING_WENT_WRONG: 'Something went wrong. Please try again.',
     NETWORK_ERROR: 'Network error. Please check your connection and try again.',
   },
+
+  // SubCategory & Topic (app content)
+  SUBCATEGORY: {
+    FETCH_FAILED: 'Failed to load subcategories. Please try again.',
+  },
+  TOPIC: {
+    FETCH_FAILED: 'Failed to load topic. Please try again.',
+  },
 } as const;
+
+/**
+ * Get user-facing error message from API/axios error.
+ * Prefers server message, then network error, then generic fallback.
+ */
+export function getApiErrorMessage(error: any, fallback?: string): string {
+  const generic = fallback || TOAST_MESSAGES.GENERIC.SOMETHING_WENT_WRONG;
+  if (!error) return generic;
+  const isNetworkError =
+    (error as any)?.isNetworkError ||
+    !error?.response ||
+    error?.code === 'ERR_NETWORK' ||
+    error?.code === 'ECONNABORTED' ||
+    error?.message === 'Network Error';
+  if (isNetworkError) return TOAST_MESSAGES.GENERIC.NETWORK_ERROR;
+  const serverMessage =
+    error?.response?.data?.message ||
+    (typeof error?.response?.data?.error === 'string' ? error.response.data.error : null);
+  if (serverMessage && String(serverMessage).trim()) return String(serverMessage).trim();
+  if (error?.message && String(error.message).trim()) return String(error.message).trim();
+  return generic;
+}
 
 /** Get user-facing message for auth API error code. Prefer serverMessage when provided. */
 export function getAuthErrorMessage(

@@ -8,6 +8,7 @@ type Styles = {
   contentContainer: ViewStyle;
   loadingContainer: ViewStyle;
   errorContainer: ViewStyle;
+  retryContainer: ViewStyle;
   shareIconContainer: ViewStyle;
   tagContainer: ViewStyle;
   tag: ViewStyle;
@@ -40,6 +41,11 @@ export const styles: Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  retryContainer: {
+    marginTop: verticalScale(16),
+    paddingHorizontal: scale(24),
+    alignSelf: 'center',
   },
   shareIconContainer: {
     width: scale(24),

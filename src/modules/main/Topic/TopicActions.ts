@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getTopic } from './TopicService';
 import { logger } from '../../../utils/logger';
+import { getApiErrorMessage, TOAST_MESSAGES } from '../../../utils/toast';
 
 export const fetchTopic = createAsyncThunk(
   'topic/fetchTopic',
@@ -10,10 +11,8 @@ export const fetchTopic = createAsyncThunk(
       return { topic, id };
     } catch (error: any) {
       logger.error('Topic Actions - Fetch Error', error as Error);
-
-      return rejectWithValue(
-        error?.response?.data?.message || error?.message || 'Failed to fetch topic'
-      );
+      const message = getApiErrorMessage(error, TOAST_MESSAGES.TOPIC.FETCH_FAILED);
+      return rejectWithValue(message);
     }
   }
 );
