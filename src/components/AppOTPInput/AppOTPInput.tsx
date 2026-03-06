@@ -41,10 +41,20 @@ export const AppOTPInput: React.FC<AppOTPInputProps> = ({
     if (cleanText) {
       newValue[index] = cleanText;
       onChange(newValue.join(''));
-
-      // Auto-focus next input
       if (index < length - 1) {
         inputRefs.current[index + 1]?.focus();
+      }
+    } else if (text === '') {
+      // Backspace / delete: clear current box (on Android number-pad, onKeyPress often doesn't fire)
+      if (newValue[index]) {
+        newValue[index] = '';
+        onChange(newValue.join(''));
+        setFocusedIndex(index);
+      } else if (index > 0) {
+        newValue[index - 1] = '';
+        onChange(newValue.join(''));
+        inputRefs.current[index - 1]?.focus();
+        setFocusedIndex(index - 1);
       }
     }
   };

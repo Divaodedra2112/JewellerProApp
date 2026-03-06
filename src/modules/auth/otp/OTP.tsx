@@ -114,7 +114,7 @@ const OTP = () => {
         if (code === 'OTP_MAX_ATTEMPTS' || failedAttempts + 1 >= 3) {
           setResendTimer(RESEND_COOLDOWN_SECONDS);
         }
-        setAutoFocusOnClear(false);
+        setAutoFocusOnClear(true);
         setOTP('');
         Keyboard.dismiss();
       }
@@ -227,6 +227,22 @@ const OTP = () => {
                   if (!autoFocusOnClear && val.length > 0) setAutoFocusOnClear(true);
                 }}
               />
+              {otp.length > 0 ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setOTP('');
+                    setError('');
+                    setAutoFocusOnClear(true);
+                    Keyboard.dismiss();
+                  }}
+                  style={localStyles.clearTouch}
+                  activeOpacity={0.7}
+                >
+                  <AppText variant={TEXT_VARIANTS.h4_small} style={localStyles.clearText}>
+                    Clear & enter new code
+                  </AppText>
+                </TouchableOpacity>
+              ) : null}
             </View>
 
             {error ? (
@@ -284,6 +300,14 @@ const localStyles = StyleSheet.create({
     fontWeight: '700',
     color: colors.error,
     marginRight: scale(6),
+  },
+  clearTouch: {
+    marginTop: verticalScale(12),
+    alignSelf: 'center',
+  },
+  clearText: {
+    color: colors.primary,
+    textDecorationLine: 'underline',
   },
 });
 
