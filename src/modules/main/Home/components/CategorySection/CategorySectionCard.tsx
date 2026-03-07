@@ -63,9 +63,11 @@ export const CategorySectionCard: React.FC<CategorySectionCardProps> = ({
             </View>
           )}
         </View>
-        <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.title} numberOfLines={2}>
-          {category.title}
-        </AppText>
+        <View style={styles.titleWrapper}>
+          <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.title} numberOfLines={2}>
+            {category.title}
+          </AppText>
+        </View>
       </View>
     </TouchableOpacity>
   );

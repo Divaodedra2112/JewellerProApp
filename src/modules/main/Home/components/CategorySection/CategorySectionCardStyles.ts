@@ -15,6 +15,7 @@ type Styles = {
   icon: ViewStyle;
   iconPlaceholder: ViewStyle;
   iconText: TextStyle;
+  titleWrapper: ViewStyle;
   title: TextStyle;
 };
 
@@ -26,7 +27,7 @@ export const styles: Styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   iconCircle: {
@@ -54,6 +55,12 @@ export const styles: Styles = StyleSheet.create({
     color: TEXT_DARK,
     fontSize: scale(14),
     fontWeight: '700',
+  },
+  titleWrapper: {
+    minHeight: verticalScale(36),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   title: {
     fontSize: scale(12),
