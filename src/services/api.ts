@@ -243,7 +243,7 @@ api.interceptors.response.use(
         }
 
         try {
-          const response = await refreshApi.post<TokenResponse>('/auth/refresh-token', {
+          const response = await refreshApi.post<TokenResponse>('/app/auth/refresh-token', {
             refreshToken: refreshToken,
           });
 

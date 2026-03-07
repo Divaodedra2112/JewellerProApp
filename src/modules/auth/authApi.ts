@@ -9,7 +9,7 @@ import { logger } from '../../utils/logger';
 const AUTH_SEND_OTP = '/auth/send-login-otp';
 const AUTH_VERIFY_OTP = '/auth/verify-login-otp';
 const AUTH_LOGOUT = '/auth/logout-app';
-const AUTH_REFRESH = '/auth/refresh-token';
+const AUTH_REFRESH = '/app/auth/refresh-token';
 
 // --- Send OTP (Log in Continue + OTP Resend Now) ---
 
