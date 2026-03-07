@@ -180,7 +180,6 @@ export const styles: Styles = StyleSheet.create({
   resendLink: {
     color: '#173051',
     fontFamily: Fonts.medium,
-    fontWeight: '600',
   },
   resendLinkDisabled: {
     color: colors.gray400,

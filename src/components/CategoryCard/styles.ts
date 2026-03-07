@@ -46,7 +46,6 @@ export const styles: Styles = StyleSheet.create({
   iconText: {
     color: colors.white,
     fontSize: scale(18),
-    fontWeight: '700',
   },
   textContainer: {
     flex: 1,
@@ -54,7 +53,6 @@ export const styles: Styles = StyleSheet.create({
   title: {
     fontSize: scale(16),
     color: colors.textPrimary,
-    fontWeight: '600',
   },
 });
 

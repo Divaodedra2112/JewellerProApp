@@ -42,7 +42,6 @@ export const styles: Styles = StyleSheet.create({
   text: {
     color: colors.white,
     fontSize: scale(16),
-    fontWeight: '600',
     fontFamily: Fonts.semi_bold,
   },
 });

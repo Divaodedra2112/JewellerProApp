@@ -77,7 +77,6 @@ export const styles: Styles = StyleSheet.create({
   title: {
     fontSize: scale(16),
     color: colors.textPrimary,
-    fontWeight: '600',
     marginBottom: verticalScale(4),
   },
   description: {

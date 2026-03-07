@@ -27,13 +27,11 @@ export const styles: Styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: scale(18),
-    fontWeight: '700',
     color: colors.textPrimary,
   },
   seeAllText: {
     fontSize: scale(14),
     color: colors.primary,
-    fontWeight: '600',
   },
   grid: {
     flexDirection: 'row',

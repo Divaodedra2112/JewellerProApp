@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: scale(16),
-    fontFamily: Fonts.semi_bold,
+    fontFamily: Fonts.medium,
   },
   subtitle: {
     fontSize: scale(12),

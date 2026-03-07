@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: moderateScale(10),
-    fontWeight: '600',
     textAlign: 'center',
   },
 });

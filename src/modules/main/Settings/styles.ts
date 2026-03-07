@@ -34,9 +34,8 @@ export const styles: Styles = StyleSheet.create({
   },
   title: {
     fontSize: scale(28),
-    fontWeight: '700',
     color: colors.textPrimary,
-    fontFamily: Fonts.bold,
+    fontFamily: Fonts.medium,
     marginBottom: verticalScale(24),
     letterSpacing: 0.5,
   },

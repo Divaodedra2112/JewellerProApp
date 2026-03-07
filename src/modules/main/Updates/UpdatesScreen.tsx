@@ -240,7 +240,6 @@ const styles = StyleSheet.create({
   cardTitle: {
     color: colors.textPrimary,
     fontSize: scale(17),
-    fontWeight: '700',
     marginBottom: verticalScale(8),
   },
   cardDescription: {
@@ -256,7 +255,6 @@ const styles = StyleSheet.create({
   learnMore: {
     color: PRIMARY_BLUE,
     fontSize: scale(15),
-    fontWeight: '600',
     textDecorationLine: 'underline',
   },
   chevronWrap: {

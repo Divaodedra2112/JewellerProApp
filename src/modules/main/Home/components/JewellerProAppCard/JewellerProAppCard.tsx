@@ -22,7 +22,7 @@ export const JewellerProAppCard: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.textBlock}>
-          <AppText variant={TEXT_VARIANTS.h3} style={styles.title}>
+          <AppText variant={TEXT_VARIANTS.h2} style={styles.title}>
             Jeweller Pro App
           </AppText>
           <AppText variant={TEXT_VARIANTS.h6_small} style={styles.description}>

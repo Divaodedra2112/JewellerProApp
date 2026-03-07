@@ -29,13 +29,13 @@ const getTextStyle = (variant: keyof TextVariantsTypes) => {
   switch (variant) {
     case 'h1':
       return {
-        fontFamily: Fonts.extra_bold,
+        fontFamily: Fonts.bold,
         fontSize: moderateScale(32),
         color: colors.ascent,
       };
     case 'h2':
       return {
-        fontFamily: Fonts.bold,
+        fontFamily: Fonts.medium,
         fontSize: moderateScale(18),
         color: colors.ascent,
       };
@@ -48,7 +48,7 @@ const getTextStyle = (variant: keyof TextVariantsTypes) => {
       };
     case 'h3_large':
       return {
-        fontFamily: Fonts.extra_large,
+        fontFamily: Fonts.medium,
         fontSize: moderateScale(16),
         color: colors.ascent,
       };
@@ -60,13 +60,13 @@ const getTextStyle = (variant: keyof TextVariantsTypes) => {
       };
     case 'h4_medium':
       return {
-        fontFamily: Fonts.bold,
+        fontFamily: Fonts.medium,
         fontSize: moderateScale(14),
         color: colors.ascent,
       };
     case 'h4_large':
       return {
-        fontFamily: Fonts.semi_bold,
+        fontFamily: Fonts.medium,
         fontSize: moderateScale(14),
         color: colors.ascent,
       };
@@ -103,7 +103,7 @@ const getTextStyle = (variant: keyof TextVariantsTypes) => {
   }
 };
 
-export const AppText: React.FC<AppTextProps> = ({ variant = 'h4_medium', style, ...props }) => {
+export const AppText: React.FC<AppTextProps> = ({ variant = 'h4_small', style, ...props }) => {
   const textStyle = getTextStyle(variant);
 
   return <RNText style={[textStyle, style]} {...props} />;

@@ -184,9 +184,8 @@ export const styles: Styles = StyleSheet.create({
   },
   titleText: {
     fontSize: scale(26),
-    fontWeight: '700',
     color: '#173051',
-    fontFamily: Fonts.bold,
+    fontFamily: Fonts.medium,
     marginTop: verticalScale(20),
     textAlign: 'center',
     letterSpacing: 0.5,
@@ -205,7 +204,6 @@ export const styles: Styles = StyleSheet.create({
     fontSize: scale(14),
     color: '#173051',
     fontFamily: Fonts.medium,
-    fontWeight: '600',
   },
   authHeader: {
     flexDirection: 'row',
@@ -217,7 +215,7 @@ export const styles: Styles = StyleSheet.create({
   },
   authHeaderTitle: {
     fontSize: scale(18),
-    fontFamily: Fonts.semi_bold,
+    fontFamily: Fonts.medium,
     color: colors.textPrimary,
   },
   backButton: {

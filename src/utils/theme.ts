@@ -108,3 +108,5 @@ export const Fonts = {
   black: Platform.OS === 'ios' ? 'Inter18pt-Black' : 'Inter_18pt-Black',
   extra_large: Platform.OS === 'ios' ? 'Inter24pt-ExtraBold' : 'Inter_24pt-ExtraBold',
 };
+
+/** Typography roles (use with AppText variant): title = h2, subtitle = h3/h3_medium, body = h4_small, body emphasis = h4_medium, description/caption = h6_small, small label = h6_medium. Prefer variant over inline fontWeight. */

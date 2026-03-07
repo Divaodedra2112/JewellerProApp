@@ -19,7 +19,6 @@ export const styles = StyleSheet.create({
     fontSize: verticalScale(40),
     borderColor: colors.gray100,
     backgroundColor: colors.white,
-    fontWeight: '700',
     fontFamily: Fonts.bold,
     color: colors.Gray80,
   },

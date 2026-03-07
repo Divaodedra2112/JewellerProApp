@@ -42,7 +42,6 @@ export const styles: Styles = StyleSheet.create({
   },
   title: {
     fontSize: scale(24),
-    fontWeight: '700',
     color: colors.white,
     marginBottom: verticalScale(8),
   },
@@ -64,7 +63,6 @@ export const styles: Styles = StyleSheet.create({
   },
   viewButtonText: {
     color: colors.white,
-    fontWeight: '600',
     fontSize: scale(14),
   },
   illustrationBlock: {

@@ -64,12 +64,10 @@ export const styles: Styles = StyleSheet.create({
   tagText: {
     fontSize: scale(12),
     color: colors.textSecondary,
-    fontWeight: '500',
   },
   title: {
     fontSize: scale(24),
     color: colors.textPrimary,
-    fontWeight: '700',
     marginBottom: verticalScale(20),
     lineHeight: scale(32),
   },

@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import CustomHeader from '../../../components/CustomHeader/Header';
 import { AppText } from '../../../components';
+import { TEXT_VARIANTS } from '../../../components/AppText/AppText';
 import { colors } from '../../../utils/theme';
 
 const ChatbotScreen = () => {
@@ -19,10 +20,10 @@ const ChatbotScreen = () => {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}>
         <View style={styles.welcomeSection}>
-          <AppText style={styles.welcomeTitle}>
+          <AppText variant={TEXT_VARIANTS.h2} style={styles.welcomeTitle}>
             Chatbot
           </AppText>
-          <AppText style={styles.welcomeSubtitle}>
+          <AppText variant={TEXT_VARIANTS.h4_small} style={styles.welcomeSubtitle}>
             AI Assistant coming soon...
           </AppText>
         </View>
@@ -48,7 +49,6 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 10,
   },

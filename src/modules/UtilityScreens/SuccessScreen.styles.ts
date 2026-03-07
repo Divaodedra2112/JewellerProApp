@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     color: colors.gray1000,
     fontSize: scale(16),
-    fontWeight: '600',
     fontFamily: Fonts.semi_bold,
     lineHeight: scale(22),
   },

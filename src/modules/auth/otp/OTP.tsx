@@ -303,7 +303,6 @@ const OTP = () => {
 const localStyles = StyleSheet.create({
   errorIcon: {
     fontSize: scale(14),
-    fontWeight: '700',
     color: colors.error,
     marginRight: scale(6),
   },

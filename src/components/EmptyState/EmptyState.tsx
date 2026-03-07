@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text } from '@ui-kitten/components';
 import { colors } from '../../utils/theme';
 import { moderateScale } from '../../utils/Responsive';
+import { AppText } from '../AppText/AppText';
+import { TEXT_VARIANTS } from '../AppText/AppText';
 
 interface EmptyStateProps {
   title: string;
@@ -12,8 +13,8 @@ interface EmptyStateProps {
 export const EmptyState: React.FC<EmptyStateProps> = ({ title, description }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      {description && <Text style={styles.description}>{description}</Text>}
+      <AppText variant={TEXT_VARIANTS.h2} style={styles.title}>{title}</AppText>
+      {description && <AppText variant={TEXT_VARIANTS.h4_small} style={styles.description}>{description}</AppText>}
     </View>
   );
 };
@@ -27,7 +28,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: moderateScale(18),
-    fontWeight: '600',
     color: colors.gray1000,
     marginBottom: moderateScale(8),
     textAlign: 'center',

@@ -54,7 +54,6 @@ export const styles: Styles = StyleSheet.create({
   iconText: {
     color: TEXT_DARK,
     fontSize: scale(14),
-    fontWeight: '700',
   },
   titleWrapper: {
     minHeight: verticalScale(36),
@@ -65,7 +64,6 @@ export const styles: Styles = StyleSheet.create({
   title: {
     fontSize: scale(12),
     color: TEXT_DARK,
-    fontWeight: '500',
     textAlign: 'center',
   },
 });

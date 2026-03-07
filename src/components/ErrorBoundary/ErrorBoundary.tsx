@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { AppText, AppButton } from '../index';
+import { TEXT_VARIANTS } from '../AppText/AppText';
 import { colors } from '../../utils/theme';
 
 interface Props {
@@ -74,14 +75,14 @@ class ErrorBoundary extends Component<Props, State> {
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={false}>
             <View style={styles.errorContainer}>
-              <AppText style={styles.title}>Oops! Something went wrong</AppText>
-              <AppText style={styles.message}>
+              <AppText variant={TEXT_VARIANTS.h2} style={styles.title}>Oops! Something went wrong</AppText>
+              <AppText variant={TEXT_VARIANTS.h4_small} style={styles.message}>
                 We're sorry for the inconvenience. The app encountered an unexpected error.
               </AppText>
 
               {__DEV__ && this.state.error && (
                 <View style={styles.errorDetails}>
-                  <AppText style={styles.errorTitle}>Error Details:</AppText>
+                  <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.errorTitle}>Error Details:</AppText>
                   <AppText style={styles.errorText}>
                     {this.state.error.toString()}
                   </AppText>
@@ -123,7 +124,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: colors.text,
     marginBottom: 16,
     textAlign: 'center',
@@ -144,7 +144,6 @@ const styles = StyleSheet.create({
   },
   errorTitle: {
     fontSize: 14,
-    fontWeight: '600',
     color: colors.error,
     marginBottom: 8,
   },

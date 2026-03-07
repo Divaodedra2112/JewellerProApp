@@ -36,7 +36,6 @@ export const styles: Styles = StyleSheet.create({
   userName: {
     fontSize: scale(18),
     color: colors.textPrimary,
-    fontWeight: '600',
   },
   avatarContainer: {
     width: scale(56),

@@ -57,14 +57,14 @@ export const CategorySectionCard: React.FC<CategorySectionCardProps> = ({
             />
           ) : (
             <View style={styles.iconPlaceholder}>
-              <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.iconText}>
+              <AppText variant={TEXT_VARIANTS.h4_small} style={styles.iconText}>
                 {category.title.charAt(0).toUpperCase()}
               </AppText>
             </View>
           )}
         </View>
         <View style={styles.titleWrapper}>
-          <AppText variant={TEXT_VARIANTS.h4_medium} style={styles.title} numberOfLines={2}>
+          <AppText variant={TEXT_VARIANTS.h4_small} style={styles.title} numberOfLines={2}>
             {category.title}
           </AppText>
         </View>
