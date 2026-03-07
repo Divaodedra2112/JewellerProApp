@@ -3,9 +3,9 @@ import HomeScreen from '../modules/main/Home/Home.screen';
 import SettingsScreen from '../modules/main/Settings/SettingsScreen';
 import QuestionsNavigator from '../navigation/QuestionsNavigator';
 import UpdatesScreen from '../modules/main/Updates/UpdatesScreen';
-import TabIcon from '../components/BottomTabNavigation/TabIcon';
 import UpdatesIconWithBadge from '../components/BottomTabNavigation/UpdatesIconWithBadge';
-import Images from '../utils/Images';
+import { HomeTabIcon, ChatTabIcon, SettingsTabIcon } from '../components/BottomTabNavigation/TabBarSvgIcons';
+import { colors } from '../utils/theme';
 
 export interface NavigationItem {
   id: string;
@@ -24,12 +24,10 @@ export const navigationModulesConfig: NavigationItem[] = [
     id: 'Home',
     name: 'Home',
     component: HomeScreen,
-    icon: ({ color, focused }) => (
-      <TabIcon 
-        source={Images.HOME_ICON} 
-        selectedSource={Images.HOME_ICON_SELECTED}
-        focused={focused} 
-        size={focused ? 24 : 20} 
+    icon: ({ focused }) => (
+      <HomeTabIcon
+        color={focused ? colors.primary : '#FFFFFF'}
+        size={focused ? 24 : 20}
       />
     ),
     type: 'bottomTab',
@@ -39,12 +37,10 @@ export const navigationModulesConfig: NavigationItem[] = [
     id: 'Questions',
     name: 'Questions',
     component: QuestionsNavigator,
-    icon: ({ color, focused, size: iconSize }) => (
-      <TabIcon 
-        source={Images.CHAT_ICON} 
-        selectedSource={Images.CHAT_ICON_SELECTED}
-        focused={focused} 
-        size={iconSize ?? (focused ? 28 : 24)} 
+    icon: ({ focused, size: iconSize }) => (
+      <ChatTabIcon
+        color={focused ? colors.primary : '#FFFFFF'}
+        size={iconSize ?? (focused ? 28 : 24)}
       />
     ),
     type: 'bottomTab',
@@ -65,12 +61,10 @@ export const navigationModulesConfig: NavigationItem[] = [
     id: 'Settings',
     name: 'Settings',
     component: SettingsScreen,
-    icon: ({ color, focused }) => (
-      <TabIcon 
-        source={Images.SETTINGS_ICON} 
-        selectedSource={Images.SETTINGS_ICON_SELECTED}
-        focused={focused} 
-        size={focused ? 24 : 20} 
+    icon: ({ focused }) => (
+      <SettingsTabIcon
+        color={focused ? colors.primary : '#FFFFFF'}
+        size={focused ? 24 : 20}
       />
     ),
     type: 'bottomTab',

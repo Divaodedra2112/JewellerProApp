@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import TabIcon from './TabIcon';
-import Images from '../../utils/Images';
+import { ActiveupdateTabIcon } from './TabBarSvgIcons';
+import { colors } from '../../utils/theme';
 import { moderateScale } from '../../utils/Responsive';
 
 interface UpdatesIconWithBadgeProps {
@@ -15,11 +15,9 @@ const UpdatesIconWithBadge: React.FC<UpdatesIconWithBadgeProps> = ({ focused }) 
 
   return (
     <View style={{ position: 'relative' }}>
-      <TabIcon 
-        source={Images.UPDATES_ICON} 
-        selectedSource={Images.UPDATES_ICON_SELECTED}
-        focused={focused} 
-        size={focused ? 24 : 20} 
+      <ActiveupdateTabIcon
+        color={focused ? colors.primary : '#FFFFFF'}
+        size={focused ? 24 : 20}
       />
       {/* Notification badge - only show if there are unread notifications */}
       {unreadCount > 0 && (
