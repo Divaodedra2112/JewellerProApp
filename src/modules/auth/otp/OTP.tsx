@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   ScrollView,
   View,
@@ -55,6 +55,7 @@ const OTP = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state: RootState) => state.auth);
   const [verifying, setVerifying] = useState(false);
+  const lastSubmittedOtpRef = useRef<string>('');
 
   useEffect(() => {
     if (error) {
@@ -125,9 +126,14 @@ const OTP = () => {
     }
   }, [verifying, loading, otp, phoneNumber, countryCode, dispatch, failedAttempts]);
 
+  // Auto-submit only once per OTP value to prevent duplicate API calls
   useEffect(() => {
-    if (otp.length === 4) {
+    if (otp.length === 4 && otp !== lastSubmittedOtpRef.current) {
+      lastSubmittedOtpRef.current = otp;
       handleVerify();
+    }
+    if (otp.length < 4) {
+      lastSubmittedOtpRef.current = '';
     }
   }, [otp, handleVerify]);
 

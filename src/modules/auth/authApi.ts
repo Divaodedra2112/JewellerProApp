@@ -4,7 +4,7 @@
  */
 
 import { post } from '../../services/api';
-import { logger } from '../../../utils/logger';
+import { logger } from '../../utils/logger';
 
 const AUTH_SEND_OTP = '/auth/send-login-otp';
 const AUTH_VERIFY_OTP = '/auth/verify-login-otp';
@@ -26,11 +26,16 @@ export interface SendLoginOtpSuccess {
 export async function sendLoginOtp(
   payload: SendLoginOtpRequest
 ): Promise<SendLoginOtpSuccess> {
+  const body = {
+    countryCode: payload.countryCode,
+    mobileNumber: payload.mobileNumber,
+  };
+  if (__DEV__) {
+    console.log('[OTP API] Send OTP – request body:', JSON.stringify(body, null, 2));
+    logger.debug('Login API – Send OTP request', { endpoint: AUTH_SEND_OTP, body });
+  }
   try {
-    const response = await post<SendLoginOtpSuccess & { message?: string }>(AUTH_SEND_OTP, {
-      countryCode: payload.countryCode,
-      mobileNumber: payload.mobileNumber,
-    });
+    const response = await post<SendLoginOtpSuccess & { message?: string }>(AUTH_SEND_OTP, body);
 
     if (!response) {
       throw new Error('No response from server');
@@ -82,12 +87,17 @@ export interface VerifyLoginOtpSuccess {
 export async function verifyLoginOtp(
   payload: VerifyLoginOtpRequest
 ): Promise<VerifyLoginOtpSuccess> {
+  const body = {
+    countryCode: payload.countryCode,
+    mobileNumber: payload.mobileNumber,
+    otp: payload.otp,
+  };
+  if (__DEV__) {
+    console.log('[OTP API] Verify OTP – request body:', JSON.stringify(body, null, 2));
+    logger.debug('Login API – Verify OTP request', { endpoint: AUTH_VERIFY_OTP, body });
+  }
   try {
-    const response = await post<VerifyLoginOtpSuccess & { message?: string }>(AUTH_VERIFY_OTP, {
-      countryCode: payload.countryCode,
-      mobileNumber: payload.mobileNumber,
-      otp: payload.otp,
-    });
+    const response = await post<VerifyLoginOtpSuccess & { message?: string }>(AUTH_VERIFY_OTP, body);
 
     if (!response) {
       throw new Error('No response from server');

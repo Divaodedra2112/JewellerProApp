@@ -118,16 +118,16 @@ const RootNavigator: React.FC<RootNavigatorProps> = ({ onNavigationReady }) => {
         <Stack.Navigator screenOptions={screenOptions}>
           {token ? (
             <Stack.Screen
-              name="Auth"
-              component={AuthNavigator}
+              name="Main"
+              component={MainNavigator}
               options={{
                 gestureEnabled: false,
               }}
             />
           ) : (
             <Stack.Screen
-              name="Main"
-              component={MainNavigator}
+              name="Auth"
+              component={AuthNavigator}
               options={{
                 gestureEnabled: false,
               }}
