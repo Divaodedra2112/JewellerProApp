@@ -1,12 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { AppText } from '../../../../../components/AppText/AppText';
 import { TEXT_VARIANTS } from '../../../../../components/AppText/AppText';
 import { Category } from '../../HomeTypes';
 import { CategorySectionCard } from './CategorySectionCard';
 import { styles } from './styles';
+import { scale } from '../../../../../utils/Responsive';
+import { SCREEN_PADDING_HORIZONTAL } from '../../../../../utils/layoutConstants';
 
 const INITIAL_CATEGORIES_COUNT = 6;
+const CATEGORY_GAP = scale(12);
+const CATEGORIES_PER_ROW = 3;
 
 interface CategorySectionProps {
   categories: Category[];
@@ -18,6 +22,13 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
   onCategoryPress,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const { width: screenWidth } = useWindowDimensions();
+
+  const categoryItemWidth = useMemo(() => {
+    const contentWidth = screenWidth - 2 * SCREEN_PADDING_HORIZONTAL;
+    const totalGaps = (CATEGORIES_PER_ROW - 1) * CATEGORY_GAP;
+    return (contentWidth - totalGaps) / CATEGORIES_PER_ROW;
+  }, [screenWidth]);
 
   const activeCategories = categories
     .filter(category => category.status === 'ACTIVE')
@@ -55,7 +66,13 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
         {displayedCategories.map((category, index) => (
           <View
             key={category.id}
-            style={[styles.gridItem, index % 3 === 2 && styles.gridItemLastInRow]}
+            style={[
+              styles.gridItem,
+              {
+                width: categoryItemWidth,
+                marginRight: index % CATEGORIES_PER_ROW === CATEGORIES_PER_ROW - 1 ? 0 : CATEGORY_GAP,
+              },
+            ]}
           >
             <CategorySectionCard
               category={category}

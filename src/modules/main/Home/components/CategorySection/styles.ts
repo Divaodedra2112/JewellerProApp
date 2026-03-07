@@ -10,7 +10,6 @@ type Styles = {
   seeAllText: TextStyle;
   grid: ViewStyle;
   gridItem: ViewStyle;
-  gridItemLastInRow: ViewStyle;
 };
 
 export const styles: Styles = StyleSheet.create({
@@ -40,12 +39,7 @@ export const styles: Styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   gridItem: {
-    width: '30%',
-    marginRight: scale(12),
     marginBottom: verticalScale(12),
-  },
-  gridItemLastInRow: {
-    marginRight: 0,
   },
 });
 
