@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   RefreshControl,
   Linking,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import CustomHeader from '../../../components/CustomHeader/Header';
 import { AppText, TEXT_VARIANTS } from '../../../components/AppText/AppText';
@@ -43,9 +44,11 @@ const UpdatesScreen = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchUpdates();
-  }, [fetchUpdates]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchUpdates();
+    }, [fetchUpdates])
+  );
 
   const onRefresh = useCallback(() => {
     fetchUpdates(true);

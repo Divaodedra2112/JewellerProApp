@@ -2,12 +2,15 @@ import { get } from '../../../services/api';
 import { UpdatesResponse, Update } from './UpdatesTypes';
 import { logger } from '../../../utils/logger';
 
+/** App updates endpoint: GET /api/v1/app/updates */
+const UPDATES_PATH = '/app/updates';
+
 /** Allowed filter values (case-insensitive): regulatory, circular, reminder, notice */
 export type UpdateTypeFilter = 'regulatory' | 'circular' | 'reminder' | 'notice';
 
 export const getUpdates = async (updateType?: UpdateTypeFilter): Promise<Update[]> => {
   try {
-    const response = await get<UpdatesResponse>('app/updates', {
+    const response = await get<UpdatesResponse>(UPDATES_PATH, {
       ...(updateType && { updateType }),
     });
 
@@ -22,7 +25,7 @@ export const getUpdates = async (updateType?: UpdateTypeFilter): Promise<Update[
     return response.data ?? [];
   } catch (error: any) {
     logger.error('Updates Service - Error fetching updates', error as Error, {
-      endpoint: 'app/updates',
+      endpoint: UPDATES_PATH,
       updateType,
     });
     throw error;
