@@ -49,6 +49,15 @@ export const TOAST_MESSAGES = {
   TOPIC: {
     FETCH_FAILED: 'Failed to load topic. Please try again.',
   },
+
+  // Profile (GET /app/profile, PATCH /app/profile)
+  PROFILE: {
+    FETCH_FAILED: 'Failed to load profile. Please try again.',
+    UPDATE_SUCCESS: 'Profile updated successfully.',
+    UPDATE_FAILED: 'Failed to update profile. Please try again.',
+    VALIDATION_ONE_NAME_REQUIRED: 'Please enter at least first name or last name.',
+    SESSION_EXPIRED: 'Your session has expired. Please login again.',
+  },
 } as const;
 
 /**

@@ -56,5 +56,21 @@
     "unknownError": "An unknown error occurred.",
     "invalidPhoneNumber": "Please enter a valid phone number",
     "invalidOTP": "Please enter a valid OTP"
+  },
+  "profile": {
+    "title": "Profile",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastNamePlaceholder": "Enter your last name",
+    "phoneNumberPlaceholder": "Enter your phone number",
+    "saveChanges": "Save Changes",
+    "loading": "Loading profile...",
+    "fetchFailed": "Failed to load profile. Please try again.",
+    "updateSuccess": "Profile updated successfully.",
+    "updateFailed": "Failed to update profile. Please try again.",
+    "validationOneNameRequired": "Please enter at least first name or last name.",
+    "sessionExpired": "Your session has expired. Please login again."
   }
 }

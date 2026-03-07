@@ -16,6 +16,7 @@ interface AuthState {
     firstName?: string;
     lastName?: string;
     mobile?: string;
+    countryCode?: string;
     email?: string;
     photo?: string;
     roles?: Array<{

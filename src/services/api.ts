@@ -72,6 +72,7 @@ api.interceptors.request.use(
 
     const token = await AsyncStorage.getItem('access_token');
     if (!isAuthPublicEndpoint && token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
       config.headers.access_token = token;
     }
     // Add dynamic device id and platform headers
@@ -442,6 +443,39 @@ export const put = async <T>(url: string, data: any): Promise<T> => {
     });
 
     // For network errors, create a proper error object without trying to construct Response
+    if (isNetworkError) {
+      const networkError = new Error(error?.message || 'Network Error');
+      (networkError as any).isNetworkError = true;
+      (networkError as any).code = error?.code;
+      throw networkError;
+    }
+
+    throw error;
+  }
+};
+
+export const patch = async <T>(url: string, data: any): Promise<T | null> => {
+  logger.logApiRequest(url, 'PATCH', data);
+
+  try {
+    const response = await api.patch<T>(url, data);
+
+    logger.logApiResponse(url, response.status, response.data);
+
+    return response.data;
+  } catch (error: any) {
+    const isNetworkError =
+      !error.response &&
+      (error.message === 'Network Error' ||
+        error.code === 'ERR_NETWORK' ||
+        error.code === 'ECONNABORTED');
+
+    logger.error(`PATCH ${url} failed`, error as Error, {
+      status: error?.response?.status ?? (isNetworkError ? 'NETWORK_ERROR' : undefined),
+      data: error?.response?.data,
+      code: error?.code,
+    });
+
     if (isNetworkError) {
       const networkError = new Error(error?.message || 'Network Error');
       (networkError as any).isNetworkError = true;

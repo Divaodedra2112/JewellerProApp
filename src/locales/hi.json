@@ -56,5 +56,21 @@
     "unknownError": "एक अज्ञात त्रुटि हुई।",
     "invalidPhoneNumber": "कृपया एक वैध फोन नंबर दर्ज करें",
     "invalidOTP": "कृपया एक वैध OTP दर्ज करें"
+  },
+  "profile": {
+    "title": "प्रोफाइल",
+    "firstName": "पहला नाम",
+    "lastName": "उपनाम",
+    "phoneNumber": "फोन नंबर",
+    "firstNamePlaceholder": "अपना पहला नाम दर्ज करें",
+    "lastNamePlaceholder": "अपना उपनाम दर्ज करें",
+    "phoneNumberPlaceholder": "अपना फोन नंबर दर्ज करें",
+    "saveChanges": "बदलाव सहेजें",
+    "loading": "प्रोफाइल लोड हो रहा है...",
+    "fetchFailed": "प्रोफाइल लोड करने में विफल। कृपया पुनः प्रयास करें।",
+    "updateSuccess": "प्रोफाइल सफलतापूर्वक अपडेट हो गई।",
+    "updateFailed": "प्रोफाइल अपडेट करने में विफल। कृपया पुनः प्रयास करें।",
+    "validationOneNameRequired": "कृपया कम से कम पहला नाम या उपनाम दर्ज करें।",
+    "sessionExpired": "आपका सत्र समाप्त हो गया है। कृपया फिर से लॉगिन करें।"
   }
 }
