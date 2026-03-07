@@ -17,6 +17,8 @@ type Styles = {
   inputLabel: TextStyle;
   inputContainer: ViewStyle;
   input: TextStyle;
+  disabledInputContainer: ViewStyle;
+  disabledInput: TextStyle;
   saveButton: ViewStyle;
 };
 
@@ -81,8 +83,16 @@ export const styles: Styles = StyleSheet.create({
     fontSize: scale(14),
     fontWeight: '500',
     marginLeft: scale(8),
-    color: colors.inputLabel,
+    color: colors.gray1000,
     fontFamily: Fonts.medium,
+  },
+  disabledInputContainer: {
+    backgroundColor: colors.inputBackground,
+    borderColor: colors.gray100,
+    opacity: 0.9,
+  },
+  disabledInput: {
+    color: colors.gray1000,
   },
   saveButton: {
     marginTop: verticalScale(32),

@@ -1,4 +1,4 @@
-import { Platform, Alert, Linking } from 'react-native';
+import { Platform, Alert, Linking, PermissionsAndroid } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS, Permission, PermissionStatus } from 'react-native-permissions';
 import { logger } from './logger';
 
@@ -7,86 +7,121 @@ export type PermissionStatusResult = {
   blocked: boolean;
 };
 
-// Camera Permissions
+// --- Android: use PermissionsAndroid to avoid E_INVALID_ACTIVITY from react-native-permissions ---
+const ANDROID_CAMERA = PermissionsAndroid.PERMISSIONS.CAMERA;
+
 export const requestCameraPermission = async (): Promise<boolean> => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(ANDROID_CAMERA, {
+        title: 'Camera Permission',
+        message: 'This app needs camera access to take your profile photo.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      });
+      const isGranted =
+        granted === PermissionsAndroid.RESULTS.GRANTED ||
+        (typeof granted === 'object' && granted[ANDROID_CAMERA] === PermissionsAndroid.RESULTS.GRANTED);
+      return !!isGranted;
+    } catch (error) {
+      logger.error('Error requesting camera permission (Android)', error as Error);
+      return false;
+    }
+  }
   try {
-    const permission = Platform.select({
-      ios: PERMISSIONS.IOS.CAMERA,
-      android: PERMISSIONS.ANDROID.CAMERA,
-    }) as Permission;
-
-    if (!permission) return false;
-
+    const permission = PERMISSIONS.IOS.CAMERA as Permission;
     const result = await request(permission);
     return result === RESULTS.GRANTED;
   } catch (error) {
-    logger.error('Error requesting camera permission', error as Error);
+    logger.error('Error requesting camera permission (iOS)', error as Error);
     return false;
   }
 };
 
 export const checkCameraPermissionStatus = async (): Promise<PermissionStatusResult> => {
-  try {
-    const permission = Platform.select({
-      ios: PERMISSIONS.IOS.CAMERA,
-      android: PERMISSIONS.ANDROID.CAMERA,
-    }) as Permission;
-
-    if (!permission) {
+  if (Platform.OS === 'android') {
+    try {
+      const result = await PermissionsAndroid.check(ANDROID_CAMERA);
+      return {
+        status: result ? RESULTS.GRANTED : RESULTS.DENIED,
+        blocked: false,
+      };
+    } catch (error) {
+      logger.error('Error checking camera permission (Android)', error as Error);
       return { status: RESULTS.DENIED, blocked: false };
     }
-
+  }
+  try {
+    const permission = PERMISSIONS.IOS.CAMERA as Permission;
     const result = await check(permission);
     return {
       status: result,
       blocked: result === RESULTS.BLOCKED,
     };
   } catch (error) {
-    logger.error('Error checking camera permission', error as Error);
+    logger.error('Error checking camera permission (iOS)', error as Error);
     return { status: RESULTS.DENIED, blocked: false };
   }
 };
 
-// Storage Permissions
+// Storage Permissions (for gallery / saving cropped image)
+const getAndroidStoragePermission = () =>
+  Platform.Version >= 33 ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
+
 export const requestStoragePermission = async (): Promise<boolean> => {
+  if (Platform.OS === 'android') {
+    try {
+      const permission = getAndroidStoragePermission();
+      const granted = await PermissionsAndroid.request(permission, {
+        title: 'Photo Access',
+        message: 'This app needs access to save your profile photo.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      });
+      const isGranted =
+        granted === PermissionsAndroid.RESULTS.GRANTED ||
+        (typeof granted === 'object' && granted[permission] === PermissionsAndroid.RESULTS.GRANTED);
+      return !!isGranted;
+    } catch (error) {
+      logger.error('Error requesting storage permission (Android)', error as Error);
+      return false;
+    }
+  }
   try {
-    const permission = Platform.select({
-      ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
-      android: Platform.Version >= 33
-        ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-    }) as Permission;
-
-    if (!permission) return false;
-
+    const permission = PERMISSIONS.IOS.PHOTO_LIBRARY as Permission;
     const result = await request(permission);
     return result === RESULTS.GRANTED;
   } catch (error) {
-    logger.error('Error requesting storage permission', error as Error);
+    logger.error('Error requesting storage permission (iOS)', error as Error);
     return false;
   }
 };
 
 export const checkStoragePermissionStatus = async (): Promise<PermissionStatusResult> => {
-  try {
-    const permission = Platform.select({
-      ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
-      android: Platform.Version >= 33
-        ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-    }) as Permission;
-
-    if (!permission) {
+  if (Platform.OS === 'android') {
+    try {
+      const permission = getAndroidStoragePermission();
+      const result = await PermissionsAndroid.check(permission);
+      return {
+        status: result ? RESULTS.GRANTED : RESULTS.DENIED,
+        blocked: false,
+      };
+    } catch (error) {
+      logger.error('Error checking storage permission (Android)', error as Error);
       return { status: RESULTS.DENIED, blocked: false };
     }
-
+  }
+  try {
+    const permission = PERMISSIONS.IOS.PHOTO_LIBRARY as Permission;
     const result = await check(permission);
     return {
       status: result,
       blocked: result === RESULTS.BLOCKED,
     };
   } catch (error) {
-    logger.error('Error checking storage permission', error as Error);
+    logger.error('Error checking storage permission (iOS)', error as Error);
     return { status: RESULTS.DENIED, blocked: false };
   }
 };

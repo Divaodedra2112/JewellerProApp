@@ -71,6 +71,12 @@
     "updateSuccess": "Profile updated successfully.",
     "updateFailed": "Failed to update profile. Please try again.",
     "validationOneNameRequired": "Please enter at least first name or last name.",
-    "sessionExpired": "Your session has expired. Please login again."
+    "sessionExpired": "Your session has expired. Please login again.",
+    "photoUpdated": "Profile photo updated",
+    "selectImageSource": "Select Image Source",
+    "selectImageSourceMessage": "Choose where to get your image from:",
+    "takePhoto": "Take Photo",
+    "chooseFromLibrary": "Choose from Library",
+    "cropPhoto": "Crop photo"
   }
 }

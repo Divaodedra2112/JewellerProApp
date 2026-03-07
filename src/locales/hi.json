@@ -71,6 +71,12 @@
     "updateSuccess": "प्रोफाइल सफलतापूर्वक अपडेट हो गई।",
     "updateFailed": "प्रोफाइल अपडेट करने में विफल। कृपया पुनः प्रयास करें।",
     "validationOneNameRequired": "कृपया कम से कम पहला नाम या उपनाम दर्ज करें।",
-    "sessionExpired": "आपका सत्र समाप्त हो गया है। कृपया फिर से लॉगिन करें।"
+    "sessionExpired": "आपका सत्र समाप्त हो गया है। कृपया फिर से लॉगिन करें।",
+    "photoUpdated": "प्रोफाइल फोटो अपडेट हो गई",
+    "selectImageSource": "छवि स्रोत चुनें",
+    "selectImageSourceMessage": "अपनी छवि कहाँ से लेनी है चुनें:",
+    "takePhoto": "फोटो लें",
+    "chooseFromLibrary": "लाइब्रेरी से चुनें",
+    "cropPhoto": "फोटो क्रॉप करें"
   }
 }
