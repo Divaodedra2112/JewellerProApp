@@ -207,11 +207,10 @@ const ProfileScreen = () => {
     })
       .then((image) => {
         const croppedUri = image?.path ?? (image as any)?.sourceURL ?? null;
-        if (croppedUri) {
-          dispatch(setUser({ ...displayUser, photo: croppedUri }));
-          setProfilePhotoUri(croppedUri);
-          showToast(TOAST_TYPE.SUCCESS, t('profile.photoUpdated', 'Profile photo updated'));
-        }
+        const finalUri = croppedUri || uri;
+        dispatch(setUser({ ...displayUser, photo: finalUri }));
+        setProfilePhotoUri(finalUri);
+        showToast(TOAST_TYPE.SUCCESS, t('profile.photoUpdated', 'Profile photo updated'));
       })
       .catch((err: any) => {
         if (err?.code === 'E_PICKER_CANCELLED' || err?.message?.includes('cancel')) return;
